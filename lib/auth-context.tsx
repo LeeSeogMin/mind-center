@@ -17,7 +17,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   profile: null,
   session: null,
-  loading: true,
+  loading: false,
   signOut: async () => {},
 });
 
@@ -28,6 +28,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -53,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function fetchProfile(userId: string) {
+    if (!supabase) return;
     const { data } = await supabase
       .from("users")
       .select("*")
@@ -62,6 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signOut() {
+    if (!supabase) return;
     await supabase.auth.signOut();
     setUser(null);
     setProfile(null);

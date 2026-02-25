@@ -35,6 +35,12 @@ export default function SignupPage() {
 
     setLoading(true);
 
+    if (!supabase) {
+      setError("서비스 연결 설정이 필요합니다. 관리자에게 문의해 주세요.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const { error } = await supabase.auth.signUp({
         email,

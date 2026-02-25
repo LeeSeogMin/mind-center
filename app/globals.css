@@ -1,0 +1,109 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  /* 안 B 웜 아이보리 커스텀 컬러 */
+  --color-warm-brown: #8B6B4E;
+  --color-light-tan: #C4A882;
+  --color-terracotta: #D4845A;
+  --color-creamy-ivory: #FBF8F3;
+  --color-deep-brown: #3A2E26;
+  --color-medium-tan: #8C7B6B;
+  --color-warm-border: #E8DDD0;
+}
+
+/* ===== 안 B — 웜 아이보리 (Warm Ivory) 테마 ===== */
+:root {
+  --radius: 0.75rem;
+  /* Primary: 웜 브라운 #8B6B4E */
+  --background: #FBF8F3;
+  --foreground: #3A2E26;
+  --card: #FFFFFF;
+  --card-foreground: #3A2E26;
+  --popover: #FFFFFF;
+  --popover-foreground: #3A2E26;
+  --primary: #8B6B4E;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F3EDE5;
+  --secondary-foreground: #3A2E26;
+  --muted: #F3EDE5;
+  --muted-foreground: #8C7B6B;
+  --accent: #D4845A;
+  --accent-foreground: #FFFFFF;
+  --destructive: #DC2626;
+  --border: #E8DDD0;
+  --input: #E8DDD0;
+  --ring: #C4A882;
+  --chart-1: #8B6B4E;
+  --chart-2: #C4A882;
+  --chart-3: #D4845A;
+  --chart-4: #A8956E;
+  --chart-5: #6B5A48;
+  --sidebar: #FBF8F3;
+  --sidebar-foreground: #3A2E26;
+  --sidebar-primary: #8B6B4E;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F3EDE5;
+  --sidebar-accent-foreground: #3A2E26;
+  --sidebar-border: #E8DDD0;
+  --sidebar-ring: #C4A882;
+  /* 커스텀 토큰 */
+  --font-heading: 'Nanum Myeongjo', serif;
+  --font-sans: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+  }
+}

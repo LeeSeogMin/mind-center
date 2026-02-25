@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>공감터 심리상담연구소 — 디자인 제안 3안 비교</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&family=Nanum+Myeongjo:wght@400;700&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: #f0f0f0; color: #333; }
+
+  /* Top selector */
+  .tab-bar {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; justify-content: center; gap: 12px;
+    background: #fff; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  }
+  .tab-btn {
+    padding: 12px 28px; border: 2px solid #ddd; border-radius: 12px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    background: #fff; transition: all .25s;
+  }
+  .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+  .tab-btn.active-a { border-color: #6B9E6E; background: #6B9E6E; color: #fff; }
+  .tab-btn.active-b { border-color: #8B6B4E; background: #8B6B4E; color: #fff; }
+  .tab-btn.active-c { border-color: #2A6B7C; background: #2A6B7C; color: #fff; }
+
+  .preview { display: none; }
+  .preview.active { display: block; }
+
+  /* ===== 안 A — Green Serenity ===== */
+  .a-header {
+    background: #fff; border-bottom: 2px solid #D8E8D4;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 72px;
+  }
+  .a-logo { font-family: 'Noto Serif KR', serif; font-size: 22px; font-weight: 700; color: #6B9E6E; }
+  .a-nav { display: flex; gap: 24px; list-style: none; }
+  .a-nav li { font-size: 14px; color: #2C3A2D; font-weight: 500; cursor: pointer; }
+  .a-nav li:hover { color: #6B9E6E; }
+  .a-auth { display: flex; gap: 10px; }
+  .a-auth button {
+    padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+  }
+  .a-auth .search { background: none; color: #6B7B6C; font-size: 18px; }
+  .a-auth .login { background: #6B9E6E; color: #fff; }
+
+  .a-hero {
+    background: linear-gradient(135deg, #6B9E6E 0%, #A8C5A0 100%);
+    padding: 80px 40px; display: flex; align-items: center; justify-content: center; gap: 60px;
+    min-height: 480px;
+  }
+  .a-hero-text { max-width: 480px; }
+  .a-hero-text h1 { font-family: 'Noto Serif KR', serif; font-size: 38px; color: #fff; line-height: 1.4; margin-bottom: 16px; }
+  .a-hero-text p { font-size: 16px; color: rgba(255,255,255,.85); line-height: 1.7; margin-bottom: 32px; }
+  .a-hero-btns { display: flex; gap: 12px; }
+  .a-hero-btns button { padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; }
+  .a-hero-btns .primary { background: #F4A261; color: #fff; }
+  .a-hero-btns .secondary { background: rgba(255,255,255,.2); color: #fff; border: 1px solid rgba(255,255,255,.4); }
+  .a-hero-img {
+    width: 320px; height: 280px; border-radius: 24px;
+    background: rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.5); font-size: 14px;
+  }
+
+  .a-services {
+    background: #F7F9F5; padding: 64px 40px; text-align: center;
+  }
+  .a-services h2 { font-family: 'Noto Serif KR', serif; font-size: 26px; color: #2C3A2D; margin-bottom: 40px; }
+  .a-service-grid {
+    display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; max-width: 900px; margin: 0 auto;
+  }
+  .a-service-card {
+    width: 110px; padding: 20px 12px; background: #fff; border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(107,158,110,.1); border-top: 3px solid #6B9E6E;
+    text-align: center; cursor: pointer; transition: transform .2s;
+  }
+  .a-service-card:hover { transform: translateY(-4px); }
+  .a-service-card .icon { font-size: 32px; margin-bottom: 8px; }
+  .a-service-card .label { font-size: 12px; color: #2C3A2D; font-weight: 500; }
+
+  .a-process {
+    background: #fff; padding: 64px 40px; text-align: center;
+  }
+  .a-process h2 { font-family: 'Noto Serif KR', serif; font-size: 26px; color: #2C3A2D; margin-bottom: 40px; }
+  .a-process-steps {
+    display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .a-step {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .a-step-circle {
+    width: 64px; height: 64px; border-radius: 50%; background: #A8C5A0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: #fff; font-weight: 700;
+  }
+  .a-step-label { font-size: 13px; color: #2C3A2D; font-weight: 500; }
+  .a-step-arrow { font-size: 24px; color: #D8E8D4; margin-top: -20px; }
+
+  .a-cta {
+    background: #6B9E6E; padding: 48px 40px; text-align: center;
+  }
+  .a-cta h2 { font-family: 'Noto Serif KR', serif; font-size: 24px; color: #fff; margin-bottom: 8px; }
+  .a-cta p { color: rgba(255,255,255,.8); margin-bottom: 24px; font-size: 15px; }
+  .a-cta-btns { display: flex; gap: 12px; justify-content: center; }
+  .a-cta-btns button {
+    padding: 14px 32px; border-radius: 12px; font-size: 15px; font-weight: 600;
+    cursor: pointer; border: none; background: #F4A261; color: #fff;
+  }
+  .a-cta-btns button:last-child { background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4); color: #fff; }
+
+  .a-footer {
+    background: #2C3A2D; padding: 40px; text-align: center; color: #A8C5A0; font-size: 13px; line-height: 2;
+  }
+
+  /* ===== 안 B — Warm Ivory ===== */
+  .b-header {
+    background: #FBF8F3; border-bottom: 1px solid #E8DDD0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 72px; position: sticky; top: 56px; z-index: 50;
+  }
+  .b-logo { font-family: 'Nanum Myeongjo', serif; font-size: 22px; font-weight: 700; color: #8B6B4E; }
+  .b-nav { display: flex; gap: 24px; list-style: none; }
+  .b-nav li { font-size: 14px; color: #3A2E26; font-weight: 500; cursor: pointer; }
+  .b-nav li:hover { color: #8B6B4E; }
+  .b-auth { display: flex; gap: 10px; }
+  .b-auth button { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
+  .b-auth .search { background: none; color: #8C7B6B; font-size: 18px; }
+  .b-auth .login { background: #8B6B4E; color: #fff; }
+
+  .b-hero {
+    background: #FBF8F3; padding: 80px 40px; display: flex; align-items: center; justify-content: center; gap: 60px;
+    min-height: 480px; max-width: 1200px; margin: 0 auto;
+  }
+  .b-hero-text { max-width: 480px; }
+  .b-hero-text h1 { font-family: 'Nanum Myeongjo', serif; font-size: 38px; color: #3A2E26; line-height: 1.5; margin-bottom: 16px; }
+  .b-hero-text .underline-deco {
+    display: inline-block; position: relative;
+  }
+  .b-hero-text .underline-deco::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 8px;
+    background: rgba(212,132,90,.25); border-radius: 4px;
+  }
+  .b-hero-text p { font-size: 16px; color: #8C7B6B; line-height: 1.7; margin-bottom: 32px; }
+  .b-hero-btns { display: flex; gap: 12px; }
+  .b-hero-btns button { padding: 14px 28px; border-radius: 24px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; }
+  .b-hero-btns .primary { background: #D4845A; color: #fff; }
+  .b-hero-btns .secondary { background: transparent; color: #8B6B4E; border: 1px solid #C4A882; }
+  .b-hero-img {
+    width: 360px; height: 320px; border-radius: 32px;
+    background: #E8DDD0; display: flex; align-items: center; justify-content: center;
+    color: #8C7B6B; font-size: 14px;
+  }
+
+  .b-services {
+    background: #fff; padding: 64px 40px; text-align: center;
+  }
+  .b-services h2 { font-family: 'Nanum Myeongjo', serif; font-size: 26px; color: #3A2E26; margin-bottom: 40px; }
+  .b-service-grid {
+    display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; max-width: 900px; margin: 0 auto;
+  }
+  .b-service-card {
+    width: 110px; padding: 20px 12px; background: #FBF8F3; border-radius: 20px;
+    border: 1px solid #E8DDD0; text-align: center; cursor: pointer; transition: transform .2s;
+  }
+  .b-service-card:hover { transform: translateY(-4px); box-shadow: 0 4px 16px rgba(139,107,78,.1); }
+  .b-service-card .icon { font-size: 32px; margin-bottom: 8px; }
+  .b-service-card .label { font-size: 12px; color: #3A2E26; font-weight: 500; }
+
+  .b-process {
+    background: #FBF8F3; padding: 64px 40px; text-align: center;
+  }
+  .b-process h2 { font-family: 'Nanum Myeongjo', serif; font-size: 26px; color: #3A2E26; margin-bottom: 40px; }
+  .b-process-steps {
+    display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .b-step {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .b-step-circle {
+    width: 64px; height: 64px; border-radius: 50%; background: #C4A882;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: #fff; font-weight: 700;
+  }
+  .b-step-label { font-size: 13px; color: #3A2E26; font-weight: 500; }
+  .b-step-arrow { font-size: 24px; color: #E8DDD0; margin-top: -20px; }
+
+  .b-cta {
+    background: #8B6B4E; padding: 48px 40px; text-align: center;
+  }
+  .b-cta h2 { font-family: 'Nanum Myeongjo', serif; font-size: 24px; color: #fff; margin-bottom: 8px; }
+  .b-cta p { color: rgba(255,255,255,.8); margin-bottom: 24px; font-size: 15px; }
+  .b-cta-btns { display: flex; gap: 12px; justify-content: center; }
+  .b-cta-btns button {
+    padding: 14px 32px; border-radius: 24px; font-size: 15px; font-weight: 600;
+    cursor: pointer; border: none; background: #D4845A; color: #fff;
+  }
+  .b-cta-btns button:last-child { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); color: #fff; }
+
+  .b-footer {
+    background: #3A2E26; padding: 40px; text-align: center; color: #C4A882; font-size: 13px; line-height: 2;
+  }
+
+  /* ===== 안 C — Deep Blue-Green ===== */
+  .c-header {
+    background: #2A6B7C;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 72px;
+  }
+  .c-logo { font-family: 'Noto Sans KR', sans-serif; font-size: 22px; font-weight: 700; color: #fff; }
+  .c-nav { display: flex; gap: 24px; list-style: none; }
+  .c-nav li { font-size: 14px; color: rgba(255,255,255,.85); font-weight: 500; cursor: pointer; }
+  .c-nav li:hover { color: #F4C842; }
+  .c-auth { display: flex; gap: 10px; }
+  .c-auth button { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
+  .c-auth .search { background: none; color: rgba(255,255,255,.7); font-size: 18px; }
+  .c-auth .login { background: #F4C842; color: #1A2B30; }
+
+  .c-hero {
+    background: linear-gradient(135deg, #2A6B7C 0%, #4A9EAF 100%);
+    padding: 80px 40px; display: flex; align-items: center; justify-content: center; gap: 60px;
+    min-height: 480px;
+  }
+  .c-hero-text { max-width: 480px; }
+  .c-hero-text h1 { font-family: 'Noto Sans KR', sans-serif; font-size: 38px; color: #fff; line-height: 1.4; margin-bottom: 16px; font-weight: 700; }
+  .c-hero-text p { font-size: 16px; color: rgba(255,255,255,.8); line-height: 1.7; margin-bottom: 32px; }
+  .c-hero-btns { display: flex; gap: 12px; }
+  .c-hero-btns button { padding: 14px 28px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; }
+  .c-hero-btns .primary { background: #F4C842; color: #1A2B30; }
+  .c-hero-btns .secondary { background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.3); }
+  .c-hero-img {
+    width: 320px; height: 280px; border-radius: 16px;
+    background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.4); font-size: 14px;
+  }
+
+  .c-services {
+    background: #F8FAFB; padding: 64px 40px; text-align: center;
+  }
+  .c-services h2 { font-size: 26px; color: #1A2B30; margin-bottom: 40px; font-weight: 700; }
+  .c-service-grid {
+    display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; max-width: 900px; margin: 0 auto;
+  }
+  .c-service-card {
+    width: 110px; padding: 20px 12px; background: #fff; border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(42,107,124,.08); border-left: 3px solid #2A6B7C;
+    text-align: center; cursor: pointer; transition: transform .2s;
+  }
+  .c-service-card:hover { transform: translateY(-4px); }
+  .c-service-card .icon { font-size: 32px; margin-bottom: 8px; }
+  .c-service-card .label { font-size: 12px; color: #1A2B30; font-weight: 500; }
+
+  .c-stats {
+    background: #2A6B7C; padding: 48px 40px; text-align: center;
+    display: flex; justify-content: center; gap: 60px; flex-wrap: wrap;
+  }
+  .c-stat { text-align: center; }
+  .c-stat .num { font-size: 42px; font-weight: 700; color: #F4C842; }
+  .c-stat .desc { font-size: 14px; color: rgba(255,255,255,.8); margin-top: 4px; }
+
+  .c-process {
+    background: #fff; padding: 64px 40px; text-align: center;
+  }
+  .c-process h2 { font-size: 26px; color: #1A2B30; margin-bottom: 40px; font-weight: 700; }
+  .c-process-steps {
+    display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .c-step {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .c-step-circle {
+    width: 64px; height: 64px; border-radius: 12px; background: #4A9EAF;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: #fff; font-weight: 700;
+  }
+  .c-step-label { font-size: 13px; color: #1A2B30; font-weight: 500; }
+  .c-step-arrow { font-size: 24px; color: #DDE8EC; margin-top: -20px; }
+
+  .c-cta {
+    background: linear-gradient(135deg, #2A6B7C, #4A9EAF); padding: 48px 40px; text-align: center;
+  }
+  .c-cta h2 { font-size: 24px; color: #fff; margin-bottom: 8px; font-weight: 700; }
+  .c-cta p { color: rgba(255,255,255,.8); margin-bottom: 24px; font-size: 15px; }
+  .c-cta-btns { display: flex; gap: 12px; justify-content: center; }
+  .c-cta-btns button {
+    padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600;
+    cursor: pointer; border: none; background: #F4C842; color: #1A2B30;
+  }
+  .c-cta-btns button:last-child { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.3); color: #fff; }
+
+  .c-footer {
+    background: #1A2B30; padding: 40px; text-align: center; color: #5B7380; font-size: 13px; line-height: 2;
+  }
+
+  /* Color palette display */
+  .palette {
+    display: flex; gap: 0; margin: 24px auto; max-width: 600px; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,.1);
+  }
+  .palette-swatch {
+    flex: 1; height: 64px; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; letter-spacing: .5px;
+  }
+
+  .design-info {
+    max-width: 700px; margin: 0 auto; padding: 32px 40px; text-align: center;
+  }
+  .design-info h3 { font-size: 20px; margin-bottom: 8px; }
+  .design-info p { font-size: 14px; color: #666; line-height: 1.7; }
+  .design-info .fonts { margin-top: 12px; font-size: 13px; color: #999; }
+</style>
+</head>
+<body>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <button class="tab-btn active-a" onclick="show('a',this)">안 A — 그린 세레니티</button>
+  <button class="tab-btn" onclick="show('b',this)">안 B — 웜 아이보리</button>
+  <button class="tab-btn" onclick="show('c',this)">안 C — 딥 블루그린</button>
+</div>
+
+<!-- ===================== 안 A ===================== -->
+<div class="preview active" id="preview-a">
+  <div class="design-info">
+    <h3>안 A — "그린 세레니티" (Green Serenity)</h3>
+    <p>자연 · 치유 · 안정감. sample.png의 그린 계열 아이콘 스타일을 전체 브랜드에 적용.<br>비채심리상담센터의 부드럽고 따뜻한 느낌을 계승.</p>
+    <div class="fonts">Noto Serif KR (헤딩) + Noto Sans KR (본문)</div>
+  </div>
+  <div class="palette">
+    <div class="palette-swatch" style="background:#6B9E6E;color:#fff">Primary<br>#6B9E6E</div>
+    <div class="palette-swatch" style="background:#A8C5A0;color:#fff">Secondary<br>#A8C5A0</div>
+    <div class="palette-swatch" style="background:#F4A261;color:#fff">Accent<br>#F4A261</div>
+    <div class="palette-swatch" style="background:#F7F9F5;color:#6B7B6C">BG<br>#F7F9F5</div>
+    <div class="palette-swatch" style="background:#2C3A2D;color:#A8C5A0">Text<br>#2C3A2D</div>
+    <div class="palette-swatch" style="background:#D8E8D4;color:#6B7B6C">Border<br>#D8E8D4</div>
+  </div>
+
+  <div class="a-header">
+    <div class="a-logo">공감터</div>
+    <ul class="a-nav">
+      <li>센터소개</li><li>상담안내</li><li>심리검사</li><li>상담예약</li><li>마음톡</li><li>게시판</li><li>센터소식</li>
+    </ul>
+    <div class="a-auth">
+      <button class="search">&#128269;</button>
+      <button class="login">로그인</button>
+    </div>
+  </div>
+
+  <div class="a-hero">
+    <div class="a-hero-text">
+      <h1>마음이 힘들 때,<br>공감터가 함께합니다</h1>
+      <p>심리상담사, 가족상담사, 발달심리사 등 각 분야 전문가가<br>당신의 건강한 정신을 돕기 위해 함께합니다.</p>
+      <div class="a-hero-btns">
+        <button class="primary">상담예약하기 &rarr;</button>
+        <button class="secondary">센터 알아보기</button>
+      </div>
+    </div>
+    <div class="a-hero-img">상담사 이미지 영역</div>
+  </div>
+
+  <div class="a-services">
+    <h2>상담 프로그램</h2>
+    <div class="a-service-grid">
+      <div class="a-service-card"><div class="icon">&#128118;</div><div class="label">아동청소년</div></div>
+      <div class="a-service-card"><div class="icon">&#128100;</div><div class="label">성인</div></div>
+      <div class="a-service-card"><div class="icon">&#128107;</div><div class="label">커플·부부</div></div>
+      <div class="a-service-card"><div class="icon">&#128106;</div><div class="label">가족</div></div>
+      <div class="a-service-card"><div class="icon">&#128188;</div><div class="label">직장인</div></div>
+      <div class="a-service-card"><div class="icon">&#127978;</div><div class="label">소상공인</div></div>
+      <div class="a-service-card"><div class="icon">&#127970;</div><div class="label">기업·단체</div></div>
+    </div>
+  </div>
+
+  <div class="a-process">
+    <h2>상담 프로세스</h2>
+    <div class="a-process-steps">
+      <div class="a-step"><div class="a-step-circle">1</div><div class="a-step-label">문의·신청</div></div>
+      <div class="a-step-arrow">&rarr;</div>
+      <div class="a-step"><div class="a-step-circle">2</div><div class="a-step-label">상담사 배정</div></div>
+      <div class="a-step-arrow">&rarr;</div>
+      <div class="a-step"><div class="a-step-circle">3</div><div class="a-step-label">상담 진행</div></div>
+      <div class="a-step-arrow">&rarr;</div>
+      <div class="a-step"><div class="a-step-circle">4</div><div class="a-step-label">사후관리</div></div>
+    </div>
+  </div>
+
+  <div class="a-cta">
+    <h2>지금 바로 예약하세요</h2>
+    <p>전문 상담사가 당신의 이야기를 기다리고 있습니다</p>
+    <div class="a-cta-btns">
+      <button>대면상담 예약</button>
+      <button>화상상담 예약</button>
+    </div>
+  </div>
+
+  <div class="a-footer">
+    공감터 심리상담연구소 | 정선이 상담학 박사<br>
+    서울특별시 OO구 OO로 123 | 02-1234-5678 | contact@gongamteo.kr<br>
+    개인정보처리방침 | 이용약관
+  </div>
+</div>
+
+<!-- ===================== 안 B ===================== -->
+<div class="preview" id="preview-b">
+  <div class="design-info">
+    <h3>안 B — "웜 아이보리" (Warm Ivory)</h3>
+    <p>고급 심리상담소의 프리미엄 느낌. 따뜻한 베이지·아이보리 계열로 심리적 안정감 극대화.<br>온맘심리상담센터의 아늑하고 세련된 분위기에서 영감. 30~50대 타겟.</p>
+    <div class="fonts">Nanum Myeongjo (헤딩) + Pretendard (본문)</div>
+  </div>
+  <div class="palette">
+    <div class="palette-swatch" style="background:#8B6B4E;color:#fff">Primary<br>#8B6B4E</div>
+    <div class="palette-swatch" style="background:#C4A882;color:#fff">Secondary<br>#C4A882</div>
+    <div class="palette-swatch" style="background:#D4845A;color:#fff">Accent<br>#D4845A</div>
+    <div class="palette-swatch" style="background:#FBF8F3;color:#8C7B6B">BG<br>#FBF8F3</div>
+    <div class="palette-swatch" style="background:#3A2E26;color:#C4A882">Text<br>#3A2E26</div>
+    <div class="palette-swatch" style="background:#E8DDD0;color:#8C7B6B">Border<br>#E8DDD0</div>
+  </div>
+
+  <div class="b-header">
+    <div class="b-logo">공감터</div>
+    <ul class="b-nav">
+      <li>센터소개</li><li>상담안내</li><li>심리검사</li><li>상담예약</li><li>마음톡</li><li>게시판</li><li>센터소식</li>
+    </ul>
+    <div class="b-auth">
+      <button class="search">&#128269;</button>
+      <button class="login">로그인</button>
+    </div>
+  </div>
+
+  <div class="b-hero">
+    <div class="b-hero-text">
+      <h1>마음이 힘들 때,<br><span class="underline-deco">공감터</span>가 함께합니다</h1>
+      <p>심리상담사, 가족상담사, 발달심리사 등 각 분야 전문가가<br>당신의 건강한 정신을 돕기 위해 함께합니다.</p>
+      <div class="b-hero-btns">
+        <button class="primary">상담예약하기 &rarr;</button>
+        <button class="secondary">센터 알아보기</button>
+      </div>
+    </div>
+    <div class="b-hero-img">상담 이미지 영역</div>
+  </div>
+
+  <div class="b-services">
+    <h2>상담 프로그램</h2>
+    <div class="b-service-grid">
+      <div class="b-service-card"><div class="icon">&#128118;</div><div class="label">아동청소년</div></div>
+      <div class="b-service-card"><div class="icon">&#128100;</div><div class="label">성인</div></div>
+      <div class="b-service-card"><div class="icon">&#128107;</div><div class="label">커플·부부</div></div>
+      <div class="b-service-card"><div class="icon">&#128106;</div><div class="label">가족</div></div>
+      <div class="b-service-card"><div class="icon">&#128188;</div><div class="label">직장인</div></div>
+      <div class="b-service-card"><div class="icon">&#127978;</div><div class="label">소상공인</div></div>
+      <div class="b-service-card"><div class="icon">&#127970;</div><div class="label">기업·단체</div></div>
+    </div>
+  </div>
+
+  <div class="b-process">
+    <h2>상담 프로세스</h2>
+    <div class="b-process-steps">
+      <div class="b-step"><div class="b-step-circle">1</div><div class="b-step-label">문의·신청</div></div>
+      <div class="b-step-arrow">&rarr;</div>
+      <div class="b-step"><div class="b-step-circle">2</div><div class="b-step-label">상담사 배정</div></div>
+      <div class="b-step-arrow">&rarr;</div>
+      <div class="b-step"><div class="b-step-circle">3</div><div class="b-step-label">상담 진행</div></div>
+      <div class="b-step-arrow">&rarr;</div>
+      <div class="b-step"><div class="b-step-circle">4</div><div class="b-step-label">사후관리</div></div>
+    </div>
+  </div>
+
+  <div class="b-cta">
+    <h2>지금 바로 예약하세요</h2>
+    <p>전문 상담사가 당신의 이야기를 기다리고 있습니다</p>
+    <div class="b-cta-btns">
+      <button>대면상담 예약</button>
+      <button>화상상담 예약</button>
+    </div>
+  </div>
+
+  <div class="b-footer">
+    공감터 심리상담연구소 | 정선이 상담학 박사<br>
+    서울특별시 OO구 OO로 123 | 02-1234-5678 | contact@gongamteo.kr<br>
+    개인정보처리방침 | 이용약관
+  </div>
+</div>
+
+<!-- ===================== 안 C ===================== -->
+<div class="preview" id="preview-c">
+  <div class="design-info">
+    <h3>안 C — "딥 블루그린" (Deep Blue-Green)</h3>
+    <p>전문성 · 신뢰 · 확신. 딥 블루그린 포인트에 화이트 기반 클린 레이아웃.<br>현대적이고 심플한 전문기관 느낌. 젊은 세대와 직장인에게 어필.</p>
+    <div class="fonts">Spoqa Han Sans Neo (헤딩) + Noto Sans KR (본문)</div>
+  </div>
+  <div class="palette">
+    <div class="palette-swatch" style="background:#2A6B7C;color:#fff">Primary<br>#2A6B7C</div>
+    <div class="palette-swatch" style="background:#4A9EAF;color:#fff">Secondary<br>#4A9EAF</div>
+    <div class="palette-swatch" style="background:#F4C842;color:#1A2B30">Accent<br>#F4C842</div>
+    <div class="palette-swatch" style="background:#F8FAFB;color:#5B7380">BG<br>#F8FAFB</div>
+    <div class="palette-swatch" style="background:#1A2B30;color:#4A9EAF">Text<br>#1A2B30</div>
+    <div class="palette-swatch" style="background:#DDE8EC;color:#5B7380">Border<br>#DDE8EC</div>
+  </div>
+
+  <div class="c-header">
+    <div class="c-logo">공감터</div>
+    <ul class="c-nav">
+      <li>센터소개</li><li>상담안내</li><li>심리검사</li><li>상담예약</li><li>마음톡</li><li>게시판</li><li>센터소식</li>
+    </ul>
+    <div class="c-auth">
+      <button class="search">&#128269;</button>
+      <button class="login">로그인</button>
+    </div>
+  </div>
+
+  <div class="c-hero">
+    <div class="c-hero-text">
+      <h1>마음이 힘들 때,<br>공감터가 함께합니다</h1>
+      <p>심리상담사, 가족상담사, 발달심리사 등 각 분야 전문가가<br>당신의 건강한 정신을 돕기 위해 함께합니다.</p>
+      <div class="c-hero-btns">
+        <button class="primary">상담예약하기 &rarr;</button>
+        <button class="secondary">센터 알아보기</button>
+      </div>
+    </div>
+    <div class="c-hero-img">상담사 이미지 영역</div>
+  </div>
+
+  <div class="c-services">
+    <h2>상담 프로그램</h2>
+    <div class="c-service-grid">
+      <div class="c-service-card"><div class="icon">&#128118;</div><div class="label">아동청소년</div></div>
+      <div class="c-service-card"><div class="icon">&#128100;</div><div class="label">성인</div></div>
+      <div class="c-service-card"><div class="icon">&#128107;</div><div class="label">커플·부부</div></div>
+      <div class="c-service-card"><div class="icon">&#128106;</div><div class="label">가족</div></div>
+      <div class="c-service-card"><div class="icon">&#128188;</div><div class="label">직장인</div></div>
+      <div class="c-service-card"><div class="icon">&#127978;</div><div class="label">소상공인</div></div>
+      <div class="c-service-card"><div class="icon">&#127970;</div><div class="label">기업·단체</div></div>
+    </div>
+  </div>
+
+  <div class="c-stats">
+    <div class="c-stat"><div class="num">10+</div><div class="desc">년 상담 경력</div></div>
+    <div class="c-stat"><div class="num">2,000+</div><div class="desc">명 상담 완료</div></div>
+    <div class="c-stat"><div class="num">15+</div><div class="desc">명 전문 상담사</div></div>
+    <div class="c-stat"><div class="num">98%</div><div class="desc">내담자 만족도</div></div>
+  </div>
+
+  <div class="c-process">
+    <h2>상담 프로세스</h2>
+    <div class="c-process-steps">
+      <div class="c-step"><div class="c-step-circle">1</div><div class="c-step-label">문의·신청</div></div>
+      <div class="c-step-arrow">&rarr;</div>
+      <div class="c-step"><div class="c-step-circle">2</div><div class="c-step-label">상담사 배정</div></div>
+      <div class="c-step-arrow">&rarr;</div>
+      <div class="c-step"><div class="c-step-circle">3</div><div class="c-step-label">상담 진행</div></div>
+      <div class="c-step-arrow">&rarr;</div>
+      <div class="c-step"><div class="c-step-circle">4</div><div class="c-step-label">사후관리</div></div>
+    </div>
+  </div>
+
+  <div class="c-cta">
+    <h2>지금 바로 예약하세요</h2>
+    <p>전문 상담사가 당신의 이야기를 기다리고 있습니다</p>
+    <div class="c-cta-btns">
+      <button>대면상담 예약</button>
+      <button>화상상담 예약</button>
+    </div>
+  </div>
+
+  <div class="c-footer">
+    공감터 심리상담연구소 | 정선이 상담학 박사<br>
+    서울특별시 OO구 OO로 123 | 02-1234-5678 | contact@gongamteo.kr<br>
+    개인정보처리방침 | 이용약관
+  </div>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.preview').forEach(el => el.classList.remove('active'));
+  document.getElementById('preview-' + id).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.className = 'tab-btn';
+  });
+  btn.classList.add('active-' + id);
+}
+</script>
+</body>
+</html>

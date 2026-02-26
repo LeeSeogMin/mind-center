@@ -16,15 +16,12 @@ export default function HeroSection() {
                   aria-hidden="true"
                 />
               </span>
-              가{" "}
-              <br className="hidden md:block" />
-              함께합니다
+              가 함께합니다
             </h1>
             <p className="text-base md:text-lg leading-relaxed text-[#8C7B6B] max-w-lg">
-              공감터 심리상담연구소는 온라인 화상상담 전문 심리상담연구소입니다.
-              아동청소년부터 성인, 부부·가족까지 다양한 심리적·정서적 어려움을
-              장소에 구애받지 않고 편안하게 상담받으실 수 있습니다.
-              정선이 상담학 박사가 여러분의 마음 건강을 따뜻하게 돌봐드립니다.
+              공감터 심리상담연구소는 상담학 박사가 운영하는 전문 심리상담기관입니다.
+              아동·청소년부터 성인, 부부·가족까지 생애 전반의 심리적·정서적 어려움에
+              근거 기반 상담을 통해 실질적인 변화를 함께 만들어갑니다.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <Link

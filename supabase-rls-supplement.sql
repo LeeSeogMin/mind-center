@@ -25,3 +25,15 @@ CREATE POLICY "상담사 예약 상태 수정" ON public.reservations
   FOR UPDATE USING (
     EXISTS (SELECT 1 FROM public.counselors WHERE user_id = auth.uid() AND id = reservations.counselor_id)
   );
+
+-- reservations: 관리자 모든 예약 조회
+CREATE POLICY "관리자 모든 예약 조회" ON public.reservations
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+  );
+
+-- reservations: 관리자 모든 예약 수정
+CREATE POLICY "관리자 모든 예약 수정" ON public.reservations
+  FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+  );

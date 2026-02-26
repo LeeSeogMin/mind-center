@@ -49,4 +49,16 @@
 - [x] Google Console에 배포 URL 추가 (🖱️ 수동)
 - [x] Google OAuth 앱 게시 — 테스트 모드 → 프로덕션 (🖱️ 수동)
 
-## 진행률: 31/31 (100%) — 완료!
+## 진행률: 31/31 (100%) — MVP 완료!
+
+---
+
+## 6단계: 결제 연동 (추후)
+- [ ] 토스페이먼츠 개발자센터 회원가입 + 테스트 키 발급 (🖱️ 수동)
+- [ ] .env.local에 NEXT_PUBLIC_TOSS_CLIENT_KEY, TOSS_SECRET_KEY 등록
+- [ ] Vercel 환경변수에 토스 키 등록 (🖱️ 수동)
+- [ ] app/api/payment/confirm/route.ts — 결제 승인 API
+- [ ] app/api/payment/webhook/route.ts — 결제 웹훅 처리
+- [ ] 예약 확정(confirmed) 시 결제 링크 발송 로직
+- [ ] 결제 완료(paid) 시 화상상담 구글 미트 링크 노출
+- [ ] 결제 플로우 테스트 (테스트 키 기준)

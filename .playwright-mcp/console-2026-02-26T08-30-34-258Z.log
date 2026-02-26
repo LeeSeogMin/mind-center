@@ -1,0 +1,4 @@
+[     391ms] [WARNING] [Warning] Please install/enable Redux devtools extension @ https://frontend-assets.supabase.com/studio/f3b6993de7c3/_next/static/chunks/edf87d66cb6db872.js?dpl=dpl_7i8B5RoCDusRRKgFbofptK18iHSA:5
+[    1070ms] [WARNING] ConfigCat - WARN - [3000] There is an existing client instance for the specified SDK Key. No new client instance will be created and the specified options are ignored. Returning the existing client instance. SDK Key: 'configcat-proxy/frontend-v2'. @ https://frontend-assets.supabase.com/studio/f3b6993de7c3/_next/static/chunks/edf87d66cb6db872.js?dpl=dpl_7i8B5RoCDusRRKgFbofptK18iHSA:5
+[   22222ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://api.supabase.com/platform/pg-meta/citgmhsbetcguolnotlt/query?key=:0
+[   40195ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://api.supabase.com/platform/pg-meta/citgmhsbetcguolnotlt/query?key=:0

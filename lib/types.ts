@@ -38,9 +38,11 @@ export interface Reservation {
   payment_status: "unpaid" | "paid" | "refunded";
   amount: number;
   memo?: string;
+  meet_link?: string;
   created_at: string;
   counselor?: Counselor;
   slot?: AvailabilitySlot;
+  user?: User;
 }
 
 export interface MindtalkPost {

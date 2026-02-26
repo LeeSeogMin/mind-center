@@ -1,0 +1,4 @@
+[   11454ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://citgmhsbetcguolnotlt.supabase.co/auth/v1/signup:0
+[   29450ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://citgmhsbetcguolnotlt.supabase.co/auth/v1/signup:0
+[   46725ms] [ERROR] Failed to load resource: the server responded with a status of 429 () @ https://citgmhsbetcguolnotlt.supabase.co/auth/v1/signup:0
+[  159019ms] [ERROR] Failed to load resource: the server responded with a status of 429 () @ https://citgmhsbetcguolnotlt.supabase.co/auth/v1/signup:0

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Search, ChevronDown } from "lucide-react";
+import { Menu, X, Search, ChevronDown, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { NAV_ITEMS, SITE_NAME } from "@/lib/constants";
@@ -10,7 +10,7 @@ import { useAuth } from "@/lib/auth-context";
 
 export default function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#E8DDD0]">
@@ -73,11 +73,20 @@ export default function Header() {
 
           {!loading && (
             user ? (
-              <Link href="/mypage">
-                <Button variant="outline" size="sm" className="border-[#E8DDD0] text-[#8B6B4E] hover:bg-[#FBF8F3]">
-                  마이페이지
-                </Button>
-              </Link>
+              <div className="flex items-center gap-2">
+                {(profile?.role === "admin" || profile?.role === "counselor") && (
+                  <Link href="/admin">
+                    <Button variant="outline" size="sm" className="border-[#D4845A] text-[#D4845A] hover:bg-[#FBF8F3] gap-1">
+                      <Shield className="w-3.5 h-3.5" /> 관리자
+                    </Button>
+                  </Link>
+                )}
+                <Link href="/mypage">
+                  <Button variant="outline" size="sm" className="border-[#E8DDD0] text-[#8B6B4E] hover:bg-[#FBF8F3]">
+                    마이페이지
+                  </Button>
+                </Link>
+              </div>
             ) : (
               <Link href="/login">
                 <Button size="sm" className="bg-[#8B6B4E] hover:bg-[#7A5D42] text-white">
@@ -125,9 +134,18 @@ export default function Header() {
               </nav>
               <div className="p-4 border-t border-[#E8DDD0]">
                 {user ? (
-                  <Link href="/mypage">
-                    <Button className="w-full bg-[#8B6B4E] hover:bg-[#7A5D42]">마이페이지</Button>
-                  </Link>
+                  <div className="space-y-2">
+                    {(profile?.role === "admin" || profile?.role === "counselor") && (
+                      <Link href="/admin">
+                        <Button variant="outline" className="w-full border-[#D4845A] text-[#D4845A] gap-1">
+                          <Shield className="w-4 h-4" /> 관리자
+                        </Button>
+                      </Link>
+                    )}
+                    <Link href="/mypage">
+                      <Button className="w-full bg-[#8B6B4E] hover:bg-[#7A5D42]">마이페이지</Button>
+                    </Link>
+                  </div>
                 ) : (
                   <div className="flex gap-2">
                     <Link href="/login" className="flex-1">

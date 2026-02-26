@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import BoardWriteButton from "@/components/board-write-button";
 
 interface BoardListProps {
-  category: "notice" | "review" | "column";
+  category: "notice" | "review" | "column" | "qna";
   title: string;
 }
 
@@ -11,13 +11,15 @@ const categoryLabels = {
   notice: "공지사항",
   review: "상담후기",
   column: "칼럼",
+  qna: "Q&A",
 };
 
 export default async function BoardList({ category, title }: BoardListProps) {
   const supabase = await createClient();
+
   const { data: posts } = await supabase
     .from("board_posts")
-    .select("id, title, created_at, view_count, users:author_id(name)")
+    .select("id, title, created_at, view_count, users:author_id(name), board_comments(count)")
     .eq("category", category)
     .order("created_at", { ascending: false });
 
@@ -38,7 +40,7 @@ export default async function BoardList({ category, title }: BoardListProps) {
       <section className="max-w-[1200px] mx-auto px-6 py-20">
         {/* 탭 네비게이션 */}
         <div className="flex gap-2 mb-8 border-b border-[#E8DDD0] pb-4">
-          {(["notice", "review", "column"] as const).map((cat) => (
+          {(["notice", "review", "column", "qna"] as const).map((cat) => (
             <Link
               key={cat}
               href={`/board/${cat}`}
@@ -73,6 +75,7 @@ export default async function BoardList({ category, title }: BoardListProps) {
           {postList.map((post, index) => {
             const users = post.users as unknown as { name: string } | null;
             const authorName = users?.name ?? "익명";
+            const commentNum = post.board_comments?.[0]?.count ?? 0;
             return (
               <Link
                 key={post.id}
@@ -83,6 +86,9 @@ export default async function BoardList({ category, title }: BoardListProps) {
               >
                 <span className="text-sm text-[#3A2E26] font-medium hover:text-[#8B6B4E] transition-colors">
                   {post.title}
+                  {category === "qna" && commentNum > 0 && (
+                    <span className="text-[#8B6B4E] text-xs ml-2">[댓글 {commentNum}]</span>
+                  )}
                 </span>
                 <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
                   {authorName}

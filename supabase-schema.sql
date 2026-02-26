@@ -95,7 +95,7 @@ CREATE TABLE public.mindtalk_comments (
 CREATE TABLE public.board_posts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   author_id UUID NOT NULL REFERENCES public.users(id),
-  category TEXT NOT NULL CHECK (category IN ('notice', 'review', 'column')),
+  category TEXT NOT NULL CHECK (category IN ('notice', 'review', 'column', 'qna')),
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   view_count INTEGER DEFAULT 0,
@@ -114,16 +114,12 @@ CREATE TABLE public.psychological_tests (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 9. news_posts 테이블
-CREATE TABLE public.news_posts (
+-- 9. board_comments 테이블
+CREATE TABLE public.board_comments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  post_id UUID NOT NULL REFERENCES public.board_posts(id) ON DELETE CASCADE,
   author_id UUID NOT NULL REFERENCES public.users(id),
-  category TEXT NOT NULL CHECK (category IN ('center', 'event')),
-  title TEXT NOT NULL,
   content TEXT NOT NULL,
-  thumbnail TEXT,
-  starts_at TIMESTAMPTZ,
-  ends_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -192,7 +188,7 @@ ALTER TABLE public.board_posts ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "누구나 게시글 조회" ON public.board_posts FOR SELECT USING (true);
 CREATE POLICY "로그인 사용자 후기 작성" ON public.board_posts FOR INSERT WITH CHECK (
   auth.uid() = author_id AND (
-    category = 'review' OR
+    category IN ('review', 'qna') OR
     EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('counselor', 'admin'))
   )
 );
@@ -205,16 +201,12 @@ CREATE POLICY "누구나 심리검사 조회" ON public.psychological_tests FOR 
 CREATE POLICY "관리자만 심리검사 관리" ON public.psychological_tests
   FOR ALL USING (EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('counselor', 'admin')));
 
--- news_posts
-ALTER TABLE public.news_posts ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "누구나 뉴스 조회" ON public.news_posts FOR SELECT USING (true);
-CREATE POLICY "관리자/상담사만 뉴스 작성" ON public.news_posts FOR INSERT WITH CHECK (
-  EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('counselor', 'admin'))
-);
-CREATE POLICY "관리자/상담사만 뉴스 수정" ON public.news_posts FOR UPDATE USING (
-  EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('counselor', 'admin'))
-);
-CREATE POLICY "관리자/상담사만 뉴스 삭제" ON public.news_posts FOR DELETE USING (
+-- board_comments
+ALTER TABLE public.board_comments ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "누구나 댓글 조회" ON public.board_comments FOR SELECT USING (true);
+CREATE POLICY "로그인 사용자 댓글 작성" ON public.board_comments FOR INSERT WITH CHECK (auth.uid() = author_id);
+CREATE POLICY "본인/상담사 댓글 삭제" ON public.board_comments FOR DELETE USING (
+  auth.uid() = author_id OR
   EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('counselor', 'admin'))
 );
 

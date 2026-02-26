@@ -69,12 +69,21 @@ export interface MindtalkComment {
 export interface BoardPost {
   id: string;
   author_id: string;
-  category: "notice" | "review" | "column";
+  category: "notice" | "review" | "column" | "qna";
   title: string;
   content: string;
   view_count: number;
   created_at: string;
   author?: { name: string };
+}
+
+export interface BoardComment {
+  id: string;
+  post_id: string;
+  author_id: string;
+  content: string;
+  created_at: string;
+  users?: { name: string; role: string };
 }
 
 export interface PsychologicalTest {
@@ -85,18 +94,6 @@ export interface PsychologicalTest {
   price: number;
   is_active: boolean;
   tags?: string[];
-}
-
-export interface NewsPost {
-  id: string;
-  author_id: string;
-  category: "center" | "event";
-  title: string;
-  content: string;
-  thumbnail?: string;
-  starts_at?: string;
-  ends_at?: string;
-  created_at: string;
 }
 
 export interface CounselingService {

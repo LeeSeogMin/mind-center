@@ -20,7 +20,6 @@ export default function Header() {
           <span>온라인 화상상담 전문 | 전화 상담: 010-2739-6432 | 평일 09:00~18:00</span>
           <div className="flex gap-4">
             <Link href="/board/notice" className="hover:text-[#8B6B4E]">공지사항</Link>
-            <Link href="/news/center" className="hover:text-[#8B6B4E]">센터소식</Link>
           </div>
         </div>
       </div>

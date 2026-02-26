@@ -22,6 +22,7 @@ const categoryLabels: Record<string, string> = {
   notice: "공지사항",
   review: "상담후기",
   column: "칼럼",
+  qna: "Q&A",
 };
 
 export default function BoardWritePage() {
@@ -103,6 +104,7 @@ export default function BoardWritePage() {
                       <SelectItem value="notice">공지사항</SelectItem>
                       <SelectItem value="review">상담후기</SelectItem>
                       <SelectItem value="column">칼럼</SelectItem>
+                      <SelectItem value="qna">Q&A</SelectItem>
                     </SelectContent>
                   </Select>
                 ) : (

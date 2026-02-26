@@ -27,10 +27,7 @@ export const NAV_ITEMS = [
     { label: "공지사항", href: "/board/notice" },
     { label: "상담후기", href: "/board/review" },
     { label: "칼럼", href: "/board/column" },
-  ]},
-  { label: "센터소식", href: "/news/center", children: [
-    { label: "센터소식", href: "/news/center" },
-    { label: "이벤트", href: "/news/event" },
+    { label: "Q&A", href: "/board/qna" },
   ]},
 ];
 

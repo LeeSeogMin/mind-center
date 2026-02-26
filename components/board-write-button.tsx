@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 
 interface BoardWriteButtonProps {
-  category: "notice" | "review" | "column";
+  category: "notice" | "review" | "column" | "qna";
 }
 
 export default function BoardWriteButton({ category }: BoardWriteButtonProps) {
@@ -14,7 +14,7 @@ export default function BoardWriteButton({ category }: BoardWriteButtonProps) {
   if (!user) return null;
 
   const isAdmin = profile?.role === "counselor" || profile?.role === "admin";
-  if (!isAdmin && category !== "review") return null;
+  if (!isAdmin && category !== "review" && category !== "qna") return null;
 
   return (
     <Link href={`/board/write?category=${category}`}>

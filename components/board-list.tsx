@@ -1,47 +1,27 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
-interface BoardPost {
-  id: number;
-  title: string;
-  author: string;
-  date: string;
-  viewCount: number;
-}
-
-const SAMPLE_DATA: Record<string, BoardPost[]> = {
-  notice: [
-    { id: 1, title: "2025년 설 연휴 휴무 안내", author: "관리자", date: "2025-01-20", viewCount: 152 },
-    { id: 2, title: "화상상담 서비스 오픈 안내", author: "관리자", date: "2025-01-15", viewCount: 238 },
-    { id: 3, title: "개인정보처리방침 개정 안내", author: "관리자", date: "2025-01-10", viewCount: 97 },
-    { id: 4, title: "상담 예약 시스템 이용 안내", author: "관리자", date: "2025-01-05", viewCount: 314 },
-  ],
-  review: [
-    { id: 1, title: "6개월간의 상담을 마치며 감사 인사드립니다", author: "김**", date: "2025-01-18", viewCount: 89 },
-    { id: 2, title: "부부상담 후기 - 대화가 다시 시작되었어요", author: "이**", date: "2025-01-12", viewCount: 134 },
-    { id: 3, title: "아이가 밝아졌어요, 놀이치료 후기", author: "박**", date: "2025-01-08", viewCount: 201 },
-  ],
-  column: [
-    { id: 1, title: "불안을 다스리는 5가지 일상 습관", author: "정선이 박사", date: "2025-01-22", viewCount: 456 },
-    { id: 2, title: "아이의 마음을 여는 대화법", author: "정선이 박사", date: "2025-01-14", viewCount: 389 },
-    { id: 3, title: "번아웃, 어떻게 회복할 수 있을까", author: "정선이 박사", date: "2025-01-07", viewCount: 312 },
-    { id: 4, title: "건강한 부부 관계를 위한 소통의 기술", author: "정선이 박사", date: "2024-12-28", viewCount: 278 },
-  ],
-};
+import { createClient } from "@/lib/supabase/server";
 
 interface BoardListProps {
   category: "notice" | "review" | "column";
   title: string;
 }
 
-export default function BoardList({ category, title }: BoardListProps) {
-  const posts = SAMPLE_DATA[category];
+const categoryLabels = {
+  notice: "공지사항",
+  review: "상담후기",
+  column: "칼럼",
+};
 
-  const categoryLabels = {
-    notice: "공지사항",
-    review: "상담후기",
-    column: "칼럼",
-  };
+export default async function BoardList({ category, title }: BoardListProps) {
+  const supabase = await createClient();
+  const { data: posts } = await supabase
+    .from("board_posts")
+    .select("id, title, created_at, view_count, users:author_id(name)")
+    .eq("category", category)
+    .order("created_at", { ascending: false });
+
+  const postList = posts ?? [];
 
   return (
     <div className="bg-[#FBF8F3]">
@@ -83,28 +63,38 @@ export default function BoardList({ category, title }: BoardListProps) {
             <span className="text-center">조회</span>
           </div>
 
-          {/* 게시글 행 */}
-          {posts.map((post, index) => (
-            <div
-              key={post.id}
-              className={`grid sm:grid-cols-[1fr_100px_100px_80px] gap-2 sm:gap-4 px-6 py-4 hover:bg-[#FBF8F3] transition-colors cursor-pointer ${
-                index < posts.length - 1 ? "border-b border-[#E8DDD0]" : ""
-              }`}
-            >
-              <span className="text-sm text-[#3A2E26] font-medium hover:text-[#8B6B4E] transition-colors">
-                {post.title}
-              </span>
-              <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
-                {post.author}
-              </span>
-              <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
-                {post.date}
-              </span>
-              <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
-                {post.viewCount}
-              </span>
+          {postList.length === 0 && (
+            <div className="px-6 py-12 text-center text-[#8C7B6B] text-sm">
+              등록된 게시글이 없습니다.
             </div>
-          ))}
+          )}
+
+          {/* 게시글 행 */}
+          {postList.map((post, index) => {
+            const users = post.users as unknown as { name: string } | null;
+            const authorName = users?.name ?? "익명";
+            return (
+              <div
+                key={post.id}
+                className={`grid sm:grid-cols-[1fr_100px_100px_80px] gap-2 sm:gap-4 px-6 py-4 hover:bg-[#FBF8F3] transition-colors cursor-pointer ${
+                  index < postList.length - 1 ? "border-b border-[#E8DDD0]" : ""
+                }`}
+              >
+                <span className="text-sm text-[#3A2E26] font-medium hover:text-[#8B6B4E] transition-colors">
+                  {post.title}
+                </span>
+                <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
+                  {authorName}
+                </span>
+                <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
+                  {new Date(post.created_at).toLocaleDateString("ko-KR")}
+                </span>
+                <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
+                  {post.view_count}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
         {/* 글쓰기 버튼 */}

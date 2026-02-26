@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { supabase } from "./supabase";
+import { createClient } from "./supabase/client";
 import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
 import type { User } from "./types";
 
@@ -28,10 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!supabase) {
-      setLoading(false);
-      return;
-    }
+    const supabase = createClient();
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -58,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function fetchProfile(userId: string) {
-    if (!supabase) return;
+    const supabase = createClient();
     const { data } = await supabase
       .from("users")
       .select("*")
@@ -68,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signOut() {
-    if (!supabase) return;
+    const supabase = createClient();
     await supabase.auth.signOut();
     setUser(null);
     setProfile(null);

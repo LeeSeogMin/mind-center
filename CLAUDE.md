@@ -45,7 +45,8 @@ Tailwind 기본 컬러 직접 사용 금지. 위 디자인 토큰 또는 CSS 변
 - `components/home/` — 홈 페이지 섹션 컴포넌트
 - `components/ui/` — shadcn/ui 컴포넌트
 - `components/board-list.tsx` — 게시판 공유 컴포넌트
-- `lib/supabase.ts` — Supabase 클라이언트
+- `lib/supabase/client.ts` — Supabase 브라우저 클라이언트 (`createBrowserClient` from `@supabase/ssr`)
+- `lib/supabase/server.ts` — Supabase 서버 클라이언트 (`createServerClient` from `@supabase/ssr`)
 - `lib/auth-context.tsx` — 전역 인증 상태 (AuthProvider, useAuth)
 - `lib/types.ts` — TypeScript 타입 정의
 - `lib/constants.ts` — 네비게이션, 상담 서비스, 프로세스 상수

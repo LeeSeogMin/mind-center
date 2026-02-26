@@ -20,6 +20,6 @@
 - 이미지에 alt 필수
 
 ## Data
-- Supabase 클라이언트: lib/supabase.ts
+- Supabase 클라이언트: lib/supabase/client.ts (브라우저) + lib/supabase/server.ts (서버)
 - 타입 정의: lib/types.ts
 - 상수/메뉴: lib/constants.ts

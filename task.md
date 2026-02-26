@@ -23,7 +23,7 @@ Phase 1: 설계 문서 작성 ✅ 완료
 Phase 2: 프로젝트 초기화 ✅ 완료
  [✅] Next.js 16 + TypeScript 프로젝트 생성
  [✅] TailwindCSS v4 + shadcn/ui 설치 및 안 B 테마 설정
- [✅] Supabase 클라이언트 설정 (lib/supabase.ts)
+ [✅] Supabase 클라이언트 설정 (lib/supabase/client.ts + server.ts)
  [✅] 토스페이먼츠 API 라우트 생성 (api/payment/*)
  [✅] copilot-instructions.md 작성
  [✅] ARCHITECTURE.md 작성

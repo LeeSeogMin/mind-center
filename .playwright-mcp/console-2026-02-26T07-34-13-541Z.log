@@ -1,0 +1,2 @@
+[     419ms] [WARNING] Deprecated API for given entry type. @ https://vercel.com/_next/static/chunks/37ac795a0ebe2b06.js?dpl=dpl_GcCT8rR4yhD9nUFV9EB4Jm8MDSk6:18
+[     568ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://vercel.com/api/jwt:0

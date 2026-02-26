@@ -7,7 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function MindtalkNewPage() {
   const { user } = useAuth();
@@ -15,6 +17,7 @@ export default function MindtalkNewPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (!user) {
     return (
@@ -30,9 +33,35 @@ export default function MindtalkNewPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Supabase insert
-    alert("글이 등록되었습니다.");
-    router.push("/mindtalk");
+
+    if (!title.trim()) {
+      toast.error("제목을 입력해 주세요.");
+      return;
+    }
+    if (!content.trim()) {
+      toast.error("내용을 입력해 주세요.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.from("mindtalk_posts").insert({
+        user_id: user.id,
+        title: title.trim(),
+        content: content.trim(),
+        is_private: isPrivate,
+      });
+
+      if (error) throw error;
+
+      toast.success("글이 등록되었습니다.");
+      router.push("/mindtalk");
+    } catch {
+      toast.error("글 등록에 실패했습니다. 다시 시도해 주세요.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -85,7 +114,13 @@ export default function MindtalkNewPage() {
                 <Link href="/mindtalk">
                   <Button type="button" variant="outline" className="border-[#E8DDD0]">취소</Button>
                 </Link>
-                <Button type="submit" className="bg-[#D4845A] hover:bg-[#C47A52] text-white">등록하기</Button>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-[#D4845A] hover:bg-[#C47A52] text-white"
+                >
+                  {loading ? "등록 중..." : "등록하기"}
+                </Button>
               </div>
             </form>
           </CardContent>

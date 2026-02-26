@@ -1,21 +1,26 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/lib/auth-context";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { Video, CalendarDays, Clock, CreditCard } from "lucide-react";
+import { toast } from "sonner";
 
 const COUNSELING_TYPES = ["아동청소년", "성인", "부부·가족", "직장인·기업"];
 const TIME_SLOTS = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"];
 
 export default function OnlineReservationPage() {
   const { user } = useAuth();
+  const router = useRouter();
   const [step, setStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState("");
@@ -34,7 +39,41 @@ export default function OnlineReservationPage() {
   }
 
   const handleSubmit = async () => {
-    alert("화상상담 예약 신청이 완료되었습니다.\n상담사 확정 후 결제 링크와 구글 미트 링크가 발송됩니다.");
+    if (!user || !selectedDate || !selectedTime) return;
+    setSubmitting(true);
+
+    try {
+      const supabase = createClient();
+
+      const { data: counselor } = await supabase
+        .from("counselors")
+        .select("id")
+        .eq("is_active", true)
+        .limit(1)
+        .single();
+
+      if (!counselor) {
+        toast.error("상담사 정보를 불러올 수 없습니다. 관리자에게 문의해 주세요.");
+        return;
+      }
+
+      const { error } = await supabase.from("reservations").insert({
+        user_id: user.id,
+        counselor_id: counselor.id,
+        type: "online",
+        status: "pending",
+        memo: memo || null,
+      });
+
+      if (error) throw error;
+
+      toast.success("화상상담 예약 신청이 완료되었습니다. 확정 후 결제 링크와 구글 미트 링크가 발송됩니다.");
+      router.push("/mypage");
+    } catch {
+      toast.error("예약 신청에 실패했습니다. 다시 시도해 주세요.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -168,7 +207,7 @@ export default function OnlineReservationPage() {
                   </p>
                   <div className="flex gap-3 mt-6">
                     <Button variant="outline" onClick={() => setStep(2)} className="border-[#E8DDD0]">이전</Button>
-                    <Button onClick={handleSubmit} className="bg-[#D4845A] hover:bg-[#C47A52] text-white">예약 신청하기</Button>
+                    <Button onClick={handleSubmit} disabled={submitting} className="bg-[#D4845A] hover:bg-[#C47A52] text-white">{submitting ? "신청 중..." : "예약 신청하기"}</Button>
                   </div>
                 </CardContent>
               </Card>

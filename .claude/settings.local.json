@@ -2,7 +2,22 @@
   "permissions": {
     "allow": [
       "Bash(cd:*)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:supabase.com)",
+      "Bash(npm run:*)",
+      "Bash(wc:*)",
+      "Bash(xargs grep:*)",
+      "Bash(echo exit: $?:*)",
+      "Bash(npx supabase:*)",
+      "Bash(npx vercel:*)",
+      "Bash(npx playwright:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_tabs"
     ]
   }
 }

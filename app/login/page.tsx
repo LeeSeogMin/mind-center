@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SITE_NAME } from "@/lib/constants";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -22,13 +22,8 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
 
-    if (!supabase) {
-      setError("서비스 연결 설정이 필요합니다. 관리자에게 문의해 주세요.");
-      setLoading(false);
-      return;
-    }
-
     try {
+      const supabase = createClient();
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -47,11 +42,11 @@ export default function LoginPage() {
   }
 
   async function handleGoogleLogin() {
-    if (!supabase) return;
+    const supabase = createClient();
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
   }

@@ -292,15 +292,15 @@ news_posts
   created_at   TIMESTAMPTZ
 8. 기술 스택 & 설계 원칙
 영역	기술	비고
-프레임워크	Next.js 15 (App Router)	SSR/SSG 혼합
+프레임워크	Next.js 16 (App Router)	SSR/SSG 혼합
 언어	TypeScript	전체 타입 안전
 스타일링	TailwindCSS v4 + shadcn/ui	CSS 변수 기반 디자인 토큰
 UI 컴포넌트	shadcn/ui (Button, Card, Dialog, Input, Calendar, Tabs 등)	
 인증	Supabase Auth	이메일/소셜 로그인
 DB	Supabase PostgreSQL	RLS 적용
 파일 저장	Supabase Storage	프로필 이미지, 게시글 첨부
-결제	포트원(아임포트) v2 또는 토스페이먼츠	신용카드 결제
-화상상담	아임웹 화상 또는 Zoom API 연동 TBD	
+결제	토스페이먼츠	링크페이 + 위젯
+화상상담	구글 미트 (고정 링크)	결제 완료 시 노출
 배포	Vercel	Edge Runtime
 폰트	Google Fonts (결정 안에 따라)	next/font 사용
 9. 주요 페이지 와이어프레임 (텍스트)

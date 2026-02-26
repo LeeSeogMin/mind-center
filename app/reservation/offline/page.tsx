@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/lib/auth-context";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { CalendarDays, Clock, User, CreditCard } from "lucide-react";
+import { toast } from "sonner";
 
 const COUNSELING_TYPES = ["아동청소년", "성인", "부부·가족", "직장인·기업"];
 
@@ -18,7 +21,9 @@ const TIME_SLOTS = [
 
 export default function OfflineReservationPage() {
   const { user } = useAuth();
+  const router = useRouter();
   const [step, setStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
   const [selectedType, setSelectedType] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string>("");
@@ -37,8 +42,42 @@ export default function OfflineReservationPage() {
   }
 
   const handleSubmit = async () => {
-    // 예약 신청 → status: pending → 상담사 확정 후 결제 링크 발송
-    alert("예약 신청이 완료되었습니다.\n상담사 확정 후 결제 링크가 발송됩니다.");
+    if (!user || !selectedDate || !selectedTime) return;
+    setSubmitting(true);
+
+    try {
+      const supabase = createClient();
+
+      // 첫 번째 활성 상담사 조회 (1인 상담센터)
+      const { data: counselor } = await supabase
+        .from("counselors")
+        .select("id")
+        .eq("is_active", true)
+        .limit(1)
+        .single();
+
+      if (!counselor) {
+        toast.error("상담사 정보를 불러올 수 없습니다. 관리자에게 문의해 주세요.");
+        return;
+      }
+
+      const { error } = await supabase.from("reservations").insert({
+        user_id: user.id,
+        counselor_id: counselor.id,
+        type: "offline",
+        status: "pending",
+        memo: memo || null,
+      });
+
+      if (error) throw error;
+
+      toast.success("예약 신청이 완료되었습니다. 상담사 확정 후 결제 안내가 발송됩니다.");
+      router.push("/mypage");
+    } catch {
+      toast.error("예약 신청에 실패했습니다. 다시 시도해 주세요.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -236,8 +275,12 @@ export default function OfflineReservationPage() {
                     <Button variant="outline" onClick={() => setStep(3)} className="border-[#E8DDD0]">
                       이전
                     </Button>
-                    <Button onClick={handleSubmit} className="bg-[#D4845A] hover:bg-[#C47A52] text-white">
-                      예약 신청하기
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={submitting}
+                      className="bg-[#D4845A] hover:bg-[#C47A52] text-white"
+                    >
+                      {submitting ? "신청 중..." : "예약 신청하기"}
                     </Button>
                   </div>
                 </CardContent>

@@ -23,7 +23,9 @@
       "mcp__playwright__browser_press_key",
       "mcp__playwright__browser_close",
       "Bash(git push:*)",
-      "mcp__playwright__browser_run_code"
+      "mcp__playwright__browser_run_code",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

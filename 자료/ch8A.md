@@ -1,8 +1,134 @@
 # Chapter 8. Supabase 시작하기 — A회차: 강의
 
-> **미션**: 게시판에 진짜 데이터베이스를 연결한다
+> **미션**: 공감터(`mind-center`) 웹사이트에 Supabase 데이터베이스를 연결한다
 
 ---
+
+## 바이브코딩 원칙 (이번 장)
+
+이번 장의 바이브코딩 핵심은 “**DB/환경변수/연결 방식**을 Copilot이 추측하지 않게 만드는 것”이다. DB는 한 번 잘못 만들면 이후 장(인증, CRUD, RLS, UX) 전체가 꼬인다.
+
+1. **스키마를 먼저 고정**: 테이블 이름/컬럼/타입/관계를 설계서(Ch7) 기준으로 확정하고, Copilot에게 그대로 준다.
+2. **환경변수 이름을 정확히**: 로컬(`.env.local`)과 배포(Vercel) 값, `NEXT_PUBLIC_*` 공개 범위를 명시한다.
+3. **Supabase 자원을 명시**: `auth.users` 기반 + 프로젝트의 `public.users`(Auth 확장) 같은 “확장 테이블” 사용 여부를 먼저 결정한다.
+4. **실행 순서를 포함**: (1) 프로젝트 생성 → (2) 키 발급/환경변수 → (3) 클라이언트 연결 → (4) SQL 실행 → (5) Next.js에서 읽기 테스트.
+5. **검증을 “쿼리”로 한다**: “잘 됐어요”가 아니라, `select`로 데이터가 보이고, 콘솔/네트워크가 정상인지로 확인한다.
+
+---
+
+## 제작 과정 (처음부터 시작)
+
+Ch7에서 문서(ARCHITECTURE.md, copilot-instructions.md)로 “무엇을 만들지”를 정했다면, 이번 장에서는 **데이터베이스를 ‘사실(Truth)’로 고정**한다.  
+여기서 스키마/키/연결이 흔들리면, 이후(인증/CRUD/RLS/UX) 단계는 전부 흔들린다.
+
+### 8.0.1 Copilot이 강한 구간 vs 굳이 안 써도 되는 구간
+
+- Copilot이 강한 구간: 스키마 초안 검토, SQL 스크립트 정리, 체크리스트/검증 쿼리 작성, Next.js 연결 코드 뼈대
+- 굳이 안 써도 되는 구간: Supabase 대시보드 클릭 작업, 키 발급/복사/붙여넣기, 비밀키/권한 관리, 실제 SQL 실행 버튼 클릭
+
+### 8.0.2 권장 제작 순서 (DB 고정 루트)
+
+1. **Supabase 프로젝트 생성**: 프로젝트/리전/DB 패스워드를 정한다.
+2. **환경변수 고정**: `.env.local`에 URL/ANON KEY를 넣고 “앱이 키를 읽는다”까지 확인한다.
+3. **스키마 확정**: `supabase-schema.sql`을 기준으로 테이블/FK/제약을 만든다.
+4. **RLS는 초안이라도 켠다**: 최소 정책(SELECT/INSERT)부터 걸어 “보안 기본값”을 만든다.
+5. **연결 검증**: Next.js에서 SELECT 1개, INSERT 1개를 성공시키고 결과를 확인한다.
+
+### 8.0.3 제작 과정용 Copilot 프롬프트 세트 (단계별)
+
+#### (1) Supabase 프로젝트 생성 체크리스트
+
+```text
+너는 GitHub Copilot Chat이야. 지금부터 `mind-center` 프로젝트의 Supabase를 "처음부터" 세팅한다.
+내가 대시보드에서 무엇을 해야 하는지 체크리스트로 안내해줘.
+
+[요구 출력]
+1) Supabase 프로젝트 생성 시 결정해야 할 것(프로젝트명/리전/DB 비밀번호)
+2) 생성 후 바로 확인할 것: Project URL, anon key, service role key(사용 금지 안내 포함)
+3) 로컬 개발에서 필요한 것 vs 배포(Vercel)에서 필요한 것 구분
+4) 흔한 실수 TOP 5 (예: env 이름 오타, NEXT_PUBLIC 범위, 키를 커밋함 등)
+```
+
+#### (2) `.env.local` 설계 + 보안 규칙
+
+```text
+너는 GitHub Copilot Chat이야. Next.js(App Router)에서 Supabase를 연결하려고 한다.
+`.env.local`에 넣을 환경변수 이름을 정확히 정리해줘(값은 비워둬).
+
+[요구 출력]
+- 필요한 env 목록(로컬용): 이름 + 설명 + 예시 형태(값은 ***로 마스킹)
+- `NEXT_PUBLIC_`를 붙여야 하는 것/붙이면 안 되는 것
+- `.gitignore`에 `.env.local`이 들어가야 하는 이유(1~2줄)
+```
+
+#### (3) Supabase 클라이언트 코드 뼈대(브라우저/서버)
+
+```text
+너는 GitHub Copilot Chat이야. Next.js App Router에서 Supabase 클라이언트를 표준 방식으로 구성하고 싶다.
+
+[요구 출력]
+1) 추천 파일 경로와 코드:
+   - `lib/supabase/client.ts` (browser client)
+   - `lib/supabase/server.ts` (server client, cookies 연동)
+2) 각 파일이 언제 쓰이는지(클라이언트 컴포넌트 vs 서버 컴포넌트 vs route handler)
+
+제약: `@supabase/ssr` 패턴을 사용하고, env 이름은 위에서 정한 것을 사용한다.
+```
+
+#### (4) 스키마 확정: `supabase-schema.sql` 실행/검토
+
+```text
+너는 GitHub Copilot Chat이야. 내가 Supabase SQL Editor에서 실행할 스키마 스크립트를 확정하려고 한다.
+
+[컨텍스트]
+- 프로젝트 문서: `ARCHITECTURE.md`의 Data Model(초안)
+- 목표 기능: 예약, 마음톡, 게시판, 마이페이지
+
+[요구 출력]
+1) 테이블 목록(최소): users 확장, counselors, availability_slots, reservations, mindtalk_posts, mindtalk_comments, board_posts, news_posts
+2) 각 테이블의 최소 컬럼(타입 수준까지)과 FK 관계 요약
+3) SQL Editor에서 실행할 때의 순서/주의점(extensions, FK 순서, 트리거 등)
+
+주의: 내가 실제로 붙여넣을 수 있게 `supabase-schema.sql` 파일 전체를 출력해줘.
+```
+
+#### (5) 연결 검증: “SELECT 1개 + INSERT 1개” 테스트
+
+```text
+너는 GitHub Copilot Chat이야. Supabase 연결이 제대로 됐는지 빠르게 검증하고 싶다.
+
+[요구 출력]
+1) SQL Editor에서 실행할 검증 쿼리 3개(SELECT/INSERT 포함) + 기대 결과
+2) Next.js에서 실행할 검증 코드 2개:
+   - 서버 컴포넌트에서 `select` 한 번
+   - 클라이언트 컴포넌트에서 `insert` 한 번(로그인 전이면 임시로 공개 테이블로)
+3) 실패했을 때 확인할 체크리스트(네트워크, env, RLS, 권한)
+```
+
+## Copilot 프롬프트 (복사/붙여넣기)
+
+```text
+너는 GitHub Copilot Chat이고, 내 Next.js(App Router) + Supabase 프로젝트의 페어 프로그래머야.
+목표: `mind-center`에 Supabase를 연결하고, `ARCHITECTURE.md`/`supabase-schema.sql` 기준으로 테이블을 만들고, Next.js에서 읽기 테스트까지 끝낸다.
+
+[기술/규칙]
+- Next.js App Router 사용
+- Supabase는 PostgreSQL 기반
+- `auth.users`를 직접 쓰되, 프로젝트처럼 `public.users(id UUID REFERENCES auth.users)` 형태의 확장 테이블을 사용할 수 있다
+- 임의의 테이블/컬럼 이름을 새로 만들지 말고, 먼저 `supabase-schema.sql`을 기준으로 맞춰라
+
+[내 설계서 요약]
+- Page Map 핵심 기능: 예약(`/reservation/*`), 마음톡(`/mindtalk`), 게시판(`/board/*`), 마이페이지(`/mypage/*`)
+- 데이터 엔티티 예: `users`, `counselors`, `availability_slots`, `reservations`, `mindtalk_posts`, `mindtalk_comments`, `board_posts`, `news_posts`
+
+[요구 출력]
+1) `.env.local`에 넣을 환경변수 이름/설명(값은 내가 채움)
+2) Next.js에서 Supabase 클라이언트를 쓰는 추천 파일 구조(생성할 파일 경로 포함)
+3) Supabase SQL Editor에 붙여넣을 SQL: `supabase-schema.sql` 실행 순서/주의점 + (필요 시) 최소 수정안
+4) 연결 검증용 테스트 쿼리 3개(SELECT/INSERT 포함): 예) 상담사 목록 조회, 마음톡 글 1개 insert, 예약 조회 + 기대 결과
+
+주의: 내가 제공한 스키마/관계 외에는 임의로 추가/변경하지 말고, 애매하면 질문해줘.
+```
 
 ## 학습목표
 
@@ -23,7 +149,7 @@
 | 00:00~00:05 | 오늘의 미션 + 빠른 진단 |
 | 00:05~00:25 | BaaS 개념 + Supabase 프로젝트 생성 + 대시보드 탐색 |
 | 00:25~00:50 | Next.js 연결 + 환경 변수 + Vercel 배포 설정 |
-| 00:50~01:20 | 라이브 코딩 시연: 데이터 모델링 + 테이블 생성 + 연결 테스트 |
+| 00:50~01:20 | 라이브 코딩: 데이터 모델링 + 테이블 생성 + 연결 테스트 |
 | 01:20~01:27 | 핵심 정리 + B회차 과제 스펙 공개 |
 | 01:27~01:30 | Exit ticket |
 
@@ -82,27 +208,17 @@ Ch5~6에서 게시판을 만들었지만, 데이터는 브라우저 메모리에
 | 파일 저장소 | S3 설정, 업로드 로직 구현 | `storage.upload()` 한 줄 |
 | 보안 | 미들웨어, 권한 체크 직접 구현 | RLS 정책으로 DB 레벨에서 강제 |
 
-> **강의 팁**: "백엔드 없이 앱을 만드는 게 아니라, 백엔드를 직접 만들지 않는 것"이라는 점을 강조한다. BaaS는 백엔드가 이미 만들어져 있는 서비스다.
+> **팁**: 백엔드 없이 앱을 만드는 게 아니라, 백엔드를 직접 만들지 않는 것이다. BaaS는 백엔드가 이미 만들어져 있는 서비스다.
 
 ### 8.1.2 Supabase란: 오픈소스 Firebase 대안
 
-**Supabase**(수파베이스)는 오픈소스 BaaS 플랫폼이다. Google의 **Firebase**와 비슷한 역할을 하지만 근본적인 차이가 있다.
-
-**표 8.3** Supabase vs Firebase
-
-| 비교 항목 | Supabase | Firebase |
-|-----------|----------|----------|
-| 데이터베이스 | **PostgreSQL** (관계형) | Firestore (NoSQL) |
-| 소스 코드 | **오픈소스** (GitHub 공개) | 비공개 (Google 독점) |
-| SQL 사용 | **사용 가능** (표준 SQL) | 사용 불가 (전용 쿼리) |
-| 무료 플랜 | 2개 프로젝트, 500MB DB | Spark 플랜 (일일 한도) |
-| 데이터 이전 | PostgreSQL이므로 **어디든 이전 가능** | Firebase에 종속 |
+**Supabase**(수파베이스)는 오픈소스 BaaS 플랫폼이다. PostgreSQL 기반이라 SQL을 배울 수 있고, 오픈소스이므로 데이터 이전이 자유롭다.
 
 이 교재에서 Supabase를 선택한 이유:
 
 1. **SQL을 배울 수 있다** — PostgreSQL 기반이므로 업계 표준 SQL을 자연스럽게 익힌다
 2. **오픈소스** — 종속(vendor lock-in) 걱정 없이 언제든 데이터를 다른 곳으로 옮길 수 있다
-3. **학생 무료** — 2개 프로젝트까지 무료, 이 수업에 충분하다
+3. **무료** — 2개 프로젝트까지 무료, 이 수업에 충분하다
 4. **Next.js와 공식 연동** — Vercel과 Supabase가 공식 파트너이므로 통합이 매끄럽다
 
 > Supabase는 PostgreSQL 위에 인증, 실시간 구독, 파일 저장소, Edge Functions를 얹은 "올인원 백엔드 플랫폼"이다.
@@ -115,7 +231,7 @@ Ch5~6에서 게시판을 만들었지만, 데이터는 브라우저 메모리에
 
 ### 8.2.1 가입 및 새 프로젝트 만들기
 
-> **함께 진행**: 교수 화면을 보며 함께 따라한다
+> **함께 진행**: 화면을 보며 함께 따라한다
 
 ① **Supabase 가입**: https://supabase.com 에서 **GitHub 계정으로 가입**한다 (별도 이메일 가입 불필요)
 
@@ -123,7 +239,7 @@ Ch5~6에서 게시판을 만들었지만, 데이터는 브라우저 메모리에
 
 ③ **프로젝트 설정**:
 
-**표 8.4** 프로젝트 생성 시 입력 항목
+**표 8.3** 프로젝트 생성 시 입력 항목
 
 | 항목 | 입력 값 | 설명 |
 |------|---------|------|
@@ -135,15 +251,14 @@ Ch5~6에서 게시판을 만들었지만, 데이터는 브라우저 메모리에
 
 ④ **생성 대기**: 프로젝트 생성에 약 1~2분이 걸린다. 이 사이 대시보드 구조를 살펴본다.
 
-> **강의 팁**: Database Password는 나중에 변경할 수 없다. 학생들이 비밀번호를 까먹으면 프로젝트를 삭제하고 다시 만들어야 한다. 반드시 어딘가에 적어두게 한다.
+> **팁**: Database Password는 나중에 변경할 수 없다. 비밀번호를 까먹으면 프로젝트를 삭제하고 다시 만들어야 한다. 반드시 어딘가에 적어두자.
 
-<!-- COPILOT_VERIFY: Supabase 프로젝트 생성 화면 스크린샷을 캡처해주세요 — 2026년 2월 기준 UI가 변경되었을 수 있습니다 -->
 
 ### 8.2.2 대시보드 탐색: Table Editor, SQL Editor, Auth
 
 Supabase 대시보드는 백엔드의 모든 기능을 한 곳에서 관리하는 **제어판**이다. 핵심 메뉴 4가지를 익힌다:
 
-**표 8.5** Supabase 대시보드 핵심 메뉴
+**표 8.4** Supabase 대시보드 핵심 메뉴
 
 | 메뉴 | 역할 | 이 수업에서 사용 시점 |
 |------|------|---------------------|
@@ -158,27 +273,37 @@ Supabase 대시보드는 백엔드의 모든 기능을 한 곳에서 관리하�
 
 Supabase와 Next.js를 연결하려면 두 가지 정보가 필요하다:
 
-① **Project URL**: `https://[프로젝트ID].supabase.co` 형태
-② **anon (public) key**: 클라이언트에서 사용하는 공개 키
+① **API URL**: `https://[프로젝트ID].supabase.co` 형태
+② **anon (public) key**: 클라이언트에서 사용하는 공개 키 (JWT 형식)
 
-확인 경로: **Project Settings** → **API** → **Project URL**과 **Project API keys**
+2026년 현재 Supabase 대시보드는 API 키 체계가 개편되었다. **API URL**과 **API Key**의 확인 위치가 다르므로 주의한다.
+
+**① API URL 확인**: 왼쪽 사이드바 **Integrations** → **Data API** → **API URL**
 
 ```text
-Project URL:  https://abcdefghijk.supabase.co
-anon key:     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-service_role: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...  ← 절대 공개 금지!
+API URL:  https://abcdefghijk.supabase.co    [Copy]
 ```
 
-**표 8.6** API 키의 두 종류
+Data API 페이지에서 **Enable Data API** 토글이 켜져 있는지도 확인한다. 이 토글이 꺼져 있으면 Supabase 클라이언트 라이브러리가 작동하지 않는다.
 
-| 키 | 용도 | 공개 여부 | 권한 |
-|----|------|----------|------|
-| **anon key** | 클라이언트(브라우저) | 공개 가능 | RLS 정책에 따라 제한됨 |
-| **service_role key** | 서버 전용 | **절대 비공개** | RLS 무시, 모든 권한 |
+**② API Key 확인**: 왼쪽 사이드바 **Project Settings** → **API Keys**
+
+API Keys 페이지에는 **두 개의 탭**이 있다:
+
+| 탭 | 내용 |
+|----|------|
+| **Publishable and secret API keys** | 새로운 키 체계 (`sb_publishable_...`, `sb_secret_...` 형식) |
+| **Legacy anon, service_role API keys** | 기존 JWT 기반 키 (`eyJhbG...` 형식) |
+
+현재 `@supabase/supabase-js` 라이브러리는 **Legacy 탭**의 JWT 형식 키를 사용한다. **"Legacy anon, service_role API keys"** 탭을 클릭하여 `anon` `public` 키를 복사한다:
+
+```text
+anon  public    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...    [Copy]
+```
 
 > anon key가 공개 가능하다는 것이 의외일 수 있다. Supabase는 **RLS(Row Level Security)**로 데이터를 보호한다. anon key로 접근해도 RLS 정책이 허용한 데이터만 볼 수 있다. RLS는 Ch11에서 자세히 다룬다.
 
-> **강의 팁**: "anon key는 집 주소, service_role key는 마스터 키"에 비유한다. 주소는 알려줘도 되지만 마스터 키는 절대 남에게 주면 안 된다.
+> **팁**: anon key는 "집 주소"와 같다. 주소는 알려줘도 되지만, 실제 데이터를 보호하는 것은 RLS(잠금 장치)의 역할이다.
 
 ---
 
@@ -192,7 +317,6 @@ Supabase 프로젝트가 준비되었으면 기존 Next.js 프로젝트에 연�
 > "Next.js App Router 프로젝트에 Supabase 클라이언트를 설치하고 초기 설정하는 방법을 알려줘.
 > @supabase/supabase-js와 @supabase/ssr 두 패키지가 필요해."
 
-<!-- COPILOT_VERIFY: 이 프롬프트로 Copilot이 올바른 설치 명령을 제시하는지 확인해주세요 -->
 
 터미널에서 두 패키지를 설치한다:
 
@@ -216,7 +340,7 @@ copilot-instructions.md의 Tech Stack 섹션에 추가한다:
 
 > 새로운 패키지를 설치할 때마다 버전을 확인하고 copilot-instructions.md에 기록하는 습관을 들이자. 이것이 Ch2에서 배운 **버전 동기화 프로토콜**이다.
 
-**표 8.7** Supabase 패키지 역할
+**표 8.5** Supabase 패키지 역할
 
 | 패키지 | 역할 |
 |--------|------|
@@ -250,48 +374,49 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 > **Copilot 프롬프트**
 > "Next.js App Router에서 Supabase 클라이언트를 초기화하는 유틸리티 파일을 만들어줘.
 > @supabase/ssr 패키지를 사용하고, 브라우저용 클라이언트를 생성하는 함수를 만들어줘.
-> 파일 경로: lib/supabase.js"
+> 파일 경로: lib/supabase.ts"
 
-<!-- COPILOT_VERIFY: Copilot이 @supabase/ssr의 createBrowserClient를 사용하는지 확인해주세요 -->
 
-Copilot이 생성한 코드를 읽어보자:
+AI가 생성한 코드를 읽어보자:
 
-```javascript
-// lib/supabase.js
+```typescript
+// lib/supabase.ts
 import { createBrowserClient } from "@supabase/ssr";
 
 export function createClient() {
   return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 }
 ```
 
+> `!`(non-null assertion)는 TypeScript에게 "이 값은 반드시 존재한다"고 알려주는 것이다. 환경 변수가 `.env.local`에 올바르게 설정되어 있다면 안전하다.
+
 **코드 읽기 가이드** — 3줄이지만 중요한 포인트가 있다:
 
-**표 8.8** Supabase 클라이언트 초기화 코드 해석
+**표 8.6** Supabase 클라이언트 초기화 코드 해석
 
 | 줄 | 코드 | 의미 |
 |----|------|------|
 | 1 | `import { createBrowserClient }` | `@supabase/ssr`에서 **브라우저용** 클라이언트 생성 함수를 가져온다 |
 | 3 | `export function createClient()` | 다른 파일에서 `import { createClient }`로 사용할 수 있게 내보낸다 |
-| 4-5 | `process.env.NEXT_PUBLIC_...` | `.env.local`에 설정한 환경 변수를 읽는다 |
+| 4-5 | `process.env.NEXT_PUBLIC_...!` | `.env.local`에 설정한 환경 변수를 읽는다 (`!`는 non-null assertion) |
 
 > 왜 `createClient`라는 이름인가? Supabase 공식 문서가 이 이름을 사용한다. 프로젝트 전체에서 `import { createClient } from "@/lib/supabase"`로 통일하면 코드가 일관된다.
 
 서버 컴포넌트에서도 Supabase를 사용해야 하는 경우가 있다(예: 초기 데이터 로딩). 이때는 별도의 서버용 클라이언트가 필요하다:
 
-```javascript
-// lib/supabase-server.js
+```typescript
+// lib/supabase-server.ts
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 export async function createServerSupabaseClient() {
   const cookieStore = await cookies();
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
@@ -308,7 +433,7 @@ export async function createServerSupabaseClient() {
 }
 ```
 
-이 파일은 Ch9(인증)에서 본격적으로 사용한다. 지금은 `lib/supabase.js`(브라우저용)만 있으면 충분하다.
+이 파일은 Ch9(인증)에서 본격적으로 사용한다. 지금은 `lib/supabase.ts`(브라우저용)만 있으면 충분하다.
 
 **검증 체크리스트** — 클라이언트 초기화가 올바른지 확인:
 
@@ -316,39 +441,26 @@ export async function createServerSupabaseClient() {
 - [ ] 환경 변수 이름이 `.env.local`과 정확히 일치하는가?
 - [ ] `service_role` 키가 아닌 `anon` 키를 사용하는가?
 
-> **함께 진행**: 함께 `lib/supabase.js` 파일을 만들고, 개발 서버에서 에러 없이 실행되는지 확인한다
+> **함께 진행**: 함께 `lib/supabase.ts` 파일을 만들고, 개발 서버에서 에러 없이 실행되는지 확인한다
 
 ### 8.3.4 Vercel 환경 변수 등록
 
 `.env.local`은 로컬 개발용이다. Vercel에 배포할 때는 **Vercel 대시보드에 환경 변수를 별도 등록**해야 한다.
 
-> **Copilot 프롬프트**
-> "Vercel에 Supabase 환경 변수를 등록하는 방법을 알려줘.
-> NEXT_PUBLIC_SUPABASE_URL과 NEXT_PUBLIC_SUPABASE_ANON_KEY 두 개를 설정해야 해."
-
-<!-- COPILOT_VERIFY: Vercel 환경 변수 등록 방법에 대한 Copilot 응답이 최신 UI와 일치하는지 확인해주세요 -->
-
-등록 경로: **Vercel Dashboard** → 프로젝트 → **Settings** → **Environment Variables**
-
-**표 8.9** Vercel 환경 변수 등록
-
-| Key | Value | Environment |
-|-----|-------|-------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | `https://[프로젝트ID].supabase.co` | Production, Preview, Development 모두 |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJhbG...` | Production, Preview, Development 모두 |
+등록 경로: **Vercel Dashboard** → 프로젝트 → **Settings** → **Environment Variables**에서 `NEXT_PUBLIC_SUPABASE_URL`과 `NEXT_PUBLIC_SUPABASE_ANON_KEY`를 등록한다. Environment는 Production, Preview, Development 모두 선택한다.
 
 등록 후 **반드시 재배포**해야 적용된다. Vercel 대시보드에서 "Redeploy"를 누르거나, 새 커밋을 push하면 된다.
 
-> **강의 팁**: "로컬에서 되는데 배포하면 안 돼요"의 90%는 **Vercel에 환경 변수를 안 넣었기 때문**이다. 이 단계를 반드시 확인한다.
+> **팁**: "로컬에서 되는데 배포하면 안 돼요"의 90%는 **Vercel에 환경 변수를 안 넣었기 때문**이다. 이 단계를 반드시 확인하자.
 
 ### 8.3.5 연결 테스트
 
-> **라이브 코딩 시연**: 교수가 Supabase 프로젝트를 생성하고 Next.js와 연결한 뒤, 연결 테스트까지 전 과정을 시연한다.
+> **라이브 코딩**: Supabase 프로젝트를 생성하고 Next.js와 연결한 뒤, 연결 테스트까지 전 과정을 진행한다.
 
 모든 설정이 끝났으면 실제로 연결이 되는지 확인한다. 임시로 페이지에 테스트 코드를 작성한다:
 
-```jsx
-// app/test/page.js — 연결 확인용 (나중에 삭제)
+```tsx
+// app/test/page.tsx — 연결 확인용 (나중에 삭제)
 "use client";
 
 import { createClient } from "@/lib/supabase";
@@ -404,7 +516,7 @@ posts 테이블
 └────┴─────────┴──────────┴─────────────────┘
 ```
 
-**표 8.10** 관계형 데이터베이스 핵심 용어
+**표 8.7** 관계형 데이터베이스 핵심 용어
 
 | 용어 | 영문 | 비유 | 설명 |
 |------|------|------|------|
@@ -425,7 +537,7 @@ Ch7에서 ARCHITECTURE.md에 데이터 모델을 설계했다. 이제 그 설계
 
 > 왜 `users`가 아닌 `profiles`인가? Supabase Auth는 내부적으로 `auth.users` 테이블을 관리한다. 우리가 추가 정보(닉네임, 아바타 등)를 저장하려면 **별도의 `profiles` 테이블**을 만들고 `auth.users`와 연결한다. 이것이 Supabase의 공식 패턴이다.
 
-이제 Copilot에게 테이블 생성 SQL을 요청한다. 이때 프롬프트의 구체성이 결과 품질을 결정한다:
+이제 AI에게 테이블 생성 SQL을 요청한다. 이때 프롬프트의 구체성이 결과 품질을 결정한다:
 
 > **나쁜 프롬프트**
 > "Supabase에서 게시판 테이블 만들어줘"
@@ -438,9 +550,8 @@ Ch7에서 ARCHITECTURE.md에 데이터 모델을 설계했다. 이제 그 설계
 > profiles.id는 auth.users.id를 참조하고, posts.user_id는 profiles.id를 참조해.
 > RLS는 아직 설정하지 마."
 
-<!-- COPILOT_VERIFY: 위 "좋은 프롬프트"로 Copilot이 auth.users를 참조하는 올바른 SQL을 생성하는지 확인해주세요 -->
 
-Copilot이 생성한 SQL을 읽어보자:
+AI가 생성한 SQL을 읽어보자:
 
 ```sql
 -- profiles 테이블
@@ -462,9 +573,9 @@ create table posts (
 );
 ```
 
-**코드 읽기 가이드** — SQL을 처음 보는 학생도 읽을 수 있도록 한 줄씩 해석한다:
+**코드 읽기 가이드** — SQL을 처음 보더라도 읽을 수 있도록 한 줄씩 해석한다:
 
-**표 8.11** profiles 테이블 SQL 해석
+**표 8.8** profiles 테이블 SQL 해석
 
 | SQL | 의미 |
 |-----|------|
@@ -476,7 +587,7 @@ create table posts (
 | `created_at timestamptz default now()` | 생성 시각, 기본값은 현재 시간 |
 | `primary key (id)` | `id`를 기본 키로 설정 |
 
-**표 8.12** posts 테이블 SQL 해석
+**표 8.9** posts 테이블 SQL 해석
 
 | SQL | 의미 |
 |-----|------|
@@ -507,17 +618,17 @@ profiles (1) ──────< posts (N)
 
 ### 8.4.4 SQL로 테이블 생성
 
-> **라이브 코딩 시연**: 교수가 SQL Editor에서 테이블을 생성하고, Table Editor에서 확인하는 과정을 시연한다.
+> **라이브 코딩**: SQL Editor에서 테이블을 생성하고, Table Editor에서 확인한다.
 
 Supabase 대시보드의 **SQL Editor**에서 위 SQL을 실행한다.
 
-> **함께 진행**: 교수 화면에서 SQL Editor를 열고, SQL을 붙여넣고, "Run" 버튼을 클릭한다
+> **함께 진행**: SQL Editor를 열고, SQL을 붙여넣고, "Run" 버튼을 클릭한다
 
 실행 후 **Table Editor**로 이동하면 `profiles`와 `posts` 테이블이 생성된 것을 확인할 수 있다.
 
 > **흔한 실수**: SQL을 두 번 실행하면 "relation already exists" 에러가 발생한다. 이미 테이블이 있다면 Table Editor에서 삭제 후 다시 실행하거나, SQL 앞에 `drop table if exists posts; drop table if exists profiles;`를 추가한다 (순서 주의: posts를 먼저 삭제해야 외래 키 참조 에러가 안 난다).
 
-**표 8.13** 흔한 AI 실수 — Supabase 클라이언트 설정 + SQL
+**표 8.10** 흔한 AI 실수 — Supabase 클라이언트 설정 + SQL
 
 | 실수 패턴 | 증상 | 해결 |
 |-----------|------|------|
@@ -543,12 +654,12 @@ Supabase 대시보드의 **SQL Editor**에서 위 SQL을 실행한다.
 **Supabase 연동 + 데이터 읽기 페이지 배포**:
 1. Supabase 프로젝트 생성 + API 키 확인
 2. `.env.local` 환경 변수 설정
-3. `lib/supabase.js` 클라이언트 초기화
+3. `lib/supabase.ts` 클라이언트 초기화
 4. SQL Editor에서 `profiles` + `posts` 테이블 생성
 5. 연결 테스트 성공 확인
 6. Vercel 환경 변수 등록 + 배포
 
-**스타터 코드**: `practice/chapter8/starter/` — Supabase 패키지가 설치된 Next.js 프로젝트와 비어 있는 `lib/supabase.js`가 준비되어 있다.
+**스타터 코드**: `practice/chapter8/starter/` — Supabase 패키지가 설치된 Next.js 프로젝트와 비어 있는 `lib/supabase.ts`가 준비되어 있다.
 
 ---
 
@@ -556,8 +667,8 @@ Supabase 대시보드의 **SQL Editor**에서 위 SQL을 실행한다.
 
 다음 코드에서 잘못된 부분을 찾아라:
 
-```javascript
-// lib/supabase.js
+```typescript
+// lib/supabase.ts
 import { createClient } from "@supabase/supabase-js";
 
 export function initSupabase() {
@@ -572,19 +683,15 @@ export function initSupabase() {
 
 ---
 
-## 교수 메모
+## 학습 체크리스트
 
-**준비물 체크리스트**:
-- [ ] Supabase 계정 로그인 확인 (시연용 프로젝트 미리 생성)
-- [ ] 학생용 Step-by-step 가이드 슬라이드 (프로젝트 생성 → API 키 확인)
-- [ ] 대시보드 탐색 시연 순서 정리 (Table Editor → SQL Editor → Auth → Settings)
-- [ ] `.env.local` 예시 파일 (학생들이 복사-붙여넣기할 수 있도록)
-- [ ] SQL 테이블 생성 스크립트 미리 준비 (학생 타이핑 실수 대비)
-- [ ] Vercel 환경 변수 등록 화면 스크린샷 (가이드용)
-- [ ] B회차 스타터 코드 준비 (`practice/chapter8/starter/`)
+**수업 전 준비**:
+- [ ] Supabase 계정 가입 (https://supabase.com)
+- [ ] `.env.local` 예시 파일 확인
+- [ ] SQL 테이블 생성 스크립트 준비 (복사-붙여넣기용)
 
-**수업 후 체크**:
-- [ ] 학생들이 BaaS 개념과 Supabase의 역할을 이해했는가
+**자기 점검**:
+- [ ] BaaS 개념과 Supabase의 역할을 이해했는가
 - [ ] anon key vs service_role key 차이를 이해했는가
 - [ ] 환경 변수 설정 방법 (`.env.local` + Vercel)을 이해했는가
 - [ ] 관계형 데이터베이스의 테이블/행/열 개념을 이해했는가

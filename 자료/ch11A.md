@@ -1,8 +1,44 @@
 # Chapter 11. Row Level Security (RLS) — A회차: 강의
 
-> **미션**: "내 글은 나만 수정/삭제할 수 있다"를 데이터베이스가 강제한다
+> **미션**: 공감터의 마음톡/게시판에서 “작성자만 수정·삭제”를 데이터베이스(RLS)가 강제한다
 
 ---
+
+## 바이브코딩 원칙 (이번 장)
+
+이번 장의 바이브코딩은 “**보안 규칙을 자연어로 먼저 고정**하고, Copilot이 그 규칙을 SQL 정책(RLS)로 정확히 번역하게 만드는 것”이다. 클라이언트에서 버튼을 숨기는 건 UX일 뿐, 보안이 아니다.
+
+1. **권한 시나리오를 문장으로 쓴다**: “누구나 읽기 / 로그인 사용자만 작성 / 작성자만 수정·삭제”처럼 규칙을 먼저 확정한다.
+2. **RLS 키워드를 강제한다**: `ALTER TABLE ... ENABLE ROW LEVEL SECURITY`, `CREATE POLICY`, `USING`, `WITH CHECK`, `auth.uid()`를 프롬프트에 포함한다.
+3. **테이블 단위로 적용한다**: `mindtalk_posts`, `mindtalk_comments`, `reservations` 등 테이블별로 정책을 분리해 설명/적용한다.
+4. **검증은 ‘우회 시도’로 한다**: 비로그인/다른 유저 세션으로 insert/update/delete를 시도해 “실패해야 정상”인 케이스를 포함한다.
+5. **에러 메시지를 UX로 연결**: RLS 에러를 사용자가 이해할 문장으로 바꾸는 흐름(Ch12)까지 염두에 둔다.
+
+---
+
+## Copilot 프롬프트 (복사/붙여넣기)
+
+```text
+너는 GitHub Copilot Chat이고, Supabase(PostgreSQL) RLS 설계를 도와주는 보안 파트너야.
+목표: `mindtalk_posts`(필요 시 `mindtalk_comments`/`reservations`)에 RLS를 켜고, 아래 권한 시나리오를 정책으로 강제한다.
+
+[권한 시나리오] (예: 마음톡)
+- SELECT: 공개글은 누구나, 비공개글은 작성자/상담사/관리자만
+- INSERT: 로그인 사용자만 가능
+- UPDATE: 작성자(user_id = auth.uid())만 가능
+- DELETE: 작성자(user_id = auth.uid())만 가능
+
+[테이블 스키마]
+- mindtalk_posts 컬럼 예: id uuid, user_id uuid, title text, content text, is_private boolean, created_at timestamptz
+- user_id는 `public.users(id)`(→ auth.users) 경로를 따른다
+
+[요구 출력]
+1) SQL 전체 스크립트: RLS 활성화 + 정책 4개(SELECT/INSERT/UPDATE/DELETE)
+2) USING vs WITH CHECK를 왜 그렇게 썼는지 한 줄 설명씩
+3) 테스트 시나리오 6개(성공 3, 실패 3)와 기대 결과
+
+주의: 클라이언트 코드에서 if문으로 ‘보안 구현’하는 답은 금지. 반드시 DB 정책으로 강제해줘.
+```
 
 ## 학습목표
 
@@ -22,7 +58,7 @@
 |------|------|
 | 00:00~00:05 | 오늘의 미션 + 빠른 진단 |
 | 00:05~00:30 | RLS의 필요성 + 기본 문법 (CREATE POLICY, USING, WITH CHECK) |
-| 00:30~00:55 | 라이브 코딩 시연: 4대 권한 시나리오 구현 |
+| 00:30~00:55 | 라이브 코딩: 4대 권한 시나리오 구현 |
 | 00:55~01:20 | RLS 테스트와 디버깅 + 트러블슈팅 |
 | 01:20~01:27 | 핵심 정리 + B회차 과제 스펙 공개 |
 | 01:27~01:30 | Exit ticket |
@@ -70,9 +106,9 @@ await supabase.from("posts").delete().eq("id", 1);
 | **클라이언트** (React) | `if (user.id === post.user_id)` | **쉽게 우회** | UX 개선 (불필요한 버튼 숨기기) |
 | **서버** (RLS) | `CREATE POLICY ... USING (auth.uid() = user_id)` | **우회 불가** | 실제 보안 |
 
-> **강의 팁**: 실제로 브라우저 콘솔에서 다른 사람의 게시글을 삭제하는 시연을 한다. "이게 왜 되는가?" 질문으로 시작하면 학생들이 RLS의 필요성을 체감한다.
+> **팁**: 실제로 브라우저 콘솔에서 다른 사람의 게시글을 삭제해보자. "이게 왜 되는가?" — 이 질문이 RLS의 필요성을 체감하게 해준다.
 
-> **라이브 코딩 시연**: 브라우저 콘솔에서 `supabase.from("posts").delete().eq("id", 1)` 실행 -> 성공 -> "이것이 문제입니다" -> RLS 적용 후 같은 명령 실행 -> 실패 -> "이제 데이터베이스가 막습니다"
+> **라이브 코딩**: 브라우저 콘솔에서 `supabase.from("posts").delete().eq("id", 1)` 실행 → 성공 → "이것이 문제다" → RLS 적용 후 같은 명령 실행 → 실패 → "이제 데이터베이스가 막는다"
 
 ### 11.1.2 서버 사이드 권한 강제의 중요성
 
@@ -129,7 +165,7 @@ CREATE POLICY "누구나 게시글 읽기" ON posts
 | RLS 활성화 + SELECT 정책만 | 허용 | **차단** | **차단** | **차단** |
 | RLS 활성화 + 모든 정책 | 정책에 따라 | 정책에 따라 | 정책에 따라 | 정책에 따라 |
 
-> **강의 팁**: "RLS를 켜는 순간 모든 문이 잠긴다. 정책을 하나씩 만드는 것은 필요한 문에만 열쇠를 꽂는 것"이라고 비유한다.
+> **팁**: "RLS를 켜는 순간 모든 문이 잠긴다. 정책을 하나씩 만드는 것은 필요한 문에만 열쇠를 꽂는 것"이라고 기억하자.
 
 ### 11.2.2 USING과 WITH CHECK
 
@@ -170,7 +206,7 @@ USING (auth.uid() = user_id)
 
 ## 11.3 권한 시나리오 구현
 
-> **라이브 코딩 시연**: 교수가 SQL Editor에서 4대 정책을 순서대로 생성하고, 다른 계정으로 권한 테스트하는 과정을 시연한다
+> **라이브 코딩**: SQL Editor에서 4대 정책을 순서대로 생성하고, 다른 계정으로 권한 테스트하는 과정을 진행한다
 
 게시판에 필요한 4가지 권한 시나리오를 SQL로 구현한다. 각 시나리오를 하나의 `CREATE POLICY` 문으로 만든다.
 
@@ -189,9 +225,8 @@ USING (auth.uid() = user_id)
 
 이 프롬프트로는 AI가 클라이언트 코드에서 `if` 문으로 보안을 구현할 수 있다. "RLS", "CREATE POLICY", `auth.uid()` 같은 핵심 키워드가 없으면 Supabase 데이터베이스 레벨 보안이 아닌 프론트엔드 보안이 나올 가능성이 높다.
 
-<!-- COPILOT_VERIFY: 위 "좋은 프롬프트"로 Copilot이 올바른 RLS 정책 SQL을 생성하는지 확인해주세요 -->
 
-> **함께 진행**: 교수 화면에서 SQL Editor를 열고, 아래 SQL을 순서대로 실행한다
+> **함께 진행**: SQL Editor를 열고, 아래 SQL을 순서대로 실행하자
 
 ### 11.3.1 "누구나 읽기 가능"
 
@@ -240,27 +275,7 @@ UPDATE에는 `USING`과 `WITH CHECK`가 모두 필요하다:
 
 DELETE에는 `USING`만 필요하다. 삭제 후에 검증할 새 데이터가 없기 때문이다.
 
-### 11.3.4 "관리자 전체 권한"
-
-관리자 역할이 필요하면 `profiles` 테이블에 `role` 열을 추가하고 정책에서 참조한다:
-
-```sql
--- profiles 테이블에 role 열 추가
-ALTER TABLE profiles ADD COLUMN role text DEFAULT 'user';
-
--- 관리자는 모든 게시글 수정/삭제 가능
-CREATE POLICY "관리자 전체 수정" ON posts
-  FOR UPDATE
-  USING (
-    auth.uid() = user_id
-    OR
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
-```
-
-`OR EXISTS (...)` -- "내 글이거나, 내가 관리자이면" 허용한다.
-
-> 이 교재에서는 관리자 기능을 직접 구현하지 않는다. 개인 프로젝트에서 필요 시 이 패턴을 참고한다.
+> 관리자 권한이 필요하면 `profiles` 테이블에 `role` 열을 추가하고 `OR EXISTS (...)` 조건으로 관리자를 허용할 수 있다. 이 교재에서는 다루지 않는다.
 
 **표 11.6** 게시판 RLS 정책 요약
 
@@ -277,7 +292,7 @@ CREATE POLICY "관리자 전체 수정" ON posts
 
 정책을 작성했으면 반드시 **테스트**해야 한다. 정책이 올바르게 동작하는지 확인하지 않으면, 보안 구멍이 그대로 남거나 반대로 정상 기능이 차단될 수 있다.
 
-> **강의 팁**: "RLS를 적용하고 테스트 안 하는 것은, 현관문에 자물쇠를 달고 잠갔는지 확인 안 하는 것과 같다."
+> **팁**: "RLS를 적용하고 테스트 안 하는 것은, 현관문에 자물쇠를 달고 잠갔는지 확인 안 하는 것과 같다."
 
 ### 11.4.1 다른 사용자 계정으로 테스트
 
@@ -294,7 +309,7 @@ CREATE POLICY "관리자 전체 수정" ON posts
 | 5 | 사용자 B -> 사용자 A의 글 수정 시도 | **실패** (작성자 아님) |
 | 6 | 사용자 B -> 사용자 A의 글 삭제 시도 | **실패** (작성자 아님) |
 
-> **함께 진행**: 교수가 두 개의 Google 계정을 번갈아 사용하며 테스트를 시연한다
+> **함께 진행**: 두 개의 Google 계정을 번갈아 사용하며 테스트해보자
 
 ### 11.4.2 RLS 거부 시 동작
 
@@ -309,32 +324,7 @@ CREATE POLICY "관리자 전체 수정" ON posts
 
 > RLS가 거부한 행은 "존재하지 않는 것"처럼 취급된다. SELECT에서는 단순히 결과에 포함되지 않고, UPDATE/DELETE에서는 아무 행도 영향받지 않는다. INSERT만 명시적 에러(`42501`)를 반환한다. 이는 보안상 의도적인 동작이다 -- 공격자에게 데이터 존재 여부를 알려주지 않는다.
 
-### 11.4.3 정책 충돌 문제
-
-같은 테이블에 여러 정책이 있으면 **OR 논리로 결합**된다. 하나라도 허용하는 정책이 있으면 접근이 허용된다.
-
-문제 예시:
-
-```sql
--- 정책 A: 작성자만 삭제
-CREATE POLICY "작성자만 삭제" ON posts
-  FOR DELETE USING (auth.uid() = user_id);
-
--- 정책 B: 누구나 삭제 (실수로 생성)
-CREATE POLICY "누구나 삭제" ON posts
-  FOR DELETE USING (true);
-```
-
-정책 B 때문에 누구나 게시글을 삭제할 수 있다! RLS 정책은 OR로 결합되므로, 하나라도 `true`인 정책이 있으면 나머지 정책은 무력화된다.
-
-해결:
-
-```sql
--- 잘못된 정책 삭제
-DROP POLICY "누구나 삭제" ON posts;
-```
-
-### 11.4.4 흔한 RLS 트러블슈팅
+### 11.4.3 흔한 RLS 트러블슈팅
 
 **"갑자기 데이터가 안 보여요"** -- RLS를 활성화한 후 SELECT 정책을 깜빡하면 발생한다.
 
@@ -356,7 +346,7 @@ await supabase.from("posts").insert({ title, content, user_id: user.id });
 
 **"본인 글인데 수정이 안 돼요"** -- `posts.user_id`와 `auth.uid()`의 타입이 모두 `uuid`인지 확인한다. 타입이 다르면 비교가 항상 실패한다.
 
-### 11.4.5 Ch10 코드와 RLS의 관계
+### 11.4.4 Ch10 코드와 RLS의 관계
 
 좋은 소식: **Ch10에서 작성한 코드는 수정할 필요가 없다**. RLS는 데이터베이스 레벨에서 동작하므로, 클라이언트 코드는 이전과 동일하게 `.insert()`, `.update()`, `.delete()`를 호출한다. 차이점은 RLS가 요청을 허용하거나 거부한다는 것뿐이다.
 
@@ -371,7 +361,7 @@ const { error } = await supabase
 // RLS 적용 후: 본인 글만 성공, 다른 사람 글은 실패
 ```
 
-### profiles 테이블 RLS
+### 11.4.5 profiles 테이블 RLS
 
 posts만이 아니라 **profiles 테이블에도 RLS가 필요하다**:
 
@@ -427,18 +417,15 @@ CREATE POLICY "로그인 사용자만 작성" ON posts
 
 ---
 
-## 교수 메모
+## 학습 체크리스트
 
-**준비물 체크리스트**:
-- [ ] Google 계정 2개 준비 (교수용 + 테스트용, RLS 테스트 시연)
-- [ ] RLS 적용 전 "다른 사람 글 삭제" 시연 준비 (보안 구멍 체감용)
-- [ ] SQL 정책 코드 미리 준비 (학생들이 SQL Editor에 복사 가능하도록)
-- [ ] USING vs WITH CHECK 비교 슬라이드
-- [ ] 정책 충돌 예시 준비 (OR 논리 설명용)
-- [ ] Supabase Dashboard에서 정책 목록 확인 방법 안내
+**수업 전 준비**:
+- [ ] Google 계정 2개 준비 (RLS 테스트용)
+- [ ] SQL 정책 코드 준비 (SQL Editor에 복사-붙여넣기용)
+- [ ] USING vs WITH CHECK 차이 복습
 
-**수업 후 체크**:
-- [ ] 학생들이 "클라이언트 보안 != 진짜 보안"을 이해했는가
+**자기 점검**:
+- [ ] "클라이언트 보안 != 진짜 보안"을 이해했는가
 - [ ] CREATE POLICY 문법을 읽을 수 있는가
 - [ ] USING과 WITH CHECK의 차이를 구분할 수 있는가
 - [ ] `auth.uid()` 함수의 역할을 이해했는가

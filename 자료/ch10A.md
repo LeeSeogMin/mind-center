@@ -1,8 +1,46 @@
 # Chapter 10. Supabase Database CRUD — A회차: 강의
 
-> **미션**: 게시글을 생성, 조회, 수정, 삭제할 수 있다
+> **미션**: 공감터의 마음톡 글을 생성, 조회, 수정, 삭제할 수 있다
 
 ---
+
+## 바이브코딩 원칙 (이번 장)
+
+이번 장의 바이브코딩은 “**데이터 모델(테이블/컬럼)과 화면 요구사항(UI/상태)**을 동시에 명시해서, Copilot이 CRUD를 ‘대충’ 만들지 못하게 하는 것”이 핵심이다.
+
+1. **테이블/컬럼을 정확히**: `mindtalk_posts`(또는 `board_posts`)의 컬럼명, 타입, 관계(예: `user_id`)를 프롬프트에 그대로 넣는다.
+2. **CRUD를 화면 단위로 쪼갠다**: 목록(Read) → 상세(Read) → 작성(Create) → 수정(Update) → 삭제(Delete) 순으로 단계화한다.
+3. **쿼리 조건을 말로 고정**: 정렬(예: 최신순), 필터(예: 내 글만), 페이지네이션 방식(limit/offset 등)을 명시한다.
+4. **에러/로딩/빈 상태를 필수로**: 성공 케이스만 만들면 UX가 망가진다. 상태 UI 요구사항을 포함한다.
+5. **검증 쿼리 + 로그**: “작동함”이 아니라, 어떤 입력으로 어떤 SQL/요청이 나가고 어떤 결과가 와야 하는지로 확인한다.
+
+---
+
+## Copilot 프롬프트 (복사/붙여넣기)
+
+```text
+너는 GitHub Copilot Chat이고, 내 Next.js(App Router) + Supabase 프로젝트의 CRUD 구현 파트너야.
+목표: 게시글 CRUD를 UI까지 포함해 완성한다(로딩/에러/빈 상태 포함).
+
+[데이터 모델]
+- 테이블: `mindtalk_posts` (필요 시 `mindtalk_comments`)
+- 컬럼 예: id uuid PK, user_id uuid FK→public.users, title text, content text, is_private boolean, created_at timestamptz
+- 정렬 기본값: (예: created_at desc)
+
+[화면/기능 요구사항]
+1) 목록(`/mindtalk`): 최신순, 로딩 스켈레톤, 빈 상태 메시지
+2) 상세(`/mindtalk/[id]`): 게시글 1개 조회, 없는 글 404 처리
+3) 작성(`/mindtalk/new`): 폼 + 저장 후 상세로 이동
+4) 수정: 작성자만 가능(UX상 버튼 숨김은 가능하지만 보안은 Ch11에서 RLS로 강제)
+5) 삭제: 확인 다이얼로그 + 성공 후 목록으로 이동
+
+[요구 출력]
+- 단계별 구현 순서(최대 5단계)와 각 단계의 파일 변경 범위
+- 각 단계에서 사용할 Supabase 쿼리 예시(select/insert/update/delete)
+- 에러 메시지/토스트 문구 초안(사용자 친화적으로)
+
+주의: 테이블/컬럼명은 임의로 바꾸지 말고, 애매하면 질문해줘.
+```
 
 ## 학습목표
 
@@ -23,7 +61,7 @@
 | 00:00~00:05 | 오늘의 미션 + 빠른 진단 |
 | 00:05~00:30 | SQL CRUD 기본 + Supabase 클라이언트 CRUD |
 | 00:30~00:55 | 쿼리 심화: 필터링, 정렬, 페이지네이션, 관계 데이터 |
-| 00:55~01:20 | 라이브 코딩 시연: React와 CRUD 연결 |
+| 00:55~01:20 | 라이브 코딩: React와 CRUD 연결 |
 | 01:20~01:27 | 핵심 정리 + B회차 과제 스펙 공개 |
 | 01:27~01:30 | Exit ticket |
 
@@ -31,7 +69,7 @@
 
 ## 오늘의 미션 + 빠른 진단
 
-> **오늘의 질문**: "게시판에서 게시글을 '만들고, 보고, 고치고, 지우는' 4가지 작업을 데이터베이스에서는 어떻게 처리하는가?"
+> **오늘의 질문**: "공감터의 마음톡 글을 '만들고, 보고, 고치고, 지우는' 4가지 작업을 데이터베이스에서는 어떻게 처리하는가?"
 
 **빠른 진단** (1문항):
 
@@ -54,28 +92,28 @@ Ch8에서 테이블을 만들 때 SQL을 처음 접했다. 이번 장에서는 �
 
 | SQL | 작업 | 영문 | 예시 |
 |-----|------|------|------|
-| `SELECT` | 조회 | Read | 게시글 목록 보기 |
-| `INSERT` | 생성 | Create | 새 게시글 작성 |
-| `UPDATE` | 수정 | Update | 게시글 제목 변경 |
-| `DELETE` | 삭제 | Delete | 게시글 삭제 |
+| `SELECT` | 조회 | Read | 마음톡 목록 보기 |
+| `INSERT` | 생성 | Create | 새 마음톡 작성 |
+| `UPDATE` | 수정 | Update | 마음톡 제목 변경 |
+| `DELETE` | 삭제 | Delete | 마음톡 삭제 |
 
-> **라이브 코딩 시연**: Supabase SQL Editor에서 아래 4가지 SQL을 하나씩 실행하며 결과를 보여준다
+> **라이브 코딩**: Supabase SQL Editor에서 아래 4가지 SQL을 하나씩 실행하며 결과를 확인한다
 
 각 명령의 기본 형태:
 
 ```sql
--- 조회: 모든 게시글 가져오기
-SELECT * FROM posts;
+-- 조회: 모든 마음톡 글 가져오기
+SELECT * FROM mindtalk_posts;
 
--- 생성: 새 게시글 추가
-INSERT INTO posts (title, content, user_id)
+-- 생성: 새 마음톡 글 추가
+INSERT INTO mindtalk_posts (title, content, user_id)
 VALUES ('첫 글', '안녕하세요', 'uuid-value');
 
--- 수정: 1번 게시글 제목 변경
-UPDATE posts SET title = '수정된 제목' WHERE id = 1;
+-- 수정: 특정 마음톡 글 제목 변경
+UPDATE mindtalk_posts SET title = '수정된 제목' WHERE id = 'uuid-post-id';
 
--- 삭제: 1번 게시글 삭제
-DELETE FROM posts WHERE id = 1;
+-- 삭제: 특정 마음톡 글 삭제
+DELETE FROM mindtalk_posts WHERE id = 'uuid-post-id';
 ```
 
 > 이 SQL을 직접 타이핑할 일은 거의 없다. Supabase JavaScript 클라이언트가 이 SQL을 대신 생성해준다. 하지만 **뒤에서 어떤 SQL이 실행되는지** 알아야 문제를 디버깅할 수 있다.
@@ -85,46 +123,23 @@ DELETE FROM posts WHERE id = 1;
 데이터를 조건으로 거르고(WHERE), 정렬하고(ORDER BY), 개수를 제한하는(LIMIT) 문법:
 
 ```sql
--- 조건: user_id가 특정 값인 게시글만
-SELECT * FROM posts WHERE user_id = 'uuid-value';
+-- 조건: user_id가 특정 값인 마음톡 글만
+SELECT * FROM mindtalk_posts WHERE user_id = 'uuid-value';
 
 -- 정렬: 최신순
-SELECT * FROM posts ORDER BY created_at DESC;
+SELECT * FROM mindtalk_posts ORDER BY created_at DESC;
 
 -- 개수 제한: 10개만
-SELECT * FROM posts LIMIT 10;
+SELECT * FROM mindtalk_posts LIMIT 10;
 
 -- 조합: 특정 사용자의 최신 게시글 5개
-SELECT * FROM posts
+SELECT * FROM mindtalk_posts
 WHERE user_id = 'uuid-value'
 ORDER BY created_at DESC
 LIMIT 5;
 ```
 
-**표 10.3** SQL 절의 실행 순서
-
-| 순서 | 절 | 역할 | 비유 |
-|:----:|-----|------|------|
-| 1 | `FROM` | 어떤 테이블에서 | 어느 서랍에서 |
-| 2 | `WHERE` | 어떤 조건으로 | 어떤 기준으로 골라 |
-| 3 | `ORDER BY` | 어떤 순서로 | 정렬해서 |
-| 4 | `LIMIT` | 몇 개를 | 위에서 N개만 |
-| 5 | `SELECT` | 어떤 열을 | 어떤 정보를 보여줘 |
-
-### 10.1.3 JOIN 기초
-
-게시글을 조회할 때 작성자 이름도 함께 보여주고 싶다. `posts` 테이블에는 `user_id`만 있고 이름은 없다. 이름은 `profiles` 테이블에 있다. 두 테이블을 **조인**(JOIN)해서 가져온다:
-
-```sql
-SELECT posts.*, profiles.username
-FROM posts
-JOIN profiles ON posts.user_id = profiles.id
-ORDER BY posts.created_at DESC;
-```
-
-이 SQL의 의미: "posts의 모든 열과 profiles의 username을 가져오되, posts.user_id와 profiles.id가 같은 행끼리 연결해라."
-
-> Supabase JavaScript 클라이언트에서는 JOIN 대신 **관계 데이터 조회** 문법을 사용한다. SQL JOIN을 직접 쓸 일은 적지만, 원리를 이해해야 10.2절에서 클라이언트 문법을 이해할 수 있다.
+> 게시글을 조회할 때 작성자 이름도 함께 가져오려면 SQL에서는 JOIN을 사용하지만, Supabase JavaScript 클라이언트에서는 **관계 데이터 조회** 문법(10.3.3절)을 사용한다. SQL JOIN을 직접 쓸 일은 적다.
 
 ---
 
@@ -135,36 +150,35 @@ SQL의 원리를 알았으니, 이제 JavaScript로 같은 작업을 한다. Sup
 ### 10.2.1 select: 데이터 조회
 
 > **Copilot 프롬프트**
-> "Supabase 클라이언트로 posts 테이블의 모든 게시글을 최신순으로 조회하는 코드를 만들어줘.
+> "Supabase 클라이언트로 mindtalk_posts 테이블의 모든 마음톡 글을 최신순으로 조회하는 코드를 만들어줘.
 > @supabase/ssr의 createBrowserClient를 사용하고, 에러 처리도 포함해줘."
 
-<!-- COPILOT_VERIFY: Copilot이 .from("posts").select("*").order() 패턴을 올바르게 생성하는지 확인해주세요 -->
 
 ```javascript
 import { createClient } from "@/lib/supabase";
 
 const supabase = createClient();
-// createClient()는 Ch8에서 만든 lib/supabase.js의 래퍼 함수
+// createClient()는 Ch8에서 만든 lib/supabase.ts의 래퍼 함수
 // 내부적으로 @supabase/ssr의 createBrowserClient를 호출한다
 
-// 모든 게시글 조회 (최신순)
-const { data: posts, error } = await supabase
-  .from("posts")
+// 모든 마음톡 글 조회 (최신순)
+const { data: mindtalkPosts, error } = await supabase
+  .from("mindtalk_posts")
   .select("*")
   .order("created_at", { ascending: false });
 
 if (error) {
   console.error("조회 실패:", error.message);
 } else {
-  console.log("게시글:", posts);
+  console.log("마음톡 글:", mindtalkPosts);
 }
 ```
 
-**표 10.4** SQL <> Supabase 클라이언트 대응
+**표 10.3** SQL <> Supabase 클라이언트 대응
 
 | SQL | Supabase 클라이언트 | 설명 |
 |-----|---------------------|------|
-| `SELECT * FROM posts` | `.from("posts").select("*")` | posts 테이블의 모든 열 |
+| `SELECT * FROM mindtalk_posts` | `.from("mindtalk_posts").select("*")` | mindtalk_posts 테이블의 모든 열 |
 | `ORDER BY created_at DESC` | `.order("created_at", { ascending: false })` | 최신순 정렬 |
 | `WHERE id = 1` | `.eq("id", 1)` | 조건 필터링 |
 | `LIMIT 10` | `.limit(10)` | 개수 제한 |
@@ -174,12 +188,12 @@ if (error) {
 ### 10.2.2 insert: 데이터 생성
 
 ```javascript
-// 새 게시글 생성
+// 새 마음톡 글 생성
 const { data, error } = await supabase
-  .from("posts")
+  .from("mindtalk_posts")
   .insert({
     title: "새 글 제목",
-    content: "게시글 내용입니다.",
+    content: "마음톡 내용입니다.",
     user_id: user.id,  // 로그인한 사용자의 ID
   })
   .select();  // 생성된 데이터를 반환받으려면 .select() 추가
@@ -190,14 +204,14 @@ const { data, error } = await supabase
 ### 10.2.3 update: 데이터 수정
 
 ```javascript
-// 게시글 수정
+// 마음톡 글 수정
 const { data, error } = await supabase
-  .from("posts")
+  .from("mindtalk_posts")
   .update({
     title: "수정된 제목",
     content: "수정된 내용",
   })
-  .eq("id", postId)  // 어떤 게시글을 수정할지
+  .eq("id", postId)  // 어떤 마음톡 글을 수정할지
   .select();
 ```
 
@@ -206,16 +220,16 @@ const { data, error } = await supabase
 ### 10.2.4 delete: 데이터 삭제
 
 ```javascript
-// 게시글 삭제
+// 마음톡 글 삭제
 const { error } = await supabase
-  .from("posts")
+  .from("mindtalk_posts")
   .delete()
   .eq("id", postId);
 ```
 
 삭제에는 `.select()`가 필요 없다. 삭제된 데이터를 돌려받을 이유가 없기 때문이다.
 
-**표 10.5** Supabase CRUD 요약
+**표 10.4** Supabase CRUD 요약
 
 | 작업 | 메서드 | 조건 필요 | `.select()` 필요 |
 |------|--------|:---------:|:----------------:|
@@ -228,22 +242,20 @@ const { error } = await supabase
 
 ## 10.3 쿼리 심화
 
-기본 CRUD를 넘어서, 실제 게시판에 필요한 심화 쿼리를 배운다.
+기본 CRUD를 넘어서, 실제 서비스(예: 마음톡)에 필요한 심화 쿼리를 배운다.
 
 ### 10.3.1 필터링: eq, neq, gt, lt, like, ilike
 
 Supabase 클라이언트는 다양한 **필터링**(Filtering) 메서드를 제공한다:
 
-**표 10.6** Supabase 필터 메서드
+**표 10.5** Supabase 주요 필터 메서드
 
 | 메서드 | SQL 대응 | 의미 | 예시 |
 |--------|---------|------|------|
 | `.eq(col, val)` | `= val` | 같다 | `.eq("id", 1)` |
-| `.neq(col, val)` | `!= val` | 같지 않다 | `.neq("status", "draft")` |
-| `.gt(col, val)` | `> val` | 크다 | `.gt("views", 100)` |
-| `.lt(col, val)` | `< val` | 작다 | `.lt("created_at", "2026-01-01")` |
-| `.like(col, pat)` | `LIKE pat` | 패턴 매칭 (대소문자 구분) | `.like("title", "%Next%")` |
 | `.ilike(col, pat)` | `ILIKE pat` | 패턴 매칭 (대소문자 무시) | `.ilike("title", "%next%")` |
+
+> 그 외 `.neq`(같지 않다), `.gt`(크다), `.lt`(작다), `.like`(대소문자 구분 패턴 매칭) 등도 있다. 필요할 때 [Supabase 공식 문서](https://supabase.com/docs/reference/javascript/using-filters)를 참고한다.
 
 > **나쁜 프롬프트**
 > "게시글 검색 기능 만들어줘"
@@ -251,7 +263,7 @@ Supabase 클라이언트는 다양한 **필터링**(Filtering) 메서드를 제�
 이 프롬프트로는 어떤 필드를 검색할지, 대소문자를 구분할지, 정렬은 어떻게 할지 AI가 알 수 없다.
 
 > **Copilot 프롬프트**
-> "Supabase에서 posts 테이블의 title과 content에서 키워드를 검색하는 함수를 만들어줘.
+> "Supabase에서 mindtalk_posts 테이블의 title과 content에서 키워드를 검색하는 함수를 만들어줘.
 > ilike를 사용하고, 대소문자 무시, 결과는 최신순으로 정렬해줘."
 
 ### 10.3.2 정렬과 페이지네이션
@@ -264,7 +276,7 @@ const PAGE_SIZE = 10;
 const page = 1; // 현재 페이지 (1부터 시작)
 
 const { data: posts, error, count } = await supabase
-  .from("posts")
+  .from("mindtalk_posts")
   .select("*", { count: "exact" })  // 전체 개수도 함께 조회
   .order("created_at", { ascending: false })
   .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
@@ -275,7 +287,7 @@ const totalPages = Math.ceil(count / PAGE_SIZE);
 
 **코드 읽기 가이드**:
 
-**표 10.7** 페이지네이션 코드 해석
+**표 10.6** 페이지네이션 코드 해석
 
 | 코드 | 의미 |
 |------|------|
@@ -286,17 +298,17 @@ const totalPages = Math.ceil(count / PAGE_SIZE);
 
 ### 10.3.3 관계 데이터 조회
 
-게시글 목록에 작성자 이름을 표시하려면 `profiles` 테이블의 데이터가 필요하다. Supabase는 JOIN 대신 **외래 키**(Foreign Key)를 따라가는 문법을 제공한다:
+마음톡 목록에 작성자 이름을 표시하려면 `users` 테이블의 데이터가 필요하다. Supabase는 JOIN 대신 **외래 키**(Foreign Key)를 따라가는 문법을 제공한다:
 
 ```javascript
-// 게시글 + 작성자 정보 함께 조회
+// 마음톡 글 + 작성자 정보 함께 조회
 const { data: posts, error } = await supabase
-  .from("posts")
+  .from("mindtalk_posts")
   .select(`
     *,
-    profiles (
-      username,
-      avatar_url
+    users (
+      name,
+      role
     )
   `)
   .order("created_at", { ascending: false });
@@ -312,45 +324,44 @@ const { data: posts, error } = await supabase
     "content": "안녕하세요",
     "user_id": "uuid-123",
     "created_at": "2026-03-01T10:00:00",
-    "profiles": {
-      "username": "홍길동",
-      "avatar_url": "https://..."
+    "users": {
+      "name": "홍길동",
+      "role": "user"
     }
   }
 ]
 ```
 
-`posts.user_id -> profiles.id` 외래 키 관계를 Supabase가 자동으로 인식하여, `profiles` 안에 작성자 정보가 중첩된다.
+`mindtalk_posts.user_id -> users.id` 외래 키 관계를 Supabase가 자동으로 인식하여, `users` 안에 작성자 정보가 중첩된다.
 
-> **핵심**: `.select("*, profiles(username, avatar_url)")`는 "posts의 모든 열과, 연결된 profiles의 username과 avatar_url을 가져와라"라는 뜻이다. SQL의 JOIN과 같은 결과이지만 문법이 훨씬 간결하다.
+> **핵심**: `.select("*, users(name, role)")`는 "mindtalk_posts의 모든 열과, 연결된 users의 name과 role을 가져와라"라는 뜻이다. SQL의 JOIN과 같은 결과이지만 문법이 훨씬 간결하다.
 
 ---
 
 ## 10.4 React와 CRUD 연결
 
-> **라이브 코딩 시연**: 교수가 PostList, PostForm 컴포넌트를 만들며 Supabase CRUD가 React에서 어떻게 연결되는지 시연한다
+> **라이브 코딩**: MindtalkList, MindtalkForm 컴포넌트를 만들며 Supabase CRUD가 React에서 어떻게 연결되는지 확인한다
 
 이제 Supabase CRUD를 React 컴포넌트에 연결한다.
 
 ### 10.4.1 게시글 목록 조회
 
 > **Copilot 프롬프트**
-> "Next.js App Router에서 Supabase posts 테이블의 게시글 목록을 표시하는 컴포넌트를 만들어줘.
+> "Next.js App Router에서 Supabase mindtalk_posts 테이블의 마음톡 글 목록을 표시하는 컴포넌트를 만들어줘.
 > 작성자 이름도 함께 표시하고, 최신순으로 정렬해줘.
 > useEffect와 useState를 사용하는 클라이언트 컴포넌트로 만들어줘."
 
-<!-- COPILOT_VERIFY: Copilot이 관계 데이터 조회(profiles 중첩)를 올바르게 사용하는지 확인해주세요 -->
 
-> **함께 진행**: PostList 컴포넌트를 함께 만들며 Supabase 쿼리가 React에서 어떻게 연결되는지 확인한다
+> **함께 진행**: MindtalkList 컴포넌트를 함께 만들며 Supabase 쿼리가 React에서 어떻게 연결되는지 확인한다
 
-```jsx
-// components/PostList.js
+```tsx
+// components/mindtalk-list.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 
-export default function PostList() {
+export default function MindtalkList() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -358,8 +369,8 @@ export default function PostList() {
     async function fetchPosts() {
       const supabase = createClient();
       const { data, error } = await supabase
-        .from("posts")
-        .select("*, profiles(username)")
+        .from("mindtalk_posts")
+        .select("*, users(name)")
         .order("created_at", { ascending: false });
 
       if (!error) setPosts(data);
@@ -369,15 +380,15 @@ export default function PostList() {
   }, []);
 
   if (loading) return <p>로딩 중...</p>;
-  if (posts.length === 0) return <p>게시글이 없습니다.</p>;
+  if (posts.length === 0) return <p>마음톡 글이 없습니다.</p>;
 
   return (
     <div className="space-y-4">
       {posts.map((post) => (
         <div key={post.id} className="border rounded-lg p-4">
           <h2 className="text-xl font-bold">{post.title}</h2>
-          <p className="text-gray-600 text-sm">
-            {post.profiles?.username} · {new Date(post.created_at).toLocaleDateString()}
+          <p className="text-muted-foreground text-sm">
+            {post.users?.name} · {new Date(post.created_at).toLocaleDateString()}
           </p>
           <p className="mt-2">{post.content}</p>
         </div>
@@ -391,29 +402,28 @@ export default function PostList() {
 
 - `useState([])` -- 게시글 배열, 초기값 빈 배열
 - `useState(true)` -- 처음에는 로딩 상태
-- `select("*, profiles(username)")` -- 게시글 + 작성자 이름
-- `post.profiles?.username` -- `?.`(**옵셔널 체이닝**, Optional Chaining)으로 profiles가 없어도 에러 방지
+- `select("*, users(name)")` -- 마음톡 글 + 작성자 이름
+- `post.users?.name` -- `?.`(**옵셔널 체이닝**, Optional Chaining)으로 users가 없어도 에러 방지
 
 ### 10.4.2 게시글 작성 폼
 
 > **Copilot 프롬프트**
-> "Supabase에 게시글을 작성하는 React 폼 컴포넌트를 만들어줘.
-> title과 content 입력 필드가 있고, 제출 시 posts 테이블에 insert해줘.
+> "Supabase에 마음톡 글을 작성하는 React 폼 컴포넌트를 만들어줘.
+> title과 content 입력 필드가 있고, 제출 시 mindtalk_posts 테이블에 insert해줘.
 > 로그인한 사용자의 ID를 user_id로 넣어줘.
 > useAuth Hook에서 user를 가져올 수 있어."
 
-<!-- COPILOT_VERIFY: Copilot이 useAuth()에서 user.id를 가져와 insert에 포함하는지 확인해주세요 -->
 
-```jsx
-// components/PostForm.js
+```tsx
+// components/mindtalk-form.tsx
 "use client";
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 
-export default function PostForm() {
+export default function MindtalkForm() {
   const { user } = useAuth();
   const router = useRouter();
   const [title, setTitle] = useState("");
@@ -427,7 +437,7 @@ export default function PostForm() {
     setLoading(true);
     const supabase = createClient();
     const { error } = await supabase
-      .from("posts")
+      .from("mindtalk_posts")
       .insert({
         title: title.trim(),
         content: content.trim(),
@@ -437,7 +447,7 @@ export default function PostForm() {
     if (error) {
       alert("작성 실패: " + error.message);
     } else {
-      router.push("/");  // 목록으로 이동
+      router.push("/mindtalk");  // 목록으로 이동
     }
     setLoading(false);
   }
@@ -462,7 +472,7 @@ export default function PostForm() {
       <button
         type="submit"
         disabled={loading}
-        className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+        className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50"
       >
         {loading ? "작성 중..." : "게시글 작성"}
       </button>
@@ -473,24 +483,24 @@ export default function PostForm() {
 
 ### 10.4.3 게시글 수정/삭제
 
-```javascript
-// lib/posts.js — 게시글 관련 함수 모음
+```typescript
+// lib/mindtalk.ts — 마음톡 관련 함수 모음
 import { createClient } from "@/lib/supabase";
 
-export async function updatePost(postId, { title, content }) {
+export async function updateMindtalkPost(postId, { title, content }) {
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("posts")
+    .from("mindtalk_posts")
     .update({ title, content })
     .eq("id", postId)
     .select();
   return { data, error };
 }
 
-export async function deletePost(postId) {
+export async function deleteMindtalkPost(postId) {
   const supabase = createClient();
   const { error } = await supabase
-    .from("posts")
+    .from("mindtalk_posts")
     .delete()
     .eq("id", postId);
   return { error };
@@ -504,10 +514,10 @@ export async function deletePost(postId) {
 <button
   onClick={async () => {
     if (!confirm("정말 삭제하시겠습니까?")) return;
-    const { error } = await deletePost(post.id);
+    const { error } = await deleteMindtalkPost(post.id);
     if (!error) router.refresh();
   }}
-  className="text-red-500 hover:text-red-700"
+  className="text-destructive hover:text-destructive/80"
 >
   삭제
 </button>
@@ -521,9 +531,7 @@ export async function deletePost(postId) {
 // 조건부 렌더링: 본인 글인지 확인
 {user && user.id === post.user_id && (
   <div className="flex gap-2">
-    <button onClick={() => router.push(`/posts/${post.id}/edit`)}>
-      수정
-    </button>
+    <button onClick={() => router.push(`/mindtalk/${post.id}`)}>상세</button>
     <button onClick={() => handleDelete(post.id)}>
       삭제
     </button>
@@ -547,15 +555,15 @@ _전체 프로젝트는 practice/chapter10/ 참고_
 
 ### B회차 과제 스펙
 
-**게시판 CRUD 완성 + 배포**:
+**마음톡 CRUD 완성 + 배포**:
 1. 게시글 목록 페이지 — 작성자 이름 표시, 최신순 정렬
 2. 게시글 작성 페이지 — 로그인 사용자만 접근
-3. 게시글 상세 페이지 — 본인 글에만 수정/삭제 버튼
-4. 게시글 수정 기능
-5. 게시글 삭제 기능 — 확인 대화상자 포함
+3. 마음톡 상세 페이지 — 본인 글에만 수정/삭제 버튼
+4. 마음톡 수정 기능
+5. 마음톡 삭제 기능 — 확인 대화상자 포함
 6. GitHub push + Vercel 배포
 
-**스타터 코드**: `practice/chapter10/starter/` — 게시판 프론트엔드(인증 포함)가 준비되어 있고, CRUD 함수 부분이 TODO로 비어 있다.
+**스타터 코드**: `practice/chapter10/starter/` — 마음톡 프론트엔드(인증 포함)가 준비되어 있고, CRUD 함수 부분이 TODO로 비어 있다.
 
 ---
 
@@ -565,25 +573,22 @@ _전체 프로젝트는 practice/chapter10/ 참고_
 
 ```javascript
 await supabase
-  .from("posts")
+  .from("mindtalk_posts")
   .update({ title: "수정된 제목" });
 ```
 
-정답: `.eq("id", postId)`가 없어서 **posts 테이블의 모든 행의 제목이 수정된다**. update/delete에는 반드시 조건을 지정해야 한다.
+정답: `.eq("id", postId)`가 없어서 **mindtalk_posts 테이블의 모든 행의 제목이 수정된다**. update/delete에는 반드시 조건을 지정해야 한다.
 
 ---
 
-## 교수 메모
+## 학습 체크리스트
 
-**준비물 체크리스트**:
-- [ ] Supabase 대시보드에 테스트용 게시글 3~5개 미리 입력 (SQL Editor에서)
-- [ ] SQL 4대 명령 비교 슬라이드 (SELECT/INSERT/UPDATE/DELETE)
-- [ ] Supabase 클라이언트 <> SQL 대응 표 (학생 참고용)
-- [ ] PostList, PostForm 예시 코드 (학생 복사 대비)
-- [ ] "다른 사람 글도 수정 가능" 시연 준비 (Ch11 RLS 동기부여)
+**수업 전 준비**:
+- [ ] Supabase 대시보드에 테스트용 마음톡 글 2~3개 미리 입력
+- [ ] SQL 4대 명령 (SELECT/INSERT/UPDATE/DELETE) 복습
 
-**수업 후 체크**:
-- [ ] 학생들이 SQL CRUD 4대 명령의 의미를 구분할 수 있는가
+**자기 점검**:
+- [ ] SQL CRUD 4대 명령의 의미를 구분할 수 있는가
 - [ ] Supabase 클라이언트 `.from().select()` 패턴을 이해했는가
 - [ ] `{ data, error }` 응답 패턴과 에러 처리의 중요성을 인식했는가
-- [ ] "UI에서 숨기기 != 보안"이라는 포인트가 전달되었는가
+- [ ] "UI에서 숨기기 != 보안"이라는 포인트를 이해했는가

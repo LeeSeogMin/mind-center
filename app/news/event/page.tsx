@@ -1,46 +1,30 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+"use client";
+
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
-export const metadata: Metadata = {
-  title: "이벤트",
-};
+interface EventItem {
+  id: string;
+  title: string;
+  content: string;
+  thumbnail: string | null;
+  starts_at: string | null;
+  ends_at: string | null;
+  created_at: string;
+}
 
-const EVENTS = [
-  {
-    id: 1,
-    title: "신규 내담자 첫 상담 20% 할인 이벤트",
-    dateRange: "2025.01.01 ~ 2025.03.31",
-    status: "진행중",
-    description:
-      "공감터 심리상담연구소를 처음 방문하시는 분들을 위해 첫 상담 비용을 20% 할인해 드립니다. 부담 없이 전문 상담을 경험해 보세요.",
-  },
-  {
-    id: 2,
-    title: "2025 상반기 무료 심리검사 이벤트",
-    dateRange: "2025.02.01 ~ 2025.02.28",
-    status: "진행중",
-    description:
-      "지역 주민을 대상으로 간이 성격검사와 스트레스 척도 검사를 무료로 제공합니다. 선착순 50명 한정이니 서둘러 신청해 주세요.",
-  },
-  {
-    id: 3,
-    title: "부부상담 패키지 특별 프로모션",
-    dateRange: "2025.03.01 ~ 2025.04.30",
-    status: "예정",
-    description:
-      "부부상담 10회기 패키지를 특별 가격으로 제공합니다. 소통의 어려움을 겪고 계신 부부를 위한 맞춤형 프로그램입니다.",
-  },
-  {
-    id: 4,
-    title: "청소년 자존감 향상 집단상담 프로그램",
-    dateRange: "2024.10.01 ~ 2024.12.31",
-    status: "종료",
-    description:
-      "중·고등학생을 대상으로 한 자존감 향상 집단상담 프로그램입니다. 또래와 함께 자기 이해와 긍정적 자아상을 형성해 나갑니다.",
-  },
-];
+function getEventStatus(starts_at: string | null, ends_at: string | null): string {
+  const now = new Date();
+  if (!starts_at || !ends_at) return "진행중";
+  const start = new Date(starts_at);
+  const end = new Date(ends_at);
+  if (now < start) return "예정";
+  if (now > end) return "종료";
+  return "진행중";
+}
 
 function getStatusColor(status: string) {
   switch (status) {
@@ -55,7 +39,31 @@ function getStatusColor(status: string) {
   }
 }
 
+function formatDateRange(starts_at: string | null, ends_at: string | null): string {
+  if (!starts_at || !ends_at) return "";
+  const start = new Date(starts_at).toLocaleDateString("ko-KR");
+  const end = new Date(ends_at).toLocaleDateString("ko-KR");
+  return `${start} ~ ${end}`;
+}
+
 export default function EventPage() {
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("news_posts")
+        .select("id, title, content, thumbnail, starts_at, ends_at, created_at")
+        .eq("category", "event")
+        .order("created_at", { ascending: false });
+      setEvents(data ?? []);
+      setLoading(false);
+    }
+    fetchEvents();
+  }, []);
+
   return (
     <div className="bg-[#FBF8F3]">
       {/* 페이지 헤더 */}
@@ -87,55 +95,54 @@ export default function EventPage() {
           </Link>
         </div>
 
-        {/* 이벤트 카드 */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {EVENTS.map((event) => (
-            <Card
-              key={event.id}
-              className="rounded-2xl bg-white border-[#E8DDD0] hover:border-[#C4A882] hover:shadow-md transition-all cursor-pointer group overflow-hidden"
-            >
-              {/* 썸네일 플레이스홀더 */}
-              <div className="h-48 bg-[#F3EDE5] flex items-center justify-center relative">
-                <div className="text-center text-[#C4A882]">
-                  <svg
-                    className="w-10 h-10 mx-auto mb-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <p className="text-xs">이벤트 이미지</p>
-                </div>
-                {/* 상태 뱃지 */}
-                <Badge
-                  className={`absolute top-4 right-4 ${getStatusColor(event.status)}`}
+        {loading ? (
+          <div className="text-center py-12 text-[#8C7B6B]">로딩 중...</div>
+        ) : events.length === 0 ? (
+          <div className="text-center py-12 text-[#8C7B6B]">등록된 이벤트가 없습니다.</div>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-6">
+            {events.map((event) => {
+              const status = getEventStatus(event.starts_at, event.ends_at);
+              return (
+                <Card
+                  key={event.id}
+                  className="rounded-2xl bg-white border-[#E8DDD0] hover:border-[#C4A882] hover:shadow-md transition-all cursor-pointer group overflow-hidden"
                 >
-                  {event.status}
-                </Badge>
-              </div>
+                  {/* 썸네일 */}
+                  <div className="h-48 bg-[#F3EDE5] flex items-center justify-center relative overflow-hidden">
+                    {event.thumbnail ? (
+                      <img src={event.thumbnail} alt={event.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="text-center text-[#C4A882]">
+                        <svg className="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <p className="text-xs">이벤트 이미지</p>
+                      </div>
+                    )}
+                    <Badge className={`absolute top-4 right-4 ${getStatusColor(status)}`}>
+                      {status}
+                    </Badge>
+                  </div>
 
-              <CardHeader className="pb-2">
-                <p className="text-xs text-[#D4845A] font-medium">
-                  {event.dateRange}
-                </p>
-                <h3 className="font-heading text-lg font-bold text-[#3A2E26] group-hover:text-[#8B6B4E] transition-colors leading-snug">
-                  {event.title}
-                </h3>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-[#8C7B6B] leading-relaxed line-clamp-2">
-                  {event.description}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  <CardHeader className="pb-2">
+                    <p className="text-xs text-[#D4845A] font-medium">
+                      {formatDateRange(event.starts_at, event.ends_at)}
+                    </p>
+                    <h3 className="font-heading text-lg font-bold text-[#3A2E26] group-hover:text-[#8B6B4E] transition-colors leading-snug">
+                      {event.title}
+                    </h3>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-[#8C7B6B] leading-relaxed line-clamp-2">
+                      {event.content.length > 150 ? event.content.slice(0, 150) + "..." : event.content}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
       </section>
     </div>
   );

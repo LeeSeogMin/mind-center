@@ -4,11 +4,14 @@ import { useAuth } from "@/lib/auth-context";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
-import { LayoutDashboard, CalendarDays, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, CalendarDays, Newspaper, ClipboardCheck, Users, ArrowLeft } from "lucide-react";
 
 const ADMIN_NAV = [
   { href: "/admin", icon: LayoutDashboard, label: "대시보드" },
   { href: "/admin/reservations", icon: CalendarDays, label: "예약 관리" },
+  { href: "/admin/news", icon: Newspaper, label: "센터소식 관리" },
+  { href: "/admin/tests", icon: ClipboardCheck, label: "심리검사 관리" },
+  { href: "/admin/users", icon: Users, label: "회원 관리" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

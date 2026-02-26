@@ -84,6 +84,7 @@ export interface PsychologicalTest {
   duration_min: number;
   price: number;
   is_active: boolean;
+  tags?: string[];
 }
 
 export interface NewsPost {

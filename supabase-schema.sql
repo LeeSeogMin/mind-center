@@ -109,6 +109,7 @@ CREATE TABLE public.psychological_tests (
   description TEXT,
   duration_min INTEGER,
   price INTEGER DEFAULT 0,
+  tags TEXT[] DEFAULT '{}',
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -125,6 +126,19 @@ CREATE TABLE public.news_posts (
   ends_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- ============================================================
+-- 초기 데이터 (시드)
+-- ============================================================
+
+-- 기본 상담사: 정선이 박사 (1인 상담센터)
+INSERT INTO public.counselors (title, bio, specialties, is_active)
+VALUES (
+  '정선이 상담학 박사',
+  '공감터 심리상담연구소 대표 상담사',
+  ARRAY['아동청소년', '성인', '부부·가족', '직장인·기업'],
+  true
+) ON CONFLICT DO NOTHING;
 
 -- ============================================================
 -- Row Level Security (RLS) 정책
@@ -188,6 +202,8 @@ CREATE POLICY "본인 게시글 삭제" ON public.board_posts FOR DELETE USING (
 -- psychological_tests
 ALTER TABLE public.psychological_tests ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "누구나 심리검사 조회" ON public.psychological_tests FOR SELECT USING (true);
+CREATE POLICY "관리자만 심리검사 관리" ON public.psychological_tests
+  FOR ALL USING (EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('counselor', 'admin')));
 
 -- news_posts
 ALTER TABLE public.news_posts ENABLE ROW LEVEL SECURITY;
@@ -195,3 +211,33 @@ CREATE POLICY "누구나 뉴스 조회" ON public.news_posts FOR SELECT USING (t
 CREATE POLICY "관리자/상담사만 뉴스 작성" ON public.news_posts FOR INSERT WITH CHECK (
   EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('counselor', 'admin'))
 );
+CREATE POLICY "관리자/상담사만 뉴스 수정" ON public.news_posts FOR UPDATE USING (
+  EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('counselor', 'admin'))
+);
+CREATE POLICY "관리자/상담사만 뉴스 삭제" ON public.news_posts FOR DELETE USING (
+  EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('counselor', 'admin'))
+);
+
+-- 관리자 사용자 역할 수정 정책
+CREATE POLICY "관리자 사용자 역할 수정" ON public.users
+  FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+  );
+
+-- 댓글 삭제 정책 (본인 또는 상담사/관리자)
+CREATE POLICY "본인/상담사 댓글 삭제" ON public.mindtalk_comments FOR DELETE USING (
+  auth.uid() = author_id OR
+  EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('counselor', 'admin'))
+);
+
+-- ============================================================
+-- 함수
+-- ============================================================
+
+-- 조회수 증가 함수
+CREATE OR REPLACE FUNCTION increment_view_count(post_id UUID)
+RETURNS void AS $$
+BEGIN
+  UPDATE board_posts SET view_count = view_count + 1 WHERE id = post_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

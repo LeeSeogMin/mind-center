@@ -1,43 +1,36 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+"use client";
+
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
-export const metadata: Metadata = {
-  title: "센터소식",
-};
-
-const NEWS_ITEMS = [
-  {
-    id: 1,
-    title: "공감터 심리상담연구소, 2025년 상반기 무료 심리검사 이벤트 실시",
-    date: "2025-01-20",
-    excerpt:
-      "공감터 심리상담연구소에서 2025년 상반기를 맞아 지역 주민을 대상으로 무료 심리검사 이벤트를 실시합니다. 간단한 성격검사와 스트레스 척도 검사를 받아보실 수 있습니다.",
-  },
-  {
-    id: 2,
-    title: "정선이 박사, OO대학교 상담심리학과 특강 진행",
-    date: "2025-01-15",
-    excerpt:
-      "정선이 박사가 OO대학교 상담심리학과 대학원생을 대상으로 '상담 현장에서의 통합적 접근'이라는 주제로 특강을 진행하였습니다.",
-  },
-  {
-    id: 3,
-    title: "화상상담 서비스 정식 오픈",
-    date: "2025-01-10",
-    excerpt:
-      "공감터 심리상담연구소에서 비대면 화상상담 서비스를 정식으로 오픈하였습니다. 거리나 시간 제약으로 대면 상담이 어려우신 분들도 편안하게 상담을 받으실 수 있습니다.",
-  },
-  {
-    id: 4,
-    title: "센터 리모델링 완료 안내",
-    date: "2024-12-20",
-    excerpt:
-      "보다 편안한 상담 환경을 위해 진행했던 센터 리모델링이 완료되었습니다. 새롭게 단장한 상담실에서 따뜻하고 아늑한 분위기 속에서 상담을 받으실 수 있습니다.",
-  },
-];
+interface NewsItem {
+  id: string;
+  title: string;
+  content: string;
+  thumbnail: string | null;
+  created_at: string;
+}
 
 export default function CenterNewsPage() {
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchNews() {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("news_posts")
+        .select("id, title, content, thumbnail, created_at")
+        .eq("category", "center")
+        .order("created_at", { ascending: false });
+      setNews(data ?? []);
+      setLoading(false);
+    }
+    fetchNews();
+  }, []);
+
   return (
     <div className="bg-[#FBF8F3]">
       {/* 페이지 헤더 */}
@@ -69,46 +62,47 @@ export default function CenterNewsPage() {
           </Link>
         </div>
 
-        {/* 소식 카드 */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {NEWS_ITEMS.map((item) => (
-            <Card
-              key={item.id}
-              className="rounded-2xl bg-white border-[#E8DDD0] hover:border-[#C4A882] hover:shadow-md transition-all cursor-pointer group"
-            >
-              {/* 썸네일 플레이스홀더 */}
-              <div className="h-48 bg-[#F3EDE5] rounded-t-2xl flex items-center justify-center">
-                <div className="text-center text-[#C4A882]">
-                  <svg
-                    className="w-10 h-10 mx-auto mb-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-                    />
-                  </svg>
-                  <p className="text-xs">이미지</p>
+        {loading ? (
+          <div className="text-center py-12 text-[#8C7B6B]">로딩 중...</div>
+        ) : news.length === 0 ? (
+          <div className="text-center py-12 text-[#8C7B6B]">등록된 소식이 없습니다.</div>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-6">
+            {news.map((item) => (
+              <Card
+                key={item.id}
+                className="rounded-2xl bg-white border-[#E8DDD0] hover:border-[#C4A882] hover:shadow-md transition-all cursor-pointer group"
+              >
+                {/* 썸네일 */}
+                <div className="h-48 bg-[#F3EDE5] rounded-t-2xl flex items-center justify-center overflow-hidden">
+                  {item.thumbnail ? (
+                    <img src={item.thumbnail} alt={item.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center text-[#C4A882]">
+                      <svg className="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                      </svg>
+                      <p className="text-xs">이미지</p>
+                    </div>
+                  )}
                 </div>
-              </div>
-              <CardHeader className="pb-2">
-                <p className="text-xs text-[#8C7B6B]">{item.date}</p>
-                <h3 className="font-heading text-lg font-bold text-[#3A2E26] group-hover:text-[#8B6B4E] transition-colors leading-snug">
-                  {item.title}
-                </h3>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-[#8C7B6B] leading-relaxed line-clamp-2">
-                  {item.excerpt}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                <CardHeader className="pb-2">
+                  <p className="text-xs text-[#8C7B6B]">
+                    {new Date(item.created_at).toLocaleDateString("ko-KR")}
+                  </p>
+                  <h3 className="font-heading text-lg font-bold text-[#3A2E26] group-hover:text-[#8B6B4E] transition-colors leading-snug">
+                    {item.title}
+                  </h3>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-[#8C7B6B] leading-relaxed line-clamp-2">
+                    {item.content.length > 150 ? item.content.slice(0, 150) + "..." : item.content}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

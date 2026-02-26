@@ -66,7 +66,7 @@ export default function MyPostsPage() {
 
   function getPostLink(post: MyPost) {
     if (post.type === "mindtalk") return `/mindtalk/${post.id}`;
-    return `/board/${post.category ?? "review"}`;
+    return `/board/${post.category ?? "review"}/${post.id}`;
   }
 
   function getTypeLabel(post: MyPost) {

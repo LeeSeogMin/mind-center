@@ -1,15 +1,24 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Link from "next/link";
-import { ArrowLeft, MessageCircle } from "lucide-react";
+import { ArrowLeft, MessageCircle, Pencil, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
@@ -35,6 +44,7 @@ interface Comment {
 
 export default function MindtalkDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const postId = params.id as string;
   const { user, profile } = useAuth();
   const [post, setPost] = useState<Post | null>(null);
@@ -42,6 +52,9 @@ export default function MindtalkDetailPage() {
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deletingCommentId, setDeletingCommentId] = useState<string | null>(null);
 
   const fetchPost = useCallback(async () => {
     const supabase = createClient();
@@ -95,6 +108,43 @@ export default function MindtalkDetailPage() {
     }
   };
 
+  const handleDeletePost = async () => {
+    setDeleting(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("mindtalk_posts")
+        .delete()
+        .eq("id", postId);
+      if (error) throw error;
+      toast.success("글이 삭제되었습니다.");
+      router.push("/mindtalk");
+    } catch {
+      toast.error("삭제에 실패했습니다.");
+    } finally {
+      setDeleting(false);
+      setDeleteDialogOpen(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    setDeletingCommentId(commentId);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("mindtalk_comments")
+        .delete()
+        .eq("id", commentId);
+      if (error) throw error;
+      toast.success("댓글이 삭제되었습니다.");
+      await fetchComments();
+    } catch {
+      toast.error("댓글 삭제에 실패했습니다.");
+    } finally {
+      setDeletingCommentId(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="bg-[#FBF8F3] min-h-screen flex items-center justify-center">
@@ -137,9 +187,41 @@ export default function MindtalkDetailPage() {
                 {post.is_answered ? "답변완료" : "답변대기"}
               </Badge>
             </div>
-            <p className="text-sm text-[#8C7B6B]">
-              {maskedName} · {new Date(post.created_at).toLocaleDateString("ko-KR")}
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-[#8C7B6B]">
+                {maskedName} · {new Date(post.created_at).toLocaleDateString("ko-KR")}
+              </p>
+              {user?.id === post.user_id && (
+                <div className="flex gap-2">
+                  <Link href={`/mindtalk/${postId}/edit`}>
+                    <Button variant="outline" size="sm" className="border-[#E8DDD0] text-[#8C7B6B]">
+                      <Pencil className="w-4 h-4 mr-1" /> 수정
+                    </Button>
+                  </Link>
+                  <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm" className="border-[#E8DDD0] text-red-500 hover:text-red-600">
+                        <Trash2 className="w-4 h-4 mr-1" /> 삭제
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>글 삭제</DialogTitle>
+                        <DialogDescription>정말로 이 글을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setDeleteDialogOpen(false)} className="border-[#E8DDD0]">
+                          취소
+                        </Button>
+                        <Button onClick={handleDeletePost} disabled={deleting} className="bg-red-500 hover:bg-red-600 text-white">
+                          {deleting ? "삭제 중..." : "삭제"}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             <p className="text-[#3A2E26] leading-relaxed whitespace-pre-line">{post.content}</p>
@@ -176,6 +258,17 @@ export default function MindtalkDetailPage() {
                     </div>
                     {isCounselor && (
                       <Badge className="bg-[#C4A882] text-white ml-auto">상담사</Badge>
+                    )}
+                    {(user?.id === c.author_id || profile?.role === "counselor" || profile?.role === "admin") && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteComment(c.id)}
+                        disabled={deletingCommentId === c.id}
+                        className="text-red-400 hover:text-red-500 ml-auto"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     )}
                   </div>
                   <p className="text-[#3A2E26] leading-relaxed whitespace-pre-line">{c.content}</p>

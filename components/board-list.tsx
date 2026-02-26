@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
+import BoardWriteButton from "@/components/board-write-button";
 
 interface BoardListProps {
   category: "notice" | "review" | "column";
@@ -74,8 +74,9 @@ export default async function BoardList({ category, title }: BoardListProps) {
             const users = post.users as unknown as { name: string } | null;
             const authorName = users?.name ?? "익명";
             return (
-              <div
+              <Link
                 key={post.id}
+                href={`/board/${category}/${post.id}`}
                 className={`grid sm:grid-cols-[1fr_100px_100px_80px] gap-2 sm:gap-4 px-6 py-4 hover:bg-[#FBF8F3] transition-colors cursor-pointer ${
                   index < postList.length - 1 ? "border-b border-[#E8DDD0]" : ""
                 }`}
@@ -92,16 +93,14 @@ export default async function BoardList({ category, title }: BoardListProps) {
                 <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
                   {post.view_count}
                 </span>
-              </div>
+              </Link>
             );
           })}
         </div>
 
         {/* 글쓰기 버튼 */}
         <div className="flex justify-end mt-6">
-          <Button className="bg-[#8B6B4E] hover:bg-[#7A5D42] text-white rounded-xl">
-            글쓰기
-          </Button>
+          <BoardWriteButton category={category} />
         </div>
       </section>
     </div>

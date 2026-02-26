@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Heart } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import BoardWriteButton from "@/components/board-write-button";
 
@@ -19,7 +20,7 @@ export default async function BoardList({ category, title }: BoardListProps) {
 
   const { data: posts } = await supabase
     .from("board_posts")
-    .select("id, title, created_at, view_count, users:author_id(name), board_comments(count)")
+    .select("id, title, created_at, view_count, users:author_id(name), board_comments(count), board_likes(count)")
     .eq("category", category)
     .order("created_at", { ascending: false });
 
@@ -58,11 +59,12 @@ export default async function BoardList({ category, title }: BoardListProps) {
         {/* 게시글 목록 */}
         <div className="bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden">
           {/* 테이블 헤더 */}
-          <div className="hidden sm:grid grid-cols-[1fr_100px_100px_80px] gap-4 px-6 py-3 bg-[#FBF8F3] border-b border-[#E8DDD0] text-xs text-[#8C7B6B] font-medium">
+          <div className="hidden sm:grid grid-cols-[1fr_100px_100px_60px_60px] gap-4 px-6 py-3 bg-[#FBF8F3] border-b border-[#E8DDD0] text-xs text-[#8C7B6B] font-medium">
             <span>제목</span>
             <span className="text-center">작성자</span>
             <span className="text-center">작성일</span>
             <span className="text-center">조회</span>
+            <span className="text-center">좋아요</span>
           </div>
 
           {postList.length === 0 && (
@@ -76,18 +78,19 @@ export default async function BoardList({ category, title }: BoardListProps) {
             const users = post.users as unknown as { name: string } | null;
             const authorName = users?.name ?? "익명";
             const commentNum = post.board_comments?.[0]?.count ?? 0;
+            const likeNum = post.board_likes?.[0]?.count ?? 0;
             return (
               <Link
                 key={post.id}
                 href={`/board/${category}/${post.id}`}
-                className={`grid sm:grid-cols-[1fr_100px_100px_80px] gap-2 sm:gap-4 px-6 py-4 hover:bg-[#FBF8F3] transition-colors cursor-pointer ${
+                className={`grid sm:grid-cols-[1fr_100px_100px_60px_60px] gap-2 sm:gap-4 px-6 py-4 hover:bg-[#FBF8F3] transition-colors cursor-pointer ${
                   index < postList.length - 1 ? "border-b border-[#E8DDD0]" : ""
                 }`}
               >
                 <span className="text-sm text-[#3A2E26] font-medium hover:text-[#8B6B4E] transition-colors">
                   {post.title}
-                  {category === "qna" && commentNum > 0 && (
-                    <span className="text-[#8B6B4E] text-xs ml-2">[댓글 {commentNum}]</span>
+                  {commentNum > 0 && (
+                    <span className="text-[#8B6B4E] text-xs ml-2">[{commentNum}]</span>
                   )}
                 </span>
                 <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
@@ -98,6 +101,9 @@ export default async function BoardList({ category, title }: BoardListProps) {
                 </span>
                 <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
                   {post.view_count}
+                </span>
+                <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center flex items-center justify-center gap-1">
+                  <Heart className="w-3 h-3" /> {likeNum}
                 </span>
               </Link>
             );

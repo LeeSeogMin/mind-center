@@ -86,6 +86,13 @@ export interface BoardComment {
   users?: { name: string; role: string };
 }
 
+export interface BoardLike {
+  id: string;
+  post_id: string;
+  user_id: string;
+  created_at: string;
+}
+
 export interface PsychologicalTest {
   id: string;
   name: string;

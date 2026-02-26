@@ -18,7 +18,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Link from "next/link";
-import { ArrowLeft, MessageCircle, Pencil, Trash2 } from "lucide-react";
+import { ArrowLeft, Heart, MessageCircle, Pencil, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
@@ -56,8 +56,8 @@ export default function BoardDetailPage() {
   const [deleting, setDeleting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deletingCommentId, setDeletingCommentId] = useState<string | null>(null);
-
-  const isQna = category === "qna";
+  const [likeCount, setLikeCount] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
 
   const fetchPost = useCallback(async () => {
     const supabase = createClient();
@@ -70,7 +70,6 @@ export default function BoardDetailPage() {
   }, [postId]);
 
   const fetchComments = useCallback(async () => {
-    if (!isQna) return;
     const supabase = createClient();
     const { data } = await supabase
       .from("board_comments")
@@ -78,17 +77,36 @@ export default function BoardDetailPage() {
       .eq("post_id", postId)
       .order("created_at", { ascending: true });
     setComments(data ?? []);
-  }, [postId, isQna]);
+  }, [postId]);
+
+  const fetchLikes = useCallback(async () => {
+    const supabase = createClient();
+    const { count } = await supabase
+      .from("board_likes")
+      .select("*", { count: "exact", head: true })
+      .eq("post_id", postId);
+    setLikeCount(count ?? 0);
+
+    if (user) {
+      const { data } = await supabase
+        .from("board_likes")
+        .select("id")
+        .eq("post_id", postId)
+        .eq("user_id", user.id)
+        .maybeSingle();
+      setIsLiked(!!data);
+    }
+  }, [postId, user]);
 
   useEffect(() => {
     async function load() {
-      await Promise.all([fetchPost(), fetchComments()]);
+      await Promise.all([fetchPost(), fetchComments(), fetchLikes()]);
       const supabase = createClient();
       await supabase.rpc("increment_view_count", { post_id: postId });
       setLoading(false);
     }
     load();
-  }, [fetchPost, fetchComments, postId]);
+  }, [fetchPost, fetchComments, fetchLikes, postId]);
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -148,6 +166,32 @@ export default function BoardDetailPage() {
       toast.error("댓글 삭제에 실패했습니다.");
     } finally {
       setDeletingCommentId(null);
+    }
+  };
+
+  const handleToggleLike = async () => {
+    if (!user) {
+      toast.error("로그인이 필요합니다.");
+      return;
+    }
+    try {
+      const supabase = createClient();
+      if (isLiked) {
+        const { error } = await supabase
+          .from("board_likes")
+          .delete()
+          .eq("post_id", postId)
+          .eq("user_id", user.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("board_likes")
+          .insert({ post_id: postId, user_id: user.id });
+        if (error) throw error;
+      }
+      await fetchLikes();
+    } catch {
+      toast.error("좋아요 처리에 실패했습니다.");
     }
   };
 
@@ -226,94 +270,101 @@ export default function BoardDetailPage() {
           </CardHeader>
           <CardContent>
             <p className="text-[#3A2E26] leading-relaxed whitespace-pre-line">{post.content}</p>
+            <div className="mt-6 pt-4 border-t border-[#E8DDD0] flex items-center gap-2">
+              <button
+                onClick={handleToggleLike}
+                className="flex items-center gap-1.5 text-sm transition-colors hover:opacity-80"
+              >
+                <Heart
+                  className={`w-5 h-5 ${isLiked ? "fill-red-500 text-red-500" : "text-[#8C7B6B]"}`}
+                />
+                <span className={isLiked ? "text-red-500" : "text-[#8C7B6B]"}>{likeCount}</span>
+              </button>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Q&A 댓글 섹션 */}
-        {isQna && (
+        {/* 댓글 섹션 */}
+        <div className="mt-8 space-y-4">
+          <div className="flex items-center gap-2">
+            <MessageCircle className="w-5 h-5 text-[#8B6B4E]" />
+            <h3 className="font-heading text-lg font-bold text-[#3A2E26]">
+              댓글 ({comments.length})
+            </h3>
+          </div>
+
+          {comments.length === 0 && (
+            <p className="text-sm text-[#8C7B6B] py-4">아직 댓글이 없습니다.</p>
+          )}
+
+          {comments.map((c) => {
+            const isCounselor = c.users?.role === "counselor" || c.users?.role === "admin";
+            return (
+              <Card key={c.id} className={`rounded-2xl bg-white ${isCounselor ? "border-[#C4A882]" : "border-[#E8DDD0]"}`}>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Avatar className="w-10 h-10">
+                      <AvatarFallback className={`text-white text-sm ${isCounselor ? "bg-[#8B6B4E]" : "bg-[#C4A882]"}`}>
+                        {(c.users?.name ?? "?")[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium text-[#3A2E26]">{c.users?.name ?? "익명"}</p>
+                      <p className="text-xs text-[#8C7B6B]">{new Date(c.created_at).toLocaleDateString("ko-KR")}</p>
+                    </div>
+                    {isCounselor && (
+                      <Badge className="bg-[#C4A882] text-white ml-auto">상담사</Badge>
+                    )}
+                    {(user?.id === c.author_id || profile?.role === "counselor" || profile?.role === "admin") && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteComment(c.id)}
+                        disabled={deletingCommentId === c.id}
+                        className="text-red-400 hover:text-red-500 ml-auto"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-[#3A2E26] leading-relaxed whitespace-pre-line">{c.content}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* 댓글 작성 폼 */}
+        {user ? (
           <>
-            <div className="mt-8 space-y-4">
-              <div className="flex items-center gap-2">
-                <MessageCircle className="w-5 h-5 text-[#8B6B4E]" />
-                <h3 className="font-heading text-lg font-bold text-[#3A2E26]">
-                  댓글 ({comments.length})
-                </h3>
-              </div>
-
-              {comments.length === 0 && (
-                <p className="text-sm text-[#8C7B6B] py-4">아직 댓글이 없습니다.</p>
-              )}
-
-              {comments.map((c) => {
-                const isCounselor = c.users?.role === "counselor" || c.users?.role === "admin";
-                return (
-                  <Card key={c.id} className={`rounded-2xl bg-white ${isCounselor ? "border-[#C4A882]" : "border-[#E8DDD0]"}`}>
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <Avatar className="w-10 h-10">
-                          <AvatarFallback className={`text-white text-sm ${isCounselor ? "bg-[#8B6B4E]" : "bg-[#C4A882]"}`}>
-                            {(c.users?.name ?? "?")[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium text-[#3A2E26]">{c.users?.name ?? "익명"}</p>
-                          <p className="text-xs text-[#8C7B6B]">{new Date(c.created_at).toLocaleDateString("ko-KR")}</p>
-                        </div>
-                        {isCounselor && (
-                          <Badge className="bg-[#C4A882] text-white ml-auto">상담사</Badge>
-                        )}
-                        {(user?.id === c.author_id || profile?.role === "counselor" || profile?.role === "admin") && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDeleteComment(c.id)}
-                            disabled={deletingCommentId === c.id}
-                            className="text-red-400 hover:text-red-500 ml-auto"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        )}
-                      </div>
-                      <p className="text-[#3A2E26] leading-relaxed whitespace-pre-line">{c.content}</p>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+            <Separator className="my-8 bg-[#E8DDD0]" />
+            <Card className="border-[#E8DDD0] rounded-2xl">
+              <CardContent className="p-6">
+                <Textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="댓글을 작성해 주세요..."
+                  className="border-[#E8DDD0] rounded-xl min-h-[100px] mb-4"
+                />
+                <Button
+                  onClick={handleCommentSubmit}
+                  disabled={submitting || !comment.trim()}
+                  className="bg-[#8B6B4E] hover:bg-[#7A5D42]"
+                >
+                  {submitting ? "등록 중..." : "댓글 등록"}
+                </Button>
+              </CardContent>
+            </Card>
+          </>
+        ) : (
+          <>
+            <Separator className="my-8 bg-[#E8DDD0]" />
+            <div className="text-center py-4">
+              <p className="text-sm text-[#8C7B6B] mb-2">댓글을 작성하려면 로그인이 필요합니다.</p>
+              <Link href="/login">
+                <Button variant="outline" className="border-[#E8DDD0]">로그인하기</Button>
+              </Link>
             </div>
-
-            {/* 댓글 작성 폼 */}
-            {user ? (
-              <>
-                <Separator className="my-8 bg-[#E8DDD0]" />
-                <Card className="border-[#E8DDD0] rounded-2xl">
-                  <CardContent className="p-6">
-                    <Textarea
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                      placeholder="댓글을 작성해 주세요..."
-                      className="border-[#E8DDD0] rounded-xl min-h-[100px] mb-4"
-                    />
-                    <Button
-                      onClick={handleCommentSubmit}
-                      disabled={submitting || !comment.trim()}
-                      className="bg-[#8B6B4E] hover:bg-[#7A5D42]"
-                    >
-                      {submitting ? "등록 중..." : "댓글 등록"}
-                    </Button>
-                  </CardContent>
-                </Card>
-              </>
-            ) : (
-              <>
-                <Separator className="my-8 bg-[#E8DDD0]" />
-                <div className="text-center py-4">
-                  <p className="text-sm text-[#8C7B6B] mb-2">댓글을 작성하려면 로그인이 필요합니다.</p>
-                  <Link href="/login">
-                    <Button variant="outline" className="border-[#E8DDD0]">로그인하기</Button>
-                  </Link>
-                </div>
-              </>
-            )}
           </>
         )}
       </div>

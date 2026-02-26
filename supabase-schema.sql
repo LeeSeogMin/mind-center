@@ -123,6 +123,15 @@ CREATE TABLE public.board_comments (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 10. board_likes 테이블
+CREATE TABLE public.board_likes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  post_id UUID NOT NULL REFERENCES public.board_posts(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(post_id, user_id)
+);
+
 -- ============================================================
 -- 초기 데이터 (시드)
 -- ============================================================
@@ -209,6 +218,12 @@ CREATE POLICY "본인/상담사 댓글 삭제" ON public.board_comments FOR DELE
   auth.uid() = author_id OR
   EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('counselor', 'admin'))
 );
+
+-- board_likes
+ALTER TABLE public.board_likes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "누구나 좋아요 조회" ON public.board_likes FOR SELECT USING (true);
+CREATE POLICY "로그인 사용자 좋아요" ON public.board_likes FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "본인 좋아요 취소" ON public.board_likes FOR DELETE USING (auth.uid() = user_id);
 
 -- 관리자 사용자 역할 수정 정책
 CREATE POLICY "관리자 사용자 역할 수정" ON public.users

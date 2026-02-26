@@ -51,6 +51,26 @@
 
 ## 진행률: 31/31 (100%) — MVP 완료!
 
+## 5.5단계: 관리자 + 마이페이지 실데이터 + 구글 미트
+- [x] lib/types.ts — Reservation에 meet_link, user 필드 추가
+- [x] middleware.ts — /admin/:path* 보호 추가
+- [x] supabase-rls-supplement.sql — 관리자 SELECT/UPDATE RLS 정책 추가
+- [x] Supabase SQL Editor에서 관리자 RLS 2개 실행 (🖱️ 수동)
+- [x] app/admin/layout.tsx — 관리자 레이아웃 + 권한 가드
+- [x] app/admin/loading.tsx — 로딩 스피너
+- [x] app/admin/page.tsx — 관리자 대시보드 (통계 카드 + 최근 대기 예약)
+- [x] app/admin/reservations/page.tsx — 예약 관리 (필터 + 확정/취소/완료 다이얼로그)
+- [x] components/layout/header.tsx — 관리자 버튼 추가 (role=admin/counselor)
+- [x] app/mypage/page.tsx — 하드코딩 → Supabase 실데이터 연결
+- [x] app/mypage/reservations/page.tsx — 실데이터 + 구글 미트 입장 버튼
+- [x] app/mypage/payments/page.tsx — 실데이터 (payment_status=paid)
+- [x] app/mypage/posts/page.tsx — 실데이터 (mindtalk + board 병합)
+- [x] Supabase에서 newmind68@hs.ac.kr role=admin 설정 (🖱️ 수동)
+- [x] Playwright MCP로 전체 동작 확인
+- [x] Vercel 재배포
+
+## 진행률: 47/47 (100%) — 관리자+마이페이지 완료!
+
 ---
 
 ## 6단계: 결제 연동 (추후)
@@ -60,5 +80,5 @@
 - [ ] app/api/payment/confirm/route.ts — 결제 승인 API
 - [ ] app/api/payment/webhook/route.ts — 결제 웹훅 처리
 - [ ] 예약 확정(confirmed) 시 결제 링크 발송 로직
-- [ ] 결제 완료(paid) 시 화상상담 구글 미트 링크 노출
+- [x] 결제 완료(paid) 시 화상상담 구글 미트 링크 노출 — 구조 구현 완료
 - [ ] 결제 플로우 테스트 (테스트 키 기준)

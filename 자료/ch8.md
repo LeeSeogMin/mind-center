@@ -604,8 +604,9 @@ Copilot에게 SQL을 요청한다. **구체적인 프롬프트**가 핵심이다
 
 > **🤖 Copilot 프롬프트**
 > "Supabase에서 게시판을 위한 SQL 테이블을 만들어줘.
-> profiles 테이블(id, username, avatar_url)과 posts 테이블(id, title, content, user_id, created_at)이 필요해.
+> profiles 테이블(id, username, avatar_url, role)과 posts 테이블(id, title, content, user_id, created_at)이 필요해.
 > profiles.id는 auth.users.id를 참조하고, posts.user_id는 profiles.id를 참조해.
+> role은 'user', 'counselor', 'admin' 중 하나이고 기본값은 'user'.
 > RLS는 아직 설정하지 마."
 
 Copilot이 생성한 SQL을 **읽고 확인**한다:
@@ -616,6 +617,7 @@ create table profiles (
   id uuid references auth.users(id) on delete cascade,
   username text,
   avatar_url text,
+  role text not null default 'user' check (role in ('user', 'counselor', 'admin')),
   created_at timestamptz default now(),
   primary key (id)
 );
@@ -641,8 +643,12 @@ create table posts (
 | `references auth.users(id)`            | Supabase Auth의 `users` 테이블 `id`를 참조한다 |
 | `on delete cascade`                    | 사용자가 삭제되면 프로필도 함께 삭제된다       |
 | `username text`                        | 문자열 타입의 `username` 열                    |
+| `role text not null default 'user'`    | 사용자 역할, 기본값은 일반 사용자(`'user'`)    |
+| `check (role in ('user', 'counselor', 'admin'))` | 허용되는 역할을 제한하는 CHECK 제약 |
 | `created_at timestamptz default now()` | 생성 시각, 기본값은 현재 시간                  |
 | `primary key (id)`                     | `id`를 기본 키로 설정                          |
+
+> `role` 컬럼은 Ch9(인증)에서 프로필 조회, Ch11(RLS)에서 역할 기반 접근 제어에 활용한다. 지금은 컬럼만 추가해두고, 실제 활용은 이후 장에서 점진적으로 진행한다.
 
 **표 8.9** posts 테이블 SQL 해석
 

@@ -240,6 +240,8 @@ supabase.auth.onAuthStateChange((event, session) => {
 > user 정보, loading 상태, signInWithEmail, signUpWithEmail, signOut 함수를 제공해줘.
 > @supabase/ssr의 createBrowserClient를 사용해줘."
 
+Supabase Auth의 `user` 객체에는 이메일과 ID만 들어 있다. 닉네임, 역할(role) 등 추가 정보는 Ch8에서 만든 `profiles` 테이블에서 별도로 조회해야 한다. 아래 코드에서 `profile` 상태와 `fetchProfile` 함수가 이 역할을 한다.
+
 ```tsx
 // lib/auth-context.tsx
 "use client";
@@ -252,7 +254,19 @@ const AuthContext = createContext({});
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // profiles 테이블에서 닉네임, 역할 등 추가 정보 조회
+  async function fetchProfile(userId) {
+    const supabase = createClient();
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .single();
+    setProfile(data);
+  }
 
   useEffect(() => {
     const supabase = createClient();
@@ -260,6 +274,7 @@ export function AuthProvider({ children }) {
     // 현재 세션 확인
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
+      if (user) fetchProfile(user.id);
       setLoading(false);
     });
 
@@ -267,7 +282,13 @@ export function AuthProvider({ children }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+      if (currentUser) {
+        fetchProfile(currentUser.id);
+      } else {
+        setProfile(null);
+      }
       setLoading(false);
     });
 
@@ -278,6 +299,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
+        profile,
         loading,
         signInWithEmail,
         signUpWithEmail,
@@ -300,8 +322,10 @@ export function useAuth() {
 
 | 부분                         | 역할                                                |
 | ---------------------------- | --------------------------------------------------- |
-| `useState(null)`             | 초기에는 사용자 정보 없음                           |
+| `useState(null)` (user)      | 초기에는 사용자 정보 없음                           |
+| `useState(null)` (profile)   | profiles 테이블의 추가 정보 (닉네임, 역할 등)       |
 | `useState(true)`             | 처음에는 로딩 상태 (세션 확인 중)                   |
+| `fetchProfile(userId)`       | profiles 테이블에서 닉네임, role 등 조회            |
 | `getUser()`                  | 페이지 로드 시 현재 로그인한 사용자 확인            |
 | `onAuthStateChange`          | 로그인/로그아웃 이벤트를 실시간 감지                |
 | `session?.user ?? null`      | 세션이 있으면 사용자 정보, 없으면 null              |
@@ -340,13 +364,19 @@ import { useAuth } from "@/lib/auth-context";
 // 핵심 패턴만 발췌:
 
 function AuthButtons() {
-  const { user, loading, signOut } = useAuth();
+  const { user, profile, loading, signOut } = useAuth();
 
   if (loading)
     return <span className="text-sm text-[#8C7B6B]">로딩 중...</span>;
 
   return user ? (
     <div className="flex items-center gap-4">
+      {/* 관리자/상담사 역할이면 관리자 버튼 표시 */}
+      {(profile?.role === "admin" || profile?.role === "counselor") && (
+        <Link href="/admin" className="text-sm text-[#D4845A] font-medium">
+          관리자
+        </Link>
+      )}
       <Link href="/mypage" className="text-sm text-[#8B6B4E]">
         마이페이지
       </Link>
@@ -373,8 +403,10 @@ function AuthButtons() {
 **코드 읽기 가이드** — 이 컴포넌트의 핵심은 **조건부 렌더링**이다:
 
 - `loading`이 `true`면 → "로딩 중..." 표시
-- `user`가 있으면 → 이메일 + 로그아웃 버튼
+- `user`가 있으면 → (관리자인 경우 관리자 버튼) + 마이페이지 + 로그아웃 버튼
 - `user`가 없으면 → 로그인 버튼
+
+> 관리자 버튼은 **UX 편의**일 뿐이다. `profile?.role`로 버튼 노출을 제어하지만, 실제 접근 제한은 미들웨어(로그인 여부 확인)와 `/admin` 레이아웃 컴포넌트(역할 확인), 그리고 Ch11의 RLS(DB 레벨 보안)가 담당한다.
 
 ### 9.4.3 보호된 페이지 만들기 (미들웨어) `🤖 바이브코딩`
 
@@ -429,9 +461,11 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/mypage/:path*", "/mindtalk/new"],
+  matcher: ["/mypage/:path*", "/mindtalk/new", "/admin/:path*"],
 };
 ```
+
+> 미들웨어는 **'로그인 여부'만 확인**한다. '관리자인지'는 `/admin` 레이아웃 컴포넌트에서 `profile.role`로 확인하고, DB 레벨 보안은 Ch11 RLS가 담당한다. 이렇게 계층별로 역할을 나누면 보안이 더 견고해진다.
 
 **코드 읽기 가이드**:
 

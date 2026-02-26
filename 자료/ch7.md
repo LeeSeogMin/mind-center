@@ -285,7 +285,9 @@ AI는 텍스트로 학습했다. "깔끔한 디자인"이라고 요청하면, AI
 │   ├── 마음톡 상세 (/mindtalk/[id])
 │   └── 마음톡 작성 (/mindtalk/new)
 ├── 로그인 (/login)
-└── 마이페이지 (/mypage)
+├── 마이페이지 (/mypage)
+├── 관리자 대시보드 (/admin)              ← 관리자/상담사만
+│   └── 예약 관리 (/admin/reservations)   ← 관리자/상담사만
 ```
 
 **페이지 맵은 종이에 그려도 충분하다.** 중요한 것은 "어떤 페이지가 있는지"와 "페이지 간 관계"를 한눈에 파악하는 것이다.
@@ -316,6 +318,15 @@ Next.js의 파일 기반 라우팅이 여기서 다시 등장한다. 설계 단�
 ```
 홈 → "마음톡" 진입 → "글쓰기" 클릭 → 로그인 페이지로 이동 → 이메일 로그인
 → 마음톡 작성 페이지로 돌아옴 → 글 작성 → 제출 → 마음톡 상세
+```
+
+유저 플로우는 '고객' 관점 외에 **'관리자/상담사' 관점**도 함께 정리한다. 역할별로 접근하는 페이지와 수행하는 작업이 다르기 때문이다.
+
+예를 들어 "상담사가 예약을 관리하는 경우":
+
+```
+관리자 로그인 → /admin 대시보드 → 대기 중 예약 확인
+→ 예약 확정(금액 입력 + 구글 미트 링크) → 상태 변경(확정/취소/완료)
 ```
 
 이런 흐름을 미리 정리해두면 두 가지가 좋아진다:
@@ -617,7 +628,8 @@ users (사용자)
 ├── id: UUID (자동 생성)
 ├── email: 이메일
 ├── name: 이름
-└── avatar_url: 프로필 이미지 URL
+├── avatar_url: 프로필 이미지 URL
+└── role: 역할 ('user', 'counselor', 'admin')
 
 posts (게시글)
 ├── id: UUID (자동 생성)
@@ -626,6 +638,8 @@ posts (게시글)
 ├── author_id: 작성자 (→ users.id)
 └── created_at: 작성일시 (자동 생성)
 ```
+
+대부분의 웹앱은 **사용자 역할(role)**이 필요하다. 일반 사용자, 상담사, 관리자처럼 역할에 따라 접근 가능한 페이지와 수행 가능한 작업이 달라진다. `role` 컬럼은 Ch9(인증)에서 프로필 조회에 활용하고, Ch11(RLS)에서 역할 기반 접근 제어에 사용한다.
 
 **테이블 관계**: 한 명의 사용자(users)가 여러 개의 마음톡 글(mindtalk_posts)을 작성할 수 있다 → **1:N 관계**. `mindtalk_posts.user_id`가 `users.id`를 참조한다.
 
@@ -646,6 +660,8 @@ posts (게시글)
 - /mindtalk/[id] — 마음톡 상세
 - /login — 로그인
 - /mypage — 마이페이지
+- /admin — 관리자 대시보드 (관리자/상담사만)
+- /admin/reservations — 예약 관리 (관리자/상담사만)
 
 ## User Flow
 
@@ -656,19 +672,20 @@ posts (게시글)
 ## Component Hierarchy
 
 Layout
-├── Header (네비게이션: 로고, 예약, 마음톡, 로그인/마이페이지)
+├── Header (네비게이션: 로고, 예약, 마음톡, 로그인/마이페이지, 관리자)
 ├── Main
 │ ├── MindtalkList (마음톡 카드 목록)
 │ ├── MindtalkDetail (마음톡 상세)
 │ ├── MindtalkForm (마음톡 작성 폼)
 │ ├── ReservationForm (예약 신청 폼)
 │ ├── LoginPage (로그인)
-│ └── MyPage (내 예약/내 마음톡)
+│ ├── MyPage (내 예약/내 마음톡)
+│ └── AdminDashboard (관리자 대시보드 — 관리자/상담사만)
 └── Footer
 
 ## Data Model
 
-- users: id, email, name, avatar_url
+- users: id, email, name, avatar_url, role ('user'|'counselor'|'admin')
 - mindtalk_posts: id, title, content, user_id (→ users.id), is_private, created_at
 - reservations: id, user_id (→ users.id), type, status, created_at
 

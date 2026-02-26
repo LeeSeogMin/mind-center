@@ -9,7 +9,7 @@ export default function ProcessSection() {
             상담 진행 과정
           </h2>
           <p className="mt-3 text-[#8C7B6B]">
-            공감터의 체계적인 상담 프로세스를 안내합니다
+            온라인으로 간편하게 진행되는 공감터의 상담 프로세스를 안내합니다
           </p>
         </div>
 

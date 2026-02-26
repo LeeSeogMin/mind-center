@@ -9,8 +9,8 @@ export default function ReservationCTA() {
             지금 바로 예약하세요
           </h2>
           <p className="text-[#E8DDD0] max-w-md leading-relaxed">
-            전문 상담사와 함께 마음의 변화를 시작하세요.
-            대면상담과 화상상담 모두 가능합니다.
+            정선이 박사와 함께 마음의 변화를 시작하세요.
+            Google Meet 화상상담으로 어디서든 편안하게 상담받으실 수 있습니다.
           </p>
           <div className="flex flex-wrap justify-center gap-4 pt-2">
             <Link

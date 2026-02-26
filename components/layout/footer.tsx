@@ -9,11 +9,17 @@ export default function Footer() {
           {/* 센터 정보 */}
           <div>
             <h3 className="font-heading text-xl font-bold text-white mb-4">{SITE_NAME}</h3>
-            <p className="text-sm leading-relaxed">
+            <p className="text-sm leading-relaxed mb-3">
               {COUNSELOR_NAME} {COUNSELOR_TITLE}<br />
-              서울특별시 OO구 OO로 123, 4층<br />
-              전화: 02-1234-5678<br />
-              이메일: contact@gongamteo.kr
+              온라인 화상상담 전문 심리상담연구소
+            </p>
+            <p className="text-sm leading-relaxed mb-3">
+              대면상담: 병점역 한신대학교 인근<br />
+              <span className="text-xs opacity-70">(예약 확정 시 구체적 장소 안내)</span>
+            </p>
+            <p className="text-sm leading-relaxed">
+              전화: 010-2739-6432<br />
+              이메일: iillac@naver.com
             </p>
           </div>
 

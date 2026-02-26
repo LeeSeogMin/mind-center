@@ -11,16 +11,15 @@ export default function AboutSection() {
               센터 소개
             </p>
             <h2 className="font-heading text-2xl md:text-3xl font-bold leading-snug text-[#3A2E26]">
-              정선이 박사가 이끌어가는
+              정선이 박사의
               <br />
-              공감터
+              온라인 심리상담연구소, 공감터
             </h2>
             <p className="text-[#8C7B6B] leading-relaxed max-w-lg">
               공감터 심리상담연구소는 &lsquo;공감&rsquo;을 바탕으로 내담자의
-              마음에 진심으로 다가가는 종합심리상담센터입니다. 상담학 박사
-              정선이 원장을 중심으로, 풍부한 임상 경험을 갖춘 전문 상담사들이
-              아동·청소년, 성인, 부부·가족, 직장인 등 다양한 대상의 심리적
-              어려움을 체계적으로 상담합니다.
+              마음에 진심으로 다가가는 온라인 화상상담 전문 심리상담연구소입니다.
+              상담학 박사 정선이 원장이 직접 아동·청소년, 성인, 부부·가족,
+              직장인 등 다양한 대상의 심리적 어려움을 체계적으로 상담합니다.
             </p>
             <p className="text-[#8C7B6B] leading-relaxed max-w-lg">
               과학적이고 검증된 상담 기법을 통해 내담자 한 분 한 분에게 맞는

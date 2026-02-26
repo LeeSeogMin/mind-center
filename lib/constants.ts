@@ -1,7 +1,7 @@
 import type { CounselingService } from "./types";
 
 export const SITE_NAME = "공감터 심리상담연구소";
-export const SITE_DESCRIPTION = "심리적·정서적 어려움을 겪고 있는 분들을 위한 종합심리상담센터";
+export const SITE_DESCRIPTION = "온라인 화상상담 전문 — 심리적·정서적 어려움을 겪고 있는 분들을 위한 심리상담연구소";
 export const COUNSELOR_NAME = "정선이";
 export const COUNSELOR_TITLE = "상담학 박사";
 
@@ -9,7 +9,6 @@ export const NAV_ITEMS = [
   { label: "센터소개", href: "/about", children: [
     { label: "인사말", href: "/about" },
     { label: "상담사 소개", href: "/about/counselors" },
-    { label: "오시는 길", href: "/about/location" },
   ]},
   { label: "상담안내", href: "/counseling", children: [
     { label: "심리상담이란", href: "/counseling" },
@@ -95,8 +94,8 @@ export const COUNSELING_SERVICES: CounselingService[] = [
 ];
 
 export const PROCESS_STEPS = [
-  { step: 1, title: "문의·신청", description: "전화, 온라인으로 상담 신청" },
-  { step: 2, title: "상담사 배정", description: "전문 분야에 맞는 상담사 배정" },
-  { step: 3, title: "상담 진행", description: "대면 또는 화상 상담 진행" },
+  { step: 1, title: "문의·신청", description: "홈페이지에서 간편하게 상담 신청" },
+  { step: 2, title: "일정 확정", description: "상담사가 일정을 확인하고 확정" },
+  { step: 3, title: "상담 진행", description: "화상(Google Meet) 또는 대면 상담 진행" },
   { step: 4, title: "사후관리", description: "상담 후 지속적인 관리와 지원" },
 ];

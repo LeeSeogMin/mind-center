@@ -150,12 +150,12 @@ export default function TestPage() {
                 상담 예약하기
               </Button>
             </Link>
-            <a href="tel:02-1234-5678">
+            <a href="tel:010-2739-6432">
               <Button
                 variant="outline"
                 className="border-[#E8DDD0] text-[#8B6B4E] hover:bg-[#FBF8F3] px-8 h-12 text-base rounded-xl"
               >
-                전화 문의: 02-1234-5678
+                전화 문의: 010-2739-6432
               </Button>
             </a>
           </div>

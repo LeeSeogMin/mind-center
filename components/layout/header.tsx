@@ -17,7 +17,7 @@ export default function Header() {
       {/* Top bar — desktop only */}
       <div className="hidden lg:block bg-[#FBF8F3] border-b border-[#E8DDD0]">
         <div className="max-w-[1200px] mx-auto px-6 py-2 flex justify-between items-center text-xs text-[#8C7B6B]">
-          <span>전화 상담: 02-1234-5678 | 평일 09:00~18:00</span>
+          <span>온라인 화상상담 전문 | 전화 상담: 010-2739-6432 | 평일 09:00~18:00</span>
           <div className="flex gap-4">
             <Link href="/board/notice" className="hover:text-[#8B6B4E]">공지사항</Link>
             <Link href="/news/center" className="hover:text-[#8B6B4E]">센터소식</Link>

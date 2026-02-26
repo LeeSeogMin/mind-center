@@ -33,7 +33,10 @@ export default function OfflineReservationPage() {
     return (
       <div className="max-w-[1200px] mx-auto px-6 py-20 text-center">
         <h1 className="font-heading text-3xl font-bold text-[#3A2E26] mb-4">대면상담 예약</h1>
-        <p className="text-[#8C7B6B] mb-8">예약을 위해 로그인이 필요합니다.</p>
+        <p className="text-[#8C7B6B] mb-2">예약을 위해 로그인이 필요합니다.</p>
+        <p className="text-[#8C7B6B] text-sm mb-8">
+          대면상담은 병점역 한신대학교 인근 지정 장소에서 진행됩니다.
+        </p>
         <Link href="/login">
           <Button className="bg-[#8B6B4E] hover:bg-[#7A5D42]">로그인하기</Button>
         </Link>
@@ -84,7 +87,17 @@ export default function OfflineReservationPage() {
     <div className="bg-[#FBF8F3] min-h-screen">
       <div className="max-w-[1200px] mx-auto px-6 py-12">
         <h1 className="font-heading text-3xl font-bold text-[#3A2E26] mb-2">대면상담 예약</h1>
-        <p className="text-[#8C7B6B] mb-10">편안한 상담을 위해 예약 정보를 입력해 주세요.</p>
+        <p className="text-[#8C7B6B] mb-6">편안한 상담을 위해 예약 정보를 입력해 주세요.</p>
+
+        {/* 대면상담 장소 안내 배너 */}
+        <div className="bg-white border border-[#E8DDD0] rounded-2xl p-6 mb-8">
+          <h3 className="font-medium text-[#3A2E26] mb-2">대면상담 장소 안내</h3>
+          <ul className="text-sm text-[#8C7B6B] space-y-1">
+            <li>• 대면상담은 <span className="text-[#3A2E26] font-medium">병점역 한신대학교 인근 지정 장소</span>에서 진행됩니다.</li>
+            <li>• 예약 확정 후 구체적인 상담 장소를 개별 안내드립니다.</li>
+            <li>• 화상상담을 원하시면 <a href="/reservation/online" className="text-[#D4845A] hover:underline">화상상담 예약</a>을 이용해 주세요.</li>
+          </ul>
+        </div>
 
         {/* Progress steps */}
         <div className="flex items-center gap-2 mb-10">

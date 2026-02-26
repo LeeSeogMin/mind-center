@@ -89,7 +89,7 @@ export default async function CounselingDetailPage({ params }: Props) {
                   {
                     step: "01",
                     title: "초기 상담",
-                    desc: "현재 겪고 있는 어려움과 상담 목표를 함께 파악합니다.",
+                    desc: "화상 또는 대면으로 현재 겪고 있는 어려움과 상담 목표를 함께 파악합니다.",
                   },
                   {
                     step: "02",
@@ -99,7 +99,7 @@ export default async function CounselingDetailPage({ params }: Props) {
                   {
                     step: "03",
                     title: "상담 진행",
-                    desc: "정기적인 상담을 통해 문제를 탐색하고 변화를 이끌어갑니다.",
+                    desc: "Google Meet 화상상담 또는 대면상담을 통해 문제를 탐색하고 변화를 이끌어갑니다.",
                   },
                   {
                     step: "04",
@@ -150,7 +150,7 @@ export default async function CounselingDetailPage({ params }: Props) {
                   </Button>
                 </Link>
                 <p className="text-xs text-[#8C7B6B] pt-2">
-                  전화 문의: 02-1234-5678
+                  전화 문의: 010-2739-6432
                 </p>
               </CardContent>
             </Card>

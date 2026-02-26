@@ -34,6 +34,12 @@ export default function MyPage() {
   const [recentReservations, setRecentReservations] = useState<RecentReservation[]>([]);
 
   useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [loading, user, router]);
+
+  useEffect(() => {
     if (!user) return;
     const supabase = createClient();
 
@@ -74,7 +80,6 @@ export default function MyPage() {
   }
 
   if (!user) {
-    router.push("/login");
     return null;
   }
 

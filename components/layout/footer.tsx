@@ -3,10 +3,10 @@ import { SITE_NAME, COUNSELOR_NAME, COUNSELOR_TITLE } from "@/lib/constants";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#3A2E26] text-[#C4A882]">
+    <footer className="bg-[#1E3A26] text-[#8CC4A0]">
       <div className="max-w-[1200px] mx-auto px-6 py-12">
         <div className="grid md:grid-cols-3 gap-8">
-          {/* 센터 정보 */}
+          {/* 연구소 정보 */}
           <div>
             <h3 className="font-heading text-xl font-bold text-white mb-4">{SITE_NAME}</h3>
             <p className="text-sm leading-relaxed mb-3">
@@ -27,7 +27,7 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-white mb-4">바로가기</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
-              <Link href="/about" className="hover:text-white transition-colors">센터소개</Link>
+              <Link href="/about" className="hover:text-white transition-colors">연구소 소개</Link>
               <Link href="/counseling" className="hover:text-white transition-colors">상담안내</Link>
               <Link href="/test" className="hover:text-white transition-colors">심리검사</Link>
               <Link href="/reservation/offline" className="hover:text-white transition-colors">상담예약</Link>
@@ -43,7 +43,7 @@ export default function Footer() {
               <p>평일: 09:00 ~ 21:00</p>
               <p>토요일: 10:00 ~ 18:00</p>
               <p>일요일·공휴일: 휴무</p>
-              <p className="mt-3 text-[#D4845A]">상담 예약제로 운영됩니다</p>
+              <p className="mt-3 text-[#4A85D4]">상담 예약제로 운영됩니다</p>
             </div>
           </div>
         </div>

@@ -6,8 +6,8 @@ export const COUNSELOR_NAME = "정선이";
 export const COUNSELOR_TITLE = "상담학 박사";
 
 export const NAV_ITEMS = [
-  { label: "센터소개", href: "/about", children: [
-    { label: "인사말", href: "/about" },
+  { label: "연구소 소개", href: "/about", children: [
+    { label: "연구소 소개", href: "/about" },
     { label: "상담사 소개", href: "/about/counselors" },
   ]},
   { label: "상담안내", href: "/counseling", children: [
@@ -17,7 +17,13 @@ export const NAV_ITEMS = [
     { label: "부부·가족 상담", href: "/counseling/family" },
     { label: "직장인·기업 상담", href: "/counseling/workplace" },
   ]},
-  { label: "심리검사", href: "/test" },
+  { label: "심리검사", href: "/test", children: [
+    { label: "심리검사 안내", href: "/test" },
+    { label: "SCT 문장완성검사", href: "/test/sct" },
+    { label: "MMPI-2 다면적 인성검사", href: "/test/mmpi2" },
+    { label: "TCI 기질·성격검사", href: "/test/tci" },
+    { label: "웩슬러 지능검사", href: "/test/wechsler" },
+  ]},
   { label: "상담예약", href: "/reservation/offline", children: [
     { label: "대면상담 예약", href: "/reservation/offline" },
     { label: "화상상담 예약", href: "/reservation/online" },

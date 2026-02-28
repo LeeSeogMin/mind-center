@@ -90,41 +90,41 @@ export default function MindtalkEditPage() {
 
   if (loading) {
     return (
-      <div className="bg-[#FBF8F3] min-h-screen flex items-center justify-center">
-        <p className="text-[#8C7B6B]">로딩 중...</p>
+      <div className="bg-[#F0FAF3] min-h-screen flex items-center justify-center">
+        <p className="text-[#6B8C7B]">로딩 중...</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#FBF8F3] min-h-screen">
+    <div className="bg-[#F0FAF3] min-h-screen">
       <div className="max-w-[800px] mx-auto px-6 py-12">
-        <h1 className="font-heading text-3xl font-bold text-[#3A2E26] mb-8">마음톡 수정</h1>
+        <h1 className="font-heading text-3xl font-bold text-[#1E3A26] mb-8">마음톡 수정</h1>
 
-        <Card className="border-[#E8DDD0] rounded-2xl">
+        <Card className="border-[#D0E8D8] rounded-2xl">
           <CardHeader>
             <CardTitle className="font-heading text-xl">글 수정</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="text-sm font-medium text-[#3A2E26] mb-2 block">제목</label>
+                <label className="text-sm font-medium text-[#1E3A26] mb-2 block">제목</label>
                 <Input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="제목을 입력해 주세요"
-                  className="border-[#E8DDD0] rounded-xl"
+                  className="border-[#D0E8D8] rounded-xl"
                   required
                 />
               </div>
 
               <div>
-                <label className="text-sm font-medium text-[#3A2E26] mb-2 block">내용</label>
+                <label className="text-sm font-medium text-[#1E3A26] mb-2 block">내용</label>
                 <Textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="상담받고 싶은 내용을 자유롭게 적어주세요."
-                  className="border-[#E8DDD0] rounded-xl min-h-[200px]"
+                  className="border-[#D0E8D8] rounded-xl min-h-[200px]"
                   required
                 />
               </div>
@@ -135,21 +135,21 @@ export default function MindtalkEditPage() {
                   id="private"
                   checked={isPrivate}
                   onChange={(e) => setIsPrivate(e.target.checked)}
-                  className="w-4 h-4 rounded border-[#E8DDD0]"
+                  className="w-4 h-4 rounded border-[#D0E8D8]"
                 />
-                <label htmlFor="private" className="text-sm text-[#3A2E26]">
+                <label htmlFor="private" className="text-sm text-[#1E3A26]">
                   비공개 (본인과 상담사만 열람 가능)
                 </label>
               </div>
 
               <div className="flex gap-3">
                 <Link href={`/mindtalk/${postId}`}>
-                  <Button type="button" variant="outline" className="border-[#E8DDD0]">취소</Button>
+                  <Button type="button" variant="outline" className="border-[#D0E8D8]">취소</Button>
                 </Link>
                 <Button
                   type="submit"
                   disabled={submitting}
-                  className="bg-[#D4845A] hover:bg-[#C47A52] text-white"
+                  className="bg-[#4A85D4] hover:bg-[#C47A52] text-white"
                 >
                   {submitting ? "수정 중..." : "수정하기"}
                 </Button>

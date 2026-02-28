@@ -50,14 +50,14 @@ export default function TestConnectionPage() {
   }, []);
 
   return (
-    <div className="bg-[#FBF8F3] min-h-screen flex items-center justify-center px-6">
-      <Card className="w-full max-w-lg rounded-2xl border-[#E8DDD0]">
+    <div className="bg-[#F0FAF3] min-h-screen flex items-center justify-center px-6">
+      <Card className="w-full max-w-lg rounded-2xl border-[#D0E8D8]">
         <CardHeader>
           <CardTitle className="font-heading text-2xl text-center">Supabase 연결 테스트</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {status === "loading" && (
-            <p className="text-center text-[#8C7B6B]">연결 확인 중...</p>
+            <p className="text-center text-[#6B8C7B]">연결 확인 중...</p>
           )}
           {status === "success" && (
             <>
@@ -65,9 +65,9 @@ export default function TestConnectionPage() {
                 <p className="text-green-700 font-medium text-lg">{message}</p>
               </div>
               {tables.length > 0 && (
-                <div className="bg-white border border-[#E8DDD0] rounded-xl p-4">
-                  <p className="text-sm font-medium text-[#3A2E26] mb-2">확인된 테이블 ({tables.length}개):</p>
-                  <ul className="text-sm text-[#8C7B6B] space-y-1">
+                <div className="bg-white border border-[#D0E8D8] rounded-xl p-4">
+                  <p className="text-sm font-medium text-[#1E3A26] mb-2">확인된 테이블 ({tables.length}개):</p>
+                  <ul className="text-sm text-[#6B8C7B] space-y-1">
                     {tables.map((t) => (
                       <li key={t}>&#10003; {t}</li>
                     ))}
@@ -81,7 +81,7 @@ export default function TestConnectionPage() {
               <p className="text-red-700 text-sm">{message}</p>
             </div>
           )}
-          <div className="bg-[#FBF8F3] border border-[#E8DDD0] rounded-xl p-4 text-xs text-[#8C7B6B] space-y-1">
+          <div className="bg-[#F0FAF3] border border-[#D0E8D8] rounded-xl p-4 text-xs text-[#6B8C7B] space-y-1">
             <p><strong>다음 단계:</strong></p>
             <p>1. Supabase Dashboard → SQL Editor 열기</p>
             <p>2. supabase-schema.sql 내용 붙여넣기 → Run</p>

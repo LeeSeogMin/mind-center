@@ -32,15 +32,15 @@ export default async function CounselingDetailPage({ params }: Props) {
   const otherServices = COUNSELING_SERVICES.filter((s) => s.slug !== slug);
 
   return (
-    <div className="bg-[#FBF8F3]">
+    <div className="bg-[#F0FAF3]">
       {/* 페이지 헤더 */}
-      <section className="bg-white border-b border-[#E8DDD0]">
+      <section className="bg-white border-b border-[#D0E8D8]">
         <div className="max-w-[1200px] mx-auto px-6 py-16 text-center">
-          <p className="text-[#D4845A] font-medium mb-2">상담안내</p>
-          <h1 className="font-heading text-4xl font-bold text-[#3A2E26] mb-4">
+          <p className="text-[#4A85D4] font-medium mb-2">상담안내</p>
+          <h1 className="font-heading text-4xl font-bold text-[#1E3A26] mb-4">
             {service.title}
           </h1>
-          <p className="text-[#8C7B6B] text-lg">{service.subtitle}</p>
+          <p className="text-[#6B8C7B] text-lg">{service.subtitle}</p>
         </div>
       </section>
 
@@ -50,38 +50,38 @@ export default async function CounselingDetailPage({ params }: Props) {
           {/* 메인 콘텐츠 */}
           <div className="space-y-10">
             {/* 설명 */}
-            <div className="bg-white rounded-2xl border border-[#E8DDD0] p-10">
-              <h2 className="font-heading text-2xl font-bold text-[#3A2E26] mb-6">
+            <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10">
+              <h2 className="font-heading text-2xl font-bold text-[#1E3A26] mb-6">
                 {service.title}이란?
               </h2>
-              <p className="text-[#3A2E26] leading-relaxed text-lg">
+              <p className="text-[#1E3A26] leading-relaxed text-lg">
                 {service.description}
               </p>
             </div>
 
             {/* 상담 내용 */}
-            <div className="bg-white rounded-2xl border border-[#E8DDD0] p-10">
-              <h2 className="font-heading text-2xl font-bold text-[#3A2E26] mb-6">
+            <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10">
+              <h2 className="font-heading text-2xl font-bold text-[#1E3A26] mb-6">
                 주요 상담 내용
               </h2>
               <ul className="space-y-4">
                 {service.details.map((detail, index) => (
                   <li
                     key={index}
-                    className="flex items-start gap-4 bg-[#FBF8F3] rounded-xl p-5 border border-[#E8DDD0]"
+                    className="flex items-start gap-4 bg-[#F0FAF3] rounded-xl p-5 border border-[#D0E8D8]"
                   >
-                    <span className="w-8 h-8 rounded-full bg-[#8B6B4E] text-white flex items-center justify-center text-sm font-medium shrink-0">
+                    <span className="w-8 h-8 rounded-full bg-[#4A8C5E] text-white flex items-center justify-center text-sm font-medium shrink-0">
                       {index + 1}
                     </span>
-                    <span className="text-[#3A2E26] pt-1">{detail}</span>
+                    <span className="text-[#1E3A26] pt-1">{detail}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* 상담 과정 */}
-            <div className="bg-white rounded-2xl border border-[#E8DDD0] p-10">
-              <h2 className="font-heading text-2xl font-bold text-[#3A2E26] mb-6">
+            <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10">
+              <h2 className="font-heading text-2xl font-bold text-[#1E3A26] mb-6">
                 상담 진행 과정
               </h2>
               <div className="grid sm:grid-cols-2 gap-4">
@@ -109,15 +109,15 @@ export default async function CounselingDetailPage({ params }: Props) {
                 ].map((item) => (
                   <div
                     key={item.step}
-                    className="bg-[#FBF8F3] rounded-xl p-5 border border-[#E8DDD0]"
+                    className="bg-[#F0FAF3] rounded-xl p-5 border border-[#D0E8D8]"
                   >
-                    <span className="text-[#D4845A] font-bold text-sm">
+                    <span className="text-[#4A85D4] font-bold text-sm">
                       STEP {item.step}
                     </span>
-                    <h4 className="font-heading text-lg font-bold text-[#3A2E26] mt-1 mb-2">
+                    <h4 className="font-heading text-lg font-bold text-[#1E3A26] mt-1 mb-2">
                       {item.title}
                     </h4>
-                    <p className="text-sm text-[#8C7B6B]">{item.desc}</p>
+                    <p className="text-sm text-[#6B8C7B]">{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -127,38 +127,38 @@ export default async function CounselingDetailPage({ params }: Props) {
           {/* 사이드바 */}
           <div className="space-y-6">
             {/* 예약 CTA */}
-            <Card className="rounded-2xl bg-white border-[#E8DDD0] sticky top-24">
+            <Card className="rounded-2xl bg-white border-[#D0E8D8] sticky top-24">
               <CardContent className="p-8 text-center space-y-4">
-                <h3 className="font-heading text-xl font-bold text-[#3A2E26]">
+                <h3 className="font-heading text-xl font-bold text-[#1E3A26]">
                   상담 예약
                 </h3>
-                <p className="text-sm text-[#8C7B6B] leading-relaxed">
+                <p className="text-sm text-[#6B8C7B] leading-relaxed">
                   {service.title}에 대해 더 자세한 상담이 필요하시면
                   편하게 예약해 주세요.
                 </p>
                 <Link href="/reservation/offline" className="block">
-                  <Button className="w-full bg-[#D4845A] hover:bg-[#C47349] text-white h-12 text-base rounded-xl">
+                  <Button className="w-full bg-[#4A85D4] hover:bg-[#3B73C4] text-white h-12 text-base rounded-xl">
                     대면상담 예약하기
                   </Button>
                 </Link>
                 <Link href="/reservation/online" className="block">
                   <Button
                     variant="outline"
-                    className="w-full border-[#E8DDD0] text-[#8B6B4E] hover:bg-[#FBF8F3] h-12 text-base rounded-xl"
+                    className="w-full border-[#D0E8D8] text-[#4A8C5E] hover:bg-[#F0FAF3] h-12 text-base rounded-xl"
                   >
                     화상상담 예약하기
                   </Button>
                 </Link>
-                <p className="text-xs text-[#8C7B6B] pt-2">
+                <p className="text-xs text-[#6B8C7B] pt-2">
                   전화 문의: 010-2739-6432
                 </p>
               </CardContent>
             </Card>
 
             {/* 다른 상담 분야 */}
-            <Card className="rounded-2xl bg-white border-[#E8DDD0]">
+            <Card className="rounded-2xl bg-white border-[#D0E8D8]">
               <CardContent className="p-6">
-                <h3 className="font-heading text-lg font-bold text-[#3A2E26] mb-4">
+                <h3 className="font-heading text-lg font-bold text-[#1E3A26] mb-4">
                   다른 상담 분야
                 </h3>
                 <div className="space-y-2">
@@ -166,10 +166,10 @@ export default async function CounselingDetailPage({ params }: Props) {
                     <Link
                       key={other.slug}
                       href={`/counseling/${other.slug}`}
-                      className="block px-4 py-3 rounded-xl text-sm text-[#3A2E26] hover:bg-[#FBF8F3] hover:text-[#8B6B4E] transition-colors border border-transparent hover:border-[#E8DDD0]"
+                      className="block px-4 py-3 rounded-xl text-sm text-[#1E3A26] hover:bg-[#F0FAF3] hover:text-[#4A8C5E] transition-colors border border-transparent hover:border-[#D0E8D8]"
                     >
                       {other.title}
-                      <span className="text-[#8C7B6B] block text-xs mt-0.5">
+                      <span className="text-[#6B8C7B] block text-xs mt-0.5">
                         {other.subtitle}
                       </span>
                     </Link>

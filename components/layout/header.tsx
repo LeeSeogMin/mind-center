@@ -7,19 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { NAV_ITEMS, SITE_NAME } from "@/lib/constants";
 import { useAuth } from "@/lib/auth-context";
+import Logo from "@/components/ui/logo";
 
 export default function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const { user, profile, loading } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#E8DDD0]">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#D0E8D8]">
       {/* Top bar — desktop only */}
-      <div className="hidden lg:block bg-[#FBF8F3] border-b border-[#E8DDD0]">
-        <div className="max-w-[1200px] mx-auto px-6 py-2 flex justify-between items-center text-xs text-[#8C7B6B]">
+      <div className="hidden lg:block bg-[#F0FAF3] border-b border-[#D0E8D8]">
+        <div className="max-w-[1200px] mx-auto px-6 py-2 flex justify-between items-center text-xs text-[#6B8C7B]">
           <span>온라인 화상상담 전문 | 전화 상담: 010-2739-6432 | 평일 09:00~18:00</span>
           <div className="flex gap-4">
-            <Link href="/board/notice" className="hover:text-[#8B6B4E]">공지사항</Link>
+            <Link href="/board/notice" className="hover:text-[#4A8C5E]">공지사항</Link>
           </div>
         </div>
       </div>
@@ -27,8 +28,9 @@ export default function Header() {
       {/* Main nav */}
       <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <span className="font-heading text-2xl font-bold text-[#8B6B4E]">{SITE_NAME}</span>
+        <Link href="/" className="flex items-center gap-2.5">
+          <Logo size={36} />
+          <span className="font-heading text-2xl font-bold text-[#4A8C5E]">{SITE_NAME}</span>
         </Link>
 
         {/* Desktop nav */}
@@ -42,18 +44,18 @@ export default function Header() {
             >
               <Link
                 href={item.href}
-                className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-[#3A2E26] hover:text-[#8B6B4E] transition-colors"
+                className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-[#1E3A26] hover:text-[#4A8C5E] transition-colors"
               >
                 {item.label}
                 {item.children && <ChevronDown className="w-3.5 h-3.5" />}
               </Link>
               {item.children && openDropdown === item.label && (
-                <div className="absolute top-full left-0 bg-white border border-[#E8DDD0] rounded-xl shadow-lg py-2 min-w-[180px]">
+                <div className="absolute top-full left-0 bg-white border border-[#D0E8D8] rounded-xl shadow-lg py-2 min-w-[180px]">
                   {item.children.map((child) => (
                     <Link
                       key={child.href}
                       href={child.href}
-                      className="block px-4 py-2 text-sm text-[#3A2E26] hover:bg-[#FBF8F3] hover:text-[#8B6B4E]"
+                      className="block px-4 py-2 text-sm text-[#1E3A26] hover:bg-[#F0FAF3] hover:text-[#4A8C5E]"
                     >
                       {child.label}
                     </Link>
@@ -66,7 +68,7 @@ export default function Header() {
 
         {/* Right actions */}
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="text-[#8C7B6B]">
+          <Button variant="ghost" size="icon" className="text-[#6B8C7B]">
             <Search className="w-5 h-5" />
           </Button>
 
@@ -75,20 +77,20 @@ export default function Header() {
               <div className="flex items-center gap-2">
                 {(profile?.role === "admin" || profile?.role === "counselor") && (
                   <Link href="/admin">
-                    <Button variant="outline" size="sm" className="border-[#D4845A] text-[#D4845A] hover:bg-[#FBF8F3] gap-1">
+                    <Button variant="outline" size="sm" className="border-[#4A85D4] text-[#4A85D4] hover:bg-[#F0FAF3] gap-1">
                       <Shield className="w-3.5 h-3.5" /> 관리자
                     </Button>
                   </Link>
                 )}
                 <Link href="/mypage">
-                  <Button variant="outline" size="sm" className="border-[#E8DDD0] text-[#8B6B4E] hover:bg-[#FBF8F3]">
+                  <Button variant="outline" size="sm" className="border-[#D0E8D8] text-[#4A8C5E] hover:bg-[#F0FAF3]">
                     마이페이지
                   </Button>
                 </Link>
               </div>
             ) : (
               <Link href="/login">
-                <Button size="sm" className="bg-[#8B6B4E] hover:bg-[#7A5D42] text-white">
+                <Button size="sm" className="bg-[#4A8C5E] hover:bg-[#3D7A4E] text-white">
                   로그인
                 </Button>
               </Link>
@@ -103,15 +105,16 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] bg-white p-0">
-              <div className="p-6 border-b border-[#E8DDD0]">
-                <span className="font-heading text-xl font-bold text-[#8B6B4E]">{SITE_NAME}</span>
+              <div className="p-6 border-b border-[#D0E8D8] flex items-center gap-2.5">
+                <Logo size={30} />
+                <span className="font-heading text-xl font-bold text-[#4A8C5E]">{SITE_NAME}</span>
               </div>
               <nav className="p-4">
                 {NAV_ITEMS.map((item) => (
                   <div key={item.label} className="mb-2">
                     <Link
                       href={item.href}
-                      className="block px-4 py-3 text-[#3A2E26] font-medium hover:bg-[#FBF8F3] rounded-lg"
+                      className="block px-4 py-3 text-[#1E3A26] font-medium hover:bg-[#F0FAF3] rounded-lg"
                     >
                       {item.label}
                     </Link>
@@ -121,7 +124,7 @@ export default function Header() {
                           <Link
                             key={child.href}
                             href={child.href}
-                            className="block px-4 py-2 text-sm text-[#8C7B6B] hover:text-[#8B6B4E]"
+                            className="block px-4 py-2 text-sm text-[#6B8C7B] hover:text-[#4A8C5E]"
                           >
                             {child.label}
                           </Link>
@@ -131,27 +134,27 @@ export default function Header() {
                   </div>
                 ))}
               </nav>
-              <div className="p-4 border-t border-[#E8DDD0]">
+              <div className="p-4 border-t border-[#D0E8D8]">
                 {user ? (
                   <div className="space-y-2">
                     {(profile?.role === "admin" || profile?.role === "counselor") && (
                       <Link href="/admin">
-                        <Button variant="outline" className="w-full border-[#D4845A] text-[#D4845A] gap-1">
+                        <Button variant="outline" className="w-full border-[#4A85D4] text-[#4A85D4] gap-1">
                           <Shield className="w-4 h-4" /> 관리자
                         </Button>
                       </Link>
                     )}
                     <Link href="/mypage">
-                      <Button className="w-full bg-[#8B6B4E] hover:bg-[#7A5D42]">마이페이지</Button>
+                      <Button className="w-full bg-[#4A8C5E] hover:bg-[#3D7A4E]">마이페이지</Button>
                     </Link>
                   </div>
                 ) : (
                   <div className="flex gap-2">
                     <Link href="/login" className="flex-1">
-                      <Button className="w-full bg-[#8B6B4E] hover:bg-[#7A5D42]">로그인</Button>
+                      <Button className="w-full bg-[#4A8C5E] hover:bg-[#3D7A4E]">로그인</Button>
                     </Link>
                     <Link href="/signup" className="flex-1">
-                      <Button variant="outline" className="w-full border-[#E8DDD0]">회원가입</Button>
+                      <Button variant="outline" className="w-full border-[#D0E8D8]">회원가입</Button>
                     </Link>
                   </div>
                 )}

@@ -197,18 +197,18 @@ export default function BoardDetailPage() {
 
   if (loading) {
     return (
-      <div className="bg-[#FBF8F3] min-h-screen flex items-center justify-center">
-        <p className="text-[#8C7B6B]">로딩 중...</p>
+      <div className="bg-[#F0FAF3] min-h-screen flex items-center justify-center">
+        <p className="text-[#6B8C7B]">로딩 중...</p>
       </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="bg-[#FBF8F3] min-h-screen flex items-center justify-center">
+      <div className="bg-[#F0FAF3] min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-[#3A2E26] font-medium mb-2">게시글을 찾을 수 없습니다.</p>
-          <Link href={`/board/${category}`} className="text-sm text-[#8B6B4E] hover:underline">
+          <p className="text-[#1E3A26] font-medium mb-2">게시글을 찾을 수 없습니다.</p>
+          <Link href={`/board/${category}`} className="text-sm text-[#4A8C5E] hover:underline">
             목록으로 돌아가기
           </Link>
         </div>
@@ -220,29 +220,29 @@ export default function BoardDetailPage() {
   const authorName = post.users?.name ?? "익명";
 
   return (
-    <div className="bg-[#FBF8F3] min-h-screen">
+    <div className="bg-[#F0FAF3] min-h-screen">
       <div className="max-w-[800px] mx-auto px-6 py-12">
         <Link
           href={`/board/${category}`}
-          className="inline-flex items-center gap-2 text-sm text-[#8C7B6B] hover:text-[#8B6B4E] mb-6"
+          className="inline-flex items-center gap-2 text-sm text-[#6B8C7B] hover:text-[#4A8C5E] mb-6"
         >
           <ArrowLeft className="w-4 h-4" /> 목록으로 돌아가기
         </Link>
 
-        <Card className="border-[#E8DDD0] rounded-2xl">
+        <Card className="border-[#D0E8D8] rounded-2xl">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="font-heading text-2xl">{post.title}</CardTitle>
               {isOwner && (
                 <div className="flex gap-2">
                   <Link href={`/board/${category}/${postId}/edit`}>
-                    <Button variant="outline" size="sm" className="border-[#E8DDD0] text-[#8C7B6B]">
+                    <Button variant="outline" size="sm" className="border-[#D0E8D8] text-[#6B8C7B]">
                       <Pencil className="w-4 h-4 mr-1" /> 수정
                     </Button>
                   </Link>
                   <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
-                      <Button variant="outline" size="sm" className="border-[#E8DDD0] text-red-500 hover:text-red-600">
+                      <Button variant="outline" size="sm" className="border-[#D0E8D8] text-red-500 hover:text-red-600">
                         <Trash2 className="w-4 h-4 mr-1" /> 삭제
                       </Button>
                     </DialogTrigger>
@@ -252,7 +252,7 @@ export default function BoardDetailPage() {
                         <DialogDescription>정말로 이 게시글을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</DialogDescription>
                       </DialogHeader>
                       <DialogFooter>
-                        <Button variant="outline" onClick={() => setDialogOpen(false)} className="border-[#E8DDD0]">
+                        <Button variant="outline" onClick={() => setDialogOpen(false)} className="border-[#D0E8D8]">
                           취소
                         </Button>
                         <Button onClick={handleDelete} disabled={deleting} className="bg-red-500 hover:bg-red-600 text-white">
@@ -264,21 +264,21 @@ export default function BoardDetailPage() {
                 </div>
               )}
             </div>
-            <p className="text-sm text-[#8C7B6B]">
+            <p className="text-sm text-[#6B8C7B]">
               {authorName} · {new Date(post.created_at).toLocaleDateString("ko-KR")} · 조회 {post.view_count}
             </p>
           </CardHeader>
           <CardContent>
-            <p className="text-[#3A2E26] leading-relaxed whitespace-pre-line">{post.content}</p>
-            <div className="mt-6 pt-4 border-t border-[#E8DDD0] flex items-center gap-2">
+            <p className="text-[#1E3A26] leading-relaxed whitespace-pre-line">{post.content}</p>
+            <div className="mt-6 pt-4 border-t border-[#D0E8D8] flex items-center gap-2">
               <button
                 onClick={handleToggleLike}
                 className="flex items-center gap-1.5 text-sm transition-colors hover:opacity-80"
               >
                 <Heart
-                  className={`w-5 h-5 ${isLiked ? "fill-red-500 text-red-500" : "text-[#8C7B6B]"}`}
+                  className={`w-5 h-5 ${isLiked ? "fill-red-500 text-red-500" : "text-[#6B8C7B]"}`}
                 />
-                <span className={isLiked ? "text-red-500" : "text-[#8C7B6B]"}>{likeCount}</span>
+                <span className={isLiked ? "text-red-500" : "text-[#6B8C7B]"}>{likeCount}</span>
               </button>
             </div>
           </CardContent>
@@ -287,33 +287,33 @@ export default function BoardDetailPage() {
         {/* 댓글 섹션 */}
         <div className="mt-8 space-y-4">
           <div className="flex items-center gap-2">
-            <MessageCircle className="w-5 h-5 text-[#8B6B4E]" />
-            <h3 className="font-heading text-lg font-bold text-[#3A2E26]">
+            <MessageCircle className="w-5 h-5 text-[#4A8C5E]" />
+            <h3 className="font-heading text-lg font-bold text-[#1E3A26]">
               댓글 ({comments.length})
             </h3>
           </div>
 
           {comments.length === 0 && (
-            <p className="text-sm text-[#8C7B6B] py-4">아직 댓글이 없습니다.</p>
+            <p className="text-sm text-[#6B8C7B] py-4">아직 댓글이 없습니다.</p>
           )}
 
           {comments.map((c) => {
             const isCounselor = c.users?.role === "counselor" || c.users?.role === "admin";
             return (
-              <Card key={c.id} className={`rounded-2xl bg-white ${isCounselor ? "border-[#C4A882]" : "border-[#E8DDD0]"}`}>
+              <Card key={c.id} className={`rounded-2xl bg-white ${isCounselor ? "border-[#8CC4A0]" : "border-[#D0E8D8]"}`}>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <Avatar className="w-10 h-10">
-                      <AvatarFallback className={`text-white text-sm ${isCounselor ? "bg-[#8B6B4E]" : "bg-[#C4A882]"}`}>
+                      <AvatarFallback className={`text-white text-sm ${isCounselor ? "bg-[#4A8C5E]" : "bg-[#8CC4A0]"}`}>
                         {(c.users?.name ?? "?")[0]}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium text-[#3A2E26]">{c.users?.name ?? "익명"}</p>
-                      <p className="text-xs text-[#8C7B6B]">{new Date(c.created_at).toLocaleDateString("ko-KR")}</p>
+                      <p className="font-medium text-[#1E3A26]">{c.users?.name ?? "익명"}</p>
+                      <p className="text-xs text-[#6B8C7B]">{new Date(c.created_at).toLocaleDateString("ko-KR")}</p>
                     </div>
                     {isCounselor && (
-                      <Badge className="bg-[#C4A882] text-white ml-auto">상담사</Badge>
+                      <Badge className="bg-[#8CC4A0] text-white ml-auto">상담사</Badge>
                     )}
                     {(user?.id === c.author_id || profile?.role === "counselor" || profile?.role === "admin") && (
                       <Button
@@ -327,7 +327,7 @@ export default function BoardDetailPage() {
                       </Button>
                     )}
                   </div>
-                  <p className="text-[#3A2E26] leading-relaxed whitespace-pre-line">{c.content}</p>
+                  <p className="text-[#1E3A26] leading-relaxed whitespace-pre-line">{c.content}</p>
                 </CardContent>
               </Card>
             );
@@ -337,19 +337,19 @@ export default function BoardDetailPage() {
         {/* 댓글 작성 폼 */}
         {user ? (
           <>
-            <Separator className="my-8 bg-[#E8DDD0]" />
-            <Card className="border-[#E8DDD0] rounded-2xl">
+            <Separator className="my-8 bg-[#D0E8D8]" />
+            <Card className="border-[#D0E8D8] rounded-2xl">
               <CardContent className="p-6">
                 <Textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="댓글을 작성해 주세요..."
-                  className="border-[#E8DDD0] rounded-xl min-h-[100px] mb-4"
+                  className="border-[#D0E8D8] rounded-xl min-h-[100px] mb-4"
                 />
                 <Button
                   onClick={handleCommentSubmit}
                   disabled={submitting || !comment.trim()}
-                  className="bg-[#8B6B4E] hover:bg-[#7A5D42]"
+                  className="bg-[#4A8C5E] hover:bg-[#3D7A4E]"
                 >
                   {submitting ? "등록 중..." : "댓글 등록"}
                 </Button>
@@ -358,11 +358,11 @@ export default function BoardDetailPage() {
           </>
         ) : (
           <>
-            <Separator className="my-8 bg-[#E8DDD0]" />
+            <Separator className="my-8 bg-[#D0E8D8]" />
             <div className="text-center py-4">
-              <p className="text-sm text-[#8C7B6B] mb-2">댓글을 작성하려면 로그인이 필요합니다.</p>
+              <p className="text-sm text-[#6B8C7B] mb-2">댓글을 작성하려면 로그인이 필요합니다.</p>
               <Link href="/login">
-                <Button variant="outline" className="border-[#E8DDD0]">로그인하기</Button>
+                <Button variant="outline" className="border-[#D0E8D8]">로그인하기</Button>
               </Link>
             </div>
           </>

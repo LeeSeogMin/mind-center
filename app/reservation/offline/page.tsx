@@ -32,13 +32,13 @@ export default function OfflineReservationPage() {
   if (!user) {
     return (
       <div className="max-w-[1200px] mx-auto px-6 py-20 text-center">
-        <h1 className="font-heading text-3xl font-bold text-[#3A2E26] mb-4">대면상담 예약</h1>
-        <p className="text-[#8C7B6B] mb-2">예약을 위해 로그인이 필요합니다.</p>
-        <p className="text-[#8C7B6B] text-sm mb-8">
+        <h1 className="font-heading text-3xl font-bold text-[#1E3A26] mb-4">대면상담 예약</h1>
+        <p className="text-[#6B8C7B] mb-2">예약을 위해 로그인이 필요합니다.</p>
+        <p className="text-[#6B8C7B] text-sm mb-8">
           대면상담은 병점역 한신대학교 인근 지정 장소에서 진행됩니다.
         </p>
         <Link href="/login">
-          <Button className="bg-[#8B6B4E] hover:bg-[#7A5D42]">로그인하기</Button>
+          <Button className="bg-[#4A8C5E] hover:bg-[#3D7A4E]">로그인하기</Button>
         </Link>
       </div>
     );
@@ -51,7 +51,7 @@ export default function OfflineReservationPage() {
     try {
       const supabase = createClient();
 
-      // 첫 번째 활성 상담사 조회 (1인 상담센터)
+      // 첫 번째 활성 상담사 조회 (1인 상담연구소)
       const { data: counselor } = await supabase
         .from("counselors")
         .select("id")
@@ -84,18 +84,18 @@ export default function OfflineReservationPage() {
   };
 
   return (
-    <div className="bg-[#FBF8F3] min-h-screen">
+    <div className="bg-[#F0FAF3] min-h-screen">
       <div className="max-w-[1200px] mx-auto px-6 py-12">
-        <h1 className="font-heading text-3xl font-bold text-[#3A2E26] mb-2">대면상담 예약</h1>
-        <p className="text-[#8C7B6B] mb-6">편안한 상담을 위해 예약 정보를 입력해 주세요.</p>
+        <h1 className="font-heading text-3xl font-bold text-[#1E3A26] mb-2">대면상담 예약</h1>
+        <p className="text-[#6B8C7B] mb-6">편안한 상담을 위해 예약 정보를 입력해 주세요.</p>
 
         {/* 대면상담 장소 안내 배너 */}
-        <div className="bg-white border border-[#E8DDD0] rounded-2xl p-6 mb-8">
-          <h3 className="font-medium text-[#3A2E26] mb-2">대면상담 장소 안내</h3>
-          <ul className="text-sm text-[#8C7B6B] space-y-1">
-            <li>• 대면상담은 <span className="text-[#3A2E26] font-medium">병점역 한신대학교 인근 지정 장소</span>에서 진행됩니다.</li>
+        <div className="bg-white border border-[#D0E8D8] rounded-2xl p-6 mb-8">
+          <h3 className="font-medium text-[#1E3A26] mb-2">대면상담 장소 안내</h3>
+          <ul className="text-sm text-[#6B8C7B] space-y-1">
+            <li>• 대면상담은 <span className="text-[#1E3A26] font-medium">병점역 한신대학교 인근 지정 장소</span>에서 진행됩니다.</li>
             <li>• 예약 확정 후 구체적인 상담 장소를 개별 안내드립니다.</li>
-            <li>• 화상상담을 원하시면 <a href="/reservation/online" className="text-[#D4845A] hover:underline">화상상담 예약</a>을 이용해 주세요.</li>
+            <li>• 화상상담을 원하시면 <a href="/reservation/online" className="text-[#4A85D4] hover:underline">화상상담 예약</a>을 이용해 주세요.</li>
           </ul>
         </div>
 
@@ -110,15 +110,15 @@ export default function OfflineReservationPage() {
             <div key={n} className="flex items-center gap-2">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
-                  step >= n ? "bg-[#8B6B4E] text-white" : "bg-[#E8DDD0] text-[#8C7B6B]"
+                  step >= n ? "bg-[#4A8C5E] text-white" : "bg-[#D0E8D8] text-[#6B8C7B]"
                 }`}
               >
                 {n}
               </div>
-              <span className={`text-sm hidden sm:inline ${step >= n ? "text-[#3A2E26]" : "text-[#8C7B6B]"}`}>
+              <span className={`text-sm hidden sm:inline ${step >= n ? "text-[#1E3A26]" : "text-[#6B8C7B]"}`}>
                 {label}
               </span>
-              {n < 4 && <div className="w-8 h-px bg-[#E8DDD0] mx-1" />}
+              {n < 4 && <div className="w-8 h-px bg-[#D0E8D8] mx-1" />}
             </div>
           ))}
         </div>
@@ -128,7 +128,7 @@ export default function OfflineReservationPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Step 1: 상담 유형 */}
             {step === 1 && (
-              <Card className="border-[#E8DDD0] rounded-2xl">
+              <Card className="border-[#D0E8D8] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="font-heading text-xl">상담 유형을 선택해 주세요</CardTitle>
                 </CardHeader>
@@ -140,18 +140,18 @@ export default function OfflineReservationPage() {
                         onClick={() => setSelectedType(type)}
                         className={`p-4 rounded-xl border-2 text-left transition-all ${
                           selectedType === type
-                            ? "border-[#8B6B4E] bg-[#FBF8F3]"
-                            : "border-[#E8DDD0] hover:border-[#C4A882]"
+                            ? "border-[#4A8C5E] bg-[#F0FAF3]"
+                            : "border-[#D0E8D8] hover:border-[#8CC4A0]"
                         }`}
                       >
-                        <span className="font-medium text-[#3A2E26]">{type}</span>
+                        <span className="font-medium text-[#1E3A26]">{type}</span>
                       </button>
                     ))}
                   </div>
                   <Button
                     onClick={() => setStep(2)}
                     disabled={!selectedType}
-                    className="mt-6 bg-[#8B6B4E] hover:bg-[#7A5D42]"
+                    className="mt-6 bg-[#4A8C5E] hover:bg-[#3D7A4E]"
                   >
                     다음 단계
                   </Button>
@@ -161,7 +161,7 @@ export default function OfflineReservationPage() {
 
             {/* Step 2: 날짜·시간 */}
             {step === 2 && (
-              <Card className="border-[#E8DDD0] rounded-2xl">
+              <Card className="border-[#D0E8D8] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="font-heading text-xl">날짜와 시간을 선택해 주세요</CardTitle>
                 </CardHeader>
@@ -173,11 +173,11 @@ export default function OfflineReservationPage() {
                         selected={selectedDate}
                         onSelect={setSelectedDate}
                         disabled={(date) => date < new Date() || date.getDay() === 0}
-                        className="rounded-xl border border-[#E8DDD0]"
+                        className="rounded-xl border border-[#D0E8D8]"
                       />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#3A2E26] mb-3">시간 선택</p>
+                      <p className="text-sm font-medium text-[#1E3A26] mb-3">시간 선택</p>
                       <div className="grid grid-cols-3 gap-2">
                         {TIME_SLOTS.map((time) => (
                           <button
@@ -185,8 +185,8 @@ export default function OfflineReservationPage() {
                             onClick={() => setSelectedTime(time)}
                             className={`py-2 px-3 rounded-lg text-sm border transition-all ${
                               selectedTime === time
-                                ? "border-[#8B6B4E] bg-[#8B6B4E] text-white"
-                                : "border-[#E8DDD0] hover:border-[#C4A882] text-[#3A2E26]"
+                                ? "border-[#4A8C5E] bg-[#4A8C5E] text-white"
+                                : "border-[#D0E8D8] hover:border-[#8CC4A0] text-[#1E3A26]"
                             }`}
                           >
                             {time}
@@ -196,13 +196,13 @@ export default function OfflineReservationPage() {
                     </div>
                   </div>
                   <div className="flex gap-3 mt-6">
-                    <Button variant="outline" onClick={() => setStep(1)} className="border-[#E8DDD0]">
+                    <Button variant="outline" onClick={() => setStep(1)} className="border-[#D0E8D8]">
                       이전
                     </Button>
                     <Button
                       onClick={() => setStep(3)}
                       disabled={!selectedDate || !selectedTime}
-                      className="bg-[#8B6B4E] hover:bg-[#7A5D42]"
+                      className="bg-[#4A8C5E] hover:bg-[#3D7A4E]"
                     >
                       다음 단계
                     </Button>
@@ -213,29 +213,29 @@ export default function OfflineReservationPage() {
 
             {/* Step 3: 추가 정보 */}
             {step === 3 && (
-              <Card className="border-[#E8DDD0] rounded-2xl">
+              <Card className="border-[#D0E8D8] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="font-heading text-xl">추가 정보</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium text-[#3A2E26] mb-2 block">
+                      <label className="text-sm font-medium text-[#1E3A26] mb-2 block">
                         상담 메모 (선택)
                       </label>
                       <Textarea
                         value={memo}
                         onChange={(e) => setMemo(e.target.value)}
                         placeholder="상담 시 참고할 내용을 자유롭게 적어주세요."
-                        className="border-[#E8DDD0] rounded-xl min-h-[120px]"
+                        className="border-[#D0E8D8] rounded-xl min-h-[120px]"
                       />
                     </div>
                   </div>
                   <div className="flex gap-3 mt-6">
-                    <Button variant="outline" onClick={() => setStep(2)} className="border-[#E8DDD0]">
+                    <Button variant="outline" onClick={() => setStep(2)} className="border-[#D0E8D8]">
                       이전
                     </Button>
-                    <Button onClick={() => setStep(4)} className="bg-[#8B6B4E] hover:bg-[#7A5D42]">
+                    <Button onClick={() => setStep(4)} className="bg-[#4A8C5E] hover:bg-[#3D7A4E]">
                       다음 단계
                     </Button>
                   </div>
@@ -245,53 +245,53 @@ export default function OfflineReservationPage() {
 
             {/* Step 4: 확인 */}
             {step === 4 && (
-              <Card className="border-[#E8DDD0] rounded-2xl">
+              <Card className="border-[#D0E8D8] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="font-heading text-xl">예약 정보 확인</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4 bg-[#FBF8F3] rounded-xl p-6">
+                  <div className="space-y-4 bg-[#F0FAF3] rounded-xl p-6">
                     <div className="flex justify-between">
-                      <span className="text-[#8C7B6B]">상담 유형</span>
-                      <span className="font-medium text-[#3A2E26]">{selectedType}</span>
+                      <span className="text-[#6B8C7B]">상담 유형</span>
+                      <span className="font-medium text-[#1E3A26]">{selectedType}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#8C7B6B]">상담사</span>
-                      <span className="font-medium text-[#3A2E26]">정선이 박사</span>
+                      <span className="text-[#6B8C7B]">상담사</span>
+                      <span className="font-medium text-[#1E3A26]">정선이 박사</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#8C7B6B]">날짜</span>
-                      <span className="font-medium text-[#3A2E26]">
+                      <span className="text-[#6B8C7B]">날짜</span>
+                      <span className="font-medium text-[#1E3A26]">
                         {selectedDate?.toLocaleDateString("ko-KR")}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#8C7B6B]">시간</span>
-                      <span className="font-medium text-[#3A2E26]">{selectedTime}</span>
+                      <span className="text-[#6B8C7B]">시간</span>
+                      <span className="font-medium text-[#1E3A26]">{selectedTime}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#8C7B6B]">상담 방식</span>
-                      <Badge className="bg-[#8B6B4E]">대면 상담</Badge>
+                      <span className="text-[#6B8C7B]">상담 방식</span>
+                      <Badge className="bg-[#4A8C5E]">대면 상담</Badge>
                     </div>
                     {memo && (
                       <div>
-                        <span className="text-[#8C7B6B] block mb-1">메모</span>
-                        <p className="text-sm text-[#3A2E26]">{memo}</p>
+                        <span className="text-[#6B8C7B] block mb-1">메모</span>
+                        <p className="text-sm text-[#1E3A26]">{memo}</p>
                       </div>
                     )}
                   </div>
-                  <p className="text-sm text-[#8C7B6B] mt-4">
+                  <p className="text-sm text-[#6B8C7B] mt-4">
                     * 예약 신청 후 상담사가 일정을 확인하고 확정합니다.<br />
                     * 확정 후 토스페이먼츠 결제 링크가 카카오톡/이메일로 발송됩니다.
                   </p>
                   <div className="flex gap-3 mt-6">
-                    <Button variant="outline" onClick={() => setStep(3)} className="border-[#E8DDD0]">
+                    <Button variant="outline" onClick={() => setStep(3)} className="border-[#D0E8D8]">
                       이전
                     </Button>
                     <Button
                       onClick={handleSubmit}
                       disabled={submitting}
-                      className="bg-[#D4845A] hover:bg-[#C47A52] text-white"
+                      className="bg-[#4A85D4] hover:bg-[#C47A52] text-white"
                     >
                       {submitting ? "신청 중..." : "예약 신청하기"}
                     </Button>
@@ -303,37 +303,37 @@ export default function OfflineReservationPage() {
 
           {/* Sidebar summary */}
           <div className="hidden lg:block">
-            <Card className="border-[#E8DDD0] rounded-2xl sticky top-32">
+            <Card className="border-[#D0E8D8] rounded-2xl sticky top-32">
               <CardHeader>
                 <CardTitle className="font-heading text-lg">예약 요약</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-[#8C7B6B]">상담 방식</span>
-                  <span className="text-[#3A2E26]">대면 상담</span>
+                  <span className="text-[#6B8C7B]">상담 방식</span>
+                  <span className="text-[#1E3A26]">대면 상담</span>
                 </div>
                 {selectedType && (
                   <div className="flex justify-between">
-                    <span className="text-[#8C7B6B]">유형</span>
-                    <span className="text-[#3A2E26]">{selectedType}</span>
+                    <span className="text-[#6B8C7B]">유형</span>
+                    <span className="text-[#1E3A26]">{selectedType}</span>
                   </div>
                 )}
                 {selectedDate && (
                   <div className="flex justify-between">
-                    <span className="text-[#8C7B6B]">날짜</span>
-                    <span className="text-[#3A2E26]">{selectedDate.toLocaleDateString("ko-KR")}</span>
+                    <span className="text-[#6B8C7B]">날짜</span>
+                    <span className="text-[#1E3A26]">{selectedDate.toLocaleDateString("ko-KR")}</span>
                   </div>
                 )}
                 {selectedTime && (
                   <div className="flex justify-between">
-                    <span className="text-[#8C7B6B]">시간</span>
-                    <span className="text-[#3A2E26]">{selectedTime}</span>
+                    <span className="text-[#6B8C7B]">시간</span>
+                    <span className="text-[#1E3A26]">{selectedTime}</span>
                   </div>
                 )}
-                <div className="pt-3 border-t border-[#E8DDD0]">
+                <div className="pt-3 border-t border-[#D0E8D8]">
                   <div className="flex justify-between font-bold">
-                    <span className="text-[#3A2E26]">상담 비용</span>
-                    <span className="text-[#D4845A]">상담사 확정 후 안내</span>
+                    <span className="text-[#1E3A26]">상담 비용</span>
+                    <span className="text-[#4A85D4]">상담사 확정 후 안내</span>
                   </div>
                 </div>
               </CardContent>

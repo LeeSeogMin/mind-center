@@ -27,28 +27,28 @@ export default async function BoardList({ category, title }: BoardListProps) {
   const postList = posts ?? [];
 
   return (
-    <div className="bg-[#FBF8F3]">
+    <div className="bg-[#F0FAF3]">
       {/* 페이지 헤더 */}
-      <section className="bg-white border-b border-[#E8DDD0]">
+      <section className="bg-white border-b border-[#D0E8D8]">
         <div className="max-w-[1200px] mx-auto px-6 py-16 text-center">
-          <h1 className="font-heading text-4xl font-bold text-[#3A2E26] mb-4">
+          <h1 className="font-heading text-4xl font-bold text-[#1E3A26] mb-4">
             {title}
           </h1>
-          <p className="text-[#8C7B6B] text-lg">게시판</p>
+          <p className="text-[#6B8C7B] text-lg">게시판</p>
         </div>
       </section>
 
       <section className="max-w-[1200px] mx-auto px-6 py-20">
         {/* 탭 네비게이션 */}
-        <div className="flex gap-2 mb-8 border-b border-[#E8DDD0] pb-4">
+        <div className="flex gap-2 mb-8 border-b border-[#D0E8D8] pb-4">
           {(["notice", "review", "column", "qna"] as const).map((cat) => (
             <Link
               key={cat}
               href={`/board/${cat}`}
               className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 cat === category
-                  ? "bg-[#8B6B4E] text-white"
-                  : "bg-white text-[#8C7B6B] border border-[#E8DDD0] hover:border-[#C4A882] hover:text-[#8B6B4E]"
+                  ? "bg-[#4A8C5E] text-white"
+                  : "bg-white text-[#6B8C7B] border border-[#D0E8D8] hover:border-[#8CC4A0] hover:text-[#4A8C5E]"
               }`}
             >
               {categoryLabels[cat]}
@@ -57,9 +57,9 @@ export default async function BoardList({ category, title }: BoardListProps) {
         </div>
 
         {/* 게시글 목록 */}
-        <div className="bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden">
+        <div className="bg-white rounded-2xl border border-[#D0E8D8] overflow-hidden">
           {/* 테이블 헤더 */}
-          <div className="hidden sm:grid grid-cols-[1fr_100px_100px_60px_60px] gap-4 px-6 py-3 bg-[#FBF8F3] border-b border-[#E8DDD0] text-xs text-[#8C7B6B] font-medium">
+          <div className="hidden sm:grid grid-cols-[1fr_100px_100px_60px_60px] gap-4 px-6 py-3 bg-[#F0FAF3] border-b border-[#D0E8D8] text-xs text-[#6B8C7B] font-medium">
             <span>제목</span>
             <span className="text-center">작성자</span>
             <span className="text-center">작성일</span>
@@ -68,7 +68,7 @@ export default async function BoardList({ category, title }: BoardListProps) {
           </div>
 
           {postList.length === 0 && (
-            <div className="px-6 py-12 text-center text-[#8C7B6B] text-sm">
+            <div className="px-6 py-12 text-center text-[#6B8C7B] text-sm">
               등록된 게시글이 없습니다.
             </div>
           )}
@@ -83,26 +83,26 @@ export default async function BoardList({ category, title }: BoardListProps) {
               <Link
                 key={post.id}
                 href={`/board/${category}/${post.id}`}
-                className={`grid sm:grid-cols-[1fr_100px_100px_60px_60px] gap-2 sm:gap-4 px-6 py-4 hover:bg-[#FBF8F3] transition-colors cursor-pointer ${
-                  index < postList.length - 1 ? "border-b border-[#E8DDD0]" : ""
+                className={`grid sm:grid-cols-[1fr_100px_100px_60px_60px] gap-2 sm:gap-4 px-6 py-4 hover:bg-[#F0FAF3] transition-colors cursor-pointer ${
+                  index < postList.length - 1 ? "border-b border-[#D0E8D8]" : ""
                 }`}
               >
-                <span className="text-sm text-[#3A2E26] font-medium hover:text-[#8B6B4E] transition-colors">
+                <span className="text-sm text-[#1E3A26] font-medium hover:text-[#4A8C5E] transition-colors">
                   {post.title}
                   {commentNum > 0 && (
-                    <span className="text-[#8B6B4E] text-xs ml-2">[{commentNum}]</span>
+                    <span className="text-[#4A8C5E] text-xs ml-2">[{commentNum}]</span>
                   )}
                 </span>
-                <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
+                <span className="text-xs sm:text-sm text-[#6B8C7B] sm:text-center">
                   {authorName}
                 </span>
-                <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
+                <span className="text-xs sm:text-sm text-[#6B8C7B] sm:text-center">
                   {new Date(post.created_at).toLocaleDateString("ko-KR")}
                 </span>
-                <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center">
+                <span className="text-xs sm:text-sm text-[#6B8C7B] sm:text-center">
                   {post.view_count}
                 </span>
-                <span className="text-xs sm:text-sm text-[#8C7B6B] sm:text-center flex items-center justify-center gap-1">
+                <span className="text-xs sm:text-sm text-[#6B8C7B] sm:text-center flex items-center justify-center gap-1">
                   <Heart className="w-3 h-3" /> {likeNum}
                 </span>
               </Link>

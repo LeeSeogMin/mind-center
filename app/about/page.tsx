@@ -1,23 +1,37 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { COUNSELOR_NAME, COUNSELOR_TITLE, SITE_NAME } from "@/lib/constants";
+import { COUNSELOR_NAME, SITE_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "인사말",
+  title: "연구소 소개",
 };
 
 export default function AboutPage() {
   return (
-    <div className="bg-[#FBF8F3]">
+    <div className="bg-[#F0FAF3]">
       {/* 페이지 헤더 */}
-      <section className="bg-white border-b border-[#E8DDD0]">
-        <div className="max-w-[1200px] mx-auto px-6 py-16 text-center">
-          <h1 className="font-heading text-4xl font-bold text-[#3A2E26] mb-4">
-            인사말
+      <section className="relative bg-white border-b border-[#D0E8D8] overflow-hidden">
+        {/* 배경 일러스트 */}
+        <div className="absolute inset-0">
+          <Image
+            src="/about-illustration.jpg"
+            alt="꽃밭 일러스트"
+            fill
+            className="object-cover opacity-30"
+            priority
+          />
+        </div>
+        <div className="relative max-w-[1200px] mx-auto px-6 py-20 text-center space-y-3">
+          <h1 className="font-heading text-2xl md:text-3xl font-bold text-[#2A5FAA] leading-relaxed">
+            당신의 마음은 안녕한가요?
           </h1>
-          <p className="text-[#8C7B6B] text-lg">
-            {SITE_NAME}을 찾아주셔서 감사합니다
+          <p className="font-heading text-2xl md:text-3xl font-bold text-[#2A5FAA] leading-relaxed">
+            깊은 이해, 새로운 시작.
+          </p>
+          <p className="font-heading text-2xl md:text-3xl font-bold text-[#2A5FAA] leading-relaxed">
+            마음에 닿는 진심, 삶을 바꾸는 상담
           </p>
         </div>
       </section>
@@ -27,10 +41,10 @@ export default function AboutPage() {
         <div className="grid md:grid-cols-2 gap-16 items-center">
           {/* 사진 영역 */}
           <div className="flex justify-center">
-            <div className="w-full max-w-[400px] aspect-[3/4] bg-white rounded-2xl border border-[#E8DDD0] flex items-center justify-center shadow-sm">
-              <div className="text-center text-[#8C7B6B]">
+            <div className="w-full max-w-[400px] aspect-[3/4] bg-white rounded-2xl border border-[#D0E8D8] flex items-center justify-center shadow-sm">
+              <div className="text-center text-[#6B8C7B]">
                 <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-[#F3EDE5] flex items-center justify-center">
-                  <span className="text-3xl text-[#C4A882]">
+                  <span className="text-3xl text-[#8CC4A0]">
                     {COUNSELOR_NAME.charAt(0)}
                   </span>
                 </div>
@@ -39,92 +53,80 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* 인사말 텍스트 */}
+          {/* 공감터 소개 */}
           <div className="space-y-8">
             <div>
-              <p className="text-[#D4845A] font-medium mb-2">대표 인사말</p>
-              <h2 className="font-heading text-3xl font-bold text-[#3A2E26] leading-relaxed">
-                마음의 어려움,<br />
-                함께 나누면 길이 보입니다.
+              <h2 className="font-heading text-5xl font-bold text-[#4A85D4] leading-tight mb-4">
+                <span className="text-[#2A5FAA] text-6xl">공감터</span>
               </h2>
             </div>
 
-            <div className="space-y-5 text-[#3A2E26] leading-relaxed">
-              <p>
-                안녕하세요. {SITE_NAME} 대표 {COUNSELOR_NAME} {COUNSELOR_TITLE}입니다.
+            <div className="space-y-5 text-[#1E3A26] leading-relaxed">
+              <p className="flex items-start gap-2">
+                <span className="mt-2 w-2 h-2 rounded-full bg-[#4A85D4] flex-shrink-0" />
+                <span>
+                  <span className="text-[#2A5FAA] font-bold text-lg">공감터</span>는
+                  임상경험이 풍부한 전문가들이 과학적 근거를 바탕으로
+                  당신의 심리적 성장을 돕습니다.
+                </span>
               </p>
-              <p>
-                살아가면서 우리 모두는 크고 작은 심리적 어려움을 경험합니다.
-                때로는 혼자 감당하기 힘든 감정들이 일상을 무겁게 할 때가 있습니다.
-                그러한 순간, 전문적인 도움과 따뜻한 공감이 함께한다면
-                마음의 짐을 조금 더 가볍게 내려놓을 수 있습니다.
+              <p className="flex items-start gap-2">
+                <span className="mt-2 w-2 h-2 rounded-full bg-[#4A85D4] flex-shrink-0" />
+                <span>
+                  <span className="text-[#2A5FAA] font-bold text-lg">공감터</span>는
+                  내면의 상처를 치유하고 본연의 빛을 되찾을 수 있도록
+                  변화의 여정에 든든한 페이스메이커가 되어드립니다.
+                </span>
               </p>
-              <p>
-                {SITE_NAME}는 온라인 화상상담을 중심으로 운영되는 1인 심리상담연구소입니다.
-                장소에 구애받지 않고, 편안한 공간에서 전문 상담을 받으실 수 있습니다.
-                심리적·정서적 어려움을 겪고 있는 분들이 자신을 더 깊이 이해하고,
-                건강한 변화를 이루어나갈 수 있도록 체계적인 상담 서비스를 제공합니다.
-              </p>
-              <p>
-                아동·청소년부터 성인, 부부·가족, 직장인에 이르기까지
-                다양한 분야의 상담을 Google Meet 화상상담으로 진행하며,
-                필요한 경우 병점역 한신대학교 인근 지정 장소에서 대면상담도 가능합니다.
-                내담자 한 분 한 분의 이야기에 귀 기울이며, 최적의 상담을 제공하겠습니다.
-              </p>
-              <p>
-                용기를 내어 첫 걸음을 내딛으신 여러분을 진심으로 환영합니다.
-                {SITE_NAME}가 여러분의 마음에 따뜻한 쉼터가 되겠습니다.
-              </p>
-            </div>
-
-            <div className="pt-4">
-              <p className="font-heading text-lg text-[#8B6B4E]">
-                {SITE_NAME} 대표
-              </p>
-              <p className="font-heading text-2xl font-bold text-[#3A2E26] mt-1">
-                {COUNSELOR_NAME} <span className="text-base font-normal text-[#8C7B6B]">{COUNSELOR_TITLE}</span>
+              <p className="flex items-start gap-2">
+                <span className="mt-2 w-2 h-2 rounded-full bg-[#4A85D4] flex-shrink-0" />
+                <span>
+                  <span className="text-[#2A5FAA] font-bold text-lg">공감터</span>는
+                  누구에게도 말하지 못했던 고민,
+                  따뜻한 경청과 공감으로 함께 하겠습니다.
+                </span>
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 센터 미션 */}
-      <section className="bg-white border-y border-[#E8DDD0]">
+      {/* 연구소 미션 */}
+      <section className="bg-white border-y border-[#D0E8D8]">
         <div className="max-w-[1200px] mx-auto px-6 py-20">
-          <h2 className="font-heading text-3xl font-bold text-[#3A2E26] text-center mb-4">
-            센터 철학
+          <h2 className="font-heading text-3xl font-bold text-[#1E3A26] text-center mb-4">
+            연구소 철학
           </h2>
-          <p className="text-[#8C7B6B] text-center mb-12 max-w-xl mx-auto">
+          <p className="text-[#6B8C7B] text-center mb-12 max-w-xl mx-auto">
             {SITE_NAME}가 소중히 여기는 가치입니다
           </p>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                title: "공감과 존중",
+                title: "무조건적 존중",
                 description:
-                  "내담자의 이야기에 진심으로 귀 기울이며, 있는 그대로의 모습을 존중합니다. 판단 없는 따뜻한 공감이 치유의 첫걸음이라고 믿습니다.",
+                  "어떤 모습의 당신이라도 비난받지 않고 온전히 수용되는 안전한 공간을 지향합니다.",
               },
               {
-                title: "전문성과 윤리",
+                title: "공감적 이해",
                 description:
-                  "검증된 상담 이론과 기법을 바탕으로 체계적인 상담을 진행합니다. 상담 윤리를 철저히 준수하며 비밀보장을 최우선으로 합니다.",
+                  "당신의 언어뿐 아니라 그 이면에 숨겨진 마음의 소리까지 귀 기울여 깊이 이해하고자 노력합니다.",
               },
               {
-                title: "성장과 변화",
+                title: "전문성과 진정성",
                 description:
-                  "단순한 문제 해결을 넘어, 내담자가 스스로 자신의 내면을 탐색하고 건강한 변화를 이루어 나갈 수 있도록 함께 동행합니다.",
+                  "과학적 근거를 기반으로 한 전문 지식에 사람을 향한 진심을 더해 최선의 치유 경로를 제시합니다.",
               },
             ].map((item) => (
               <div
                 key={item.title}
-                className="bg-[#FBF8F3] rounded-2xl border border-[#E8DDD0] p-8 text-center"
+                className="bg-[#F0FAF3] rounded-2xl border border-[#D0E8D8] p-8 text-center"
               >
-                <h3 className="font-heading text-xl font-bold text-[#3A2E26] mb-4">
+                <h3 className="font-heading text-xl font-bold text-[#1E3A26] mb-4">
                   {item.title}
                 </h3>
-                <p className="text-[#8C7B6B] leading-relaxed text-sm">
+                <p className="text-[#6B8C7B] leading-relaxed text-sm">
                   {item.description}
                 </p>
               </div>
@@ -135,14 +137,14 @@ export default function AboutPage() {
 
       {/* CTA */}
       <section className="max-w-[1200px] mx-auto px-6 py-20 text-center">
-        <h2 className="font-heading text-2xl font-bold text-[#3A2E26] mb-4">
+        <h2 className="font-heading text-2xl font-bold text-[#1E3A26] mb-4">
           상담이 필요하신가요?
         </h2>
-        <p className="text-[#8C7B6B] mb-8">
+        <p className="text-[#6B8C7B] mb-8">
           정선이 박사와 함께 마음의 이야기를 나누어 보세요.
         </p>
         <Link href="/reservation/offline">
-          <Button className="bg-[#D4845A] hover:bg-[#C47349] text-white px-8 h-12 text-base rounded-xl">
+          <Button className="bg-[#4A85D4] hover:bg-[#3B73C4] text-white px-8 h-12 text-base rounded-xl">
             상담 예약하기
           </Button>
         </Link>

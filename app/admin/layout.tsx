@@ -26,8 +26,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading) {
     return (
-      <div className="bg-[#FBF8F3] min-h-screen flex items-center justify-center">
-        <p className="text-[#8C7B6B]">로딩 중...</p>
+      <div className="bg-[#F0FAF3] min-h-screen flex items-center justify-center">
+        <p className="text-[#6B8C7B]">로딩 중...</p>
       </div>
     );
   }
@@ -37,11 +37,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="bg-[#FBF8F3] min-h-screen flex">
+    <div className="bg-[#F0FAF3] min-h-screen flex">
       {/* Sidebar */}
-      <aside className="w-60 border-r border-[#E8DDD0] bg-white hidden md:block">
-        <div className="p-6 border-b border-[#E8DDD0]">
-          <h2 className="font-heading text-lg font-bold text-[#8B6B4E]">관리자</h2>
+      <aside className="w-60 border-r border-[#D0E8D8] bg-white hidden md:block">
+        <div className="p-6 border-b border-[#D0E8D8]">
+          <h2 className="font-heading text-lg font-bold text-[#4A8C5E]">관리자</h2>
         </div>
         <nav className="p-4 space-y-1">
           {ADMIN_NAV.map(({ href, icon: Icon, label }) => {
@@ -52,8 +52,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href={href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                   active
-                    ? "bg-[#FBF8F3] text-[#8B6B4E]"
-                    : "text-[#8C7B6B] hover:bg-[#FBF8F3] hover:text-[#8B6B4E]"
+                    ? "bg-[#F0FAF3] text-[#4A8C5E]"
+                    : "text-[#6B8C7B] hover:bg-[#F0FAF3] hover:text-[#4A8C5E]"
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -62,10 +62,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             );
           })}
         </nav>
-        <div className="p-4 mt-auto border-t border-[#E8DDD0]">
+        <div className="p-4 mt-auto border-t border-[#D0E8D8]">
           <Link
             href="/"
-            className="flex items-center gap-2 px-4 py-2 text-sm text-[#8C7B6B] hover:text-[#8B6B4E]"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-[#6B8C7B] hover:text-[#4A8C5E]"
           >
             <ArrowLeft className="w-4 h-4" /> 사이트로 돌아가기
           </Link>
@@ -73,7 +73,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Mobile nav */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#E8DDD0] flex">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#D0E8D8] flex">
         {ADMIN_NAV.map(({ href, icon: Icon, label }) => {
           const active = pathname === href;
           return (
@@ -81,7 +81,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               key={href}
               href={href}
               className={`flex-1 flex flex-col items-center gap-1 py-3 text-xs ${
-                active ? "text-[#8B6B4E]" : "text-[#8C7B6B]"
+                active ? "text-[#4A8C5E]" : "text-[#6B8C7B]"
               }`}
             >
               <Icon className="w-5 h-5" />

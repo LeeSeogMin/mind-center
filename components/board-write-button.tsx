@@ -18,7 +18,7 @@ export default function BoardWriteButton({ category }: BoardWriteButtonProps) {
 
   return (
     <Link href={`/board/write?category=${category}`}>
-      <Button className="bg-[#8B6B4E] hover:bg-[#7A5D42] text-white rounded-xl">
+      <Button className="bg-[#4A8C5E] hover:bg-[#3D7A4E] text-white rounded-xl">
         글쓰기
       </Button>
     </Link>

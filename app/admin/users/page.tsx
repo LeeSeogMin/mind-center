@@ -33,9 +33,9 @@ const roleLabels: Record<string, string> = {
 };
 
 const roleBadgeColors: Record<string, string> = {
-  user: "bg-[#E8DDD0] text-[#8C7B6B]",
-  counselor: "bg-[#C4A882] text-white",
-  admin: "bg-[#8B6B4E] text-white",
+  user: "bg-[#D0E8D8] text-[#6B8C7B]",
+  counselor: "bg-[#8CC4A0] text-white",
+  admin: "bg-[#4A8C5E] text-white",
 };
 
 export default function AdminUsersPage() {
@@ -106,7 +106,7 @@ export default function AdminUsersPage() {
 
   return (
     <div className="p-6 md:p-10">
-      <h1 className="font-heading text-2xl font-bold text-[#3A2E26] mb-8">회원 관리</h1>
+      <h1 className="font-heading text-2xl font-bold text-[#1E3A26] mb-8">회원 관리</h1>
 
       {/* 필터 + 검색 */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -117,8 +117,8 @@ export default function AdminUsersPage() {
               onClick={() => setRoleFilter(r)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                 roleFilter === r
-                  ? "bg-[#8B6B4E] text-white"
-                  : "bg-white text-[#8C7B6B] border border-[#E8DDD0] hover:border-[#C4A882]"
+                  ? "bg-[#4A8C5E] text-white"
+                  : "bg-white text-[#6B8C7B] border border-[#D0E8D8] hover:border-[#8CC4A0]"
               }`}
             >
               {r === "all" ? "전체" : roleLabels[r]}
@@ -126,42 +126,42 @@ export default function AdminUsersPage() {
           ))}
         </div>
         <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C7B6B]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B8C7B]" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="이름 또는 이메일 검색"
-            className="pl-10 border-[#E8DDD0] rounded-xl"
+            className="pl-10 border-[#D0E8D8] rounded-xl"
           />
         </div>
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-[#8C7B6B]">로딩 중...</div>
+        <div className="text-center py-12 text-[#6B8C7B]">로딩 중...</div>
       ) : filtered.length === 0 ? (
-        <Card className="border-[#E8DDD0] rounded-2xl">
-          <CardContent className="p-8 text-center text-[#8C7B6B]">
+        <Card className="border-[#D0E8D8] rounded-2xl">
+          <CardContent className="p-8 text-center text-[#6B8C7B]">
             {search ? "검색 결과가 없습니다." : "등록된 회원이 없습니다."}
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-3">
           {filtered.map((u) => (
-            <Card key={u.id} className="border-[#E8DDD0] rounded-2xl">
+            <Card key={u.id} className="border-[#D0E8D8] rounded-2xl">
               <CardContent className="flex items-center justify-between p-4 sm:p-6">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <Badge className={roleBadgeColors[u.role]}>{roleLabels[u.role]}</Badge>
-                    <p className="font-medium text-[#3A2E26] truncate">{u.name}</p>
+                    <p className="font-medium text-[#1E3A26] truncate">{u.name}</p>
                   </div>
-                  <p className="text-xs text-[#8C7B6B]">
+                  <p className="text-xs text-[#6B8C7B]">
                     {u.email} · 가입일 {new Date(u.created_at).toLocaleDateString("ko-KR")}
                   </p>
                 </div>
                 {isAdmin && (
                   <div className="shrink-0 ml-4">
                     <Select value={u.role} onValueChange={(v) => handleRoleSelect(u, v)}>
-                      <SelectTrigger className="w-[120px] border-[#E8DDD0] rounded-xl text-sm">
+                      <SelectTrigger className="w-[120px] border-[#D0E8D8] rounded-xl text-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -194,10 +194,10 @@ export default function AdminUsersPage() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setChangeTarget(null)} className="border-[#E8DDD0]">
+            <Button variant="outline" onClick={() => setChangeTarget(null)} className="border-[#D0E8D8]">
               취소
             </Button>
-            <Button onClick={confirmRoleChange} disabled={changing} className="bg-[#8B6B4E] hover:bg-[#7A5D42] text-white">
+            <Button onClick={confirmRoleChange} disabled={changing} className="bg-[#4A8C5E] hover:bg-[#3D7A4E] text-white">
               {changing ? "변경 중..." : "변경"}
             </Button>
           </DialogFooter>

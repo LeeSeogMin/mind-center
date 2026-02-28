@@ -5,10 +5,10 @@ export default function ProcessSection() {
     <section className="bg-white py-20 md:py-24">
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="text-center mb-14">
-          <h2 className="font-heading text-2xl md:text-3xl font-bold text-[#3A2E26]">
+          <h2 className="font-heading text-2xl md:text-3xl font-bold text-[#1E3A26]">
             상담 진행 과정
           </h2>
-          <p className="mt-3 text-[#8C7B6B]">
+          <p className="mt-3 text-[#6B8C7B]">
             온라인으로 간편하게 진행되는 공감터의 상담 프로세스를 안내합니다
           </p>
         </div>
@@ -19,13 +19,13 @@ export default function ProcessSection() {
             <div key={step.step} className="flex items-start">
               {/* Step card */}
               <div className="flex flex-col items-center text-center w-[200px]">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#C4A882] text-white text-lg font-bold shadow-sm">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#8CC4A0] text-white text-lg font-bold shadow-sm">
                   {step.step}
                 </div>
-                <h3 className="mt-4 text-base font-semibold text-[#3A2E26]">
+                <h3 className="mt-4 text-base font-semibold text-[#1E3A26]">
                   {step.title}
                 </h3>
-                <p className="mt-1.5 text-sm text-[#8C7B6B] leading-relaxed max-w-[160px]">
+                <p className="mt-1.5 text-sm text-[#6B8C7B] leading-relaxed max-w-[160px]">
                   {step.description}
                 </p>
               </div>
@@ -43,7 +43,7 @@ export default function ProcessSection() {
                   >
                     <path
                       d="M0 8H36M36 8L28 1M36 8L28 15"
-                      stroke="#C4A882"
+                      stroke="#8CC4A0"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -61,14 +61,14 @@ export default function ProcessSection() {
             <div key={step.step} className="flex flex-col items-center">
               {/* Step card */}
               <div className="flex items-center gap-5 w-full max-w-xs">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#C4A882] text-white text-lg font-bold shadow-sm">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#8CC4A0] text-white text-lg font-bold shadow-sm">
                   {step.step}
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold text-[#3A2E26]">
+                  <h3 className="text-base font-semibold text-[#1E3A26]">
                     {step.title}
                   </h3>
-                  <p className="mt-0.5 text-sm text-[#8C7B6B]">
+                  <p className="mt-0.5 text-sm text-[#6B8C7B]">
                     {step.description}
                   </p>
                 </div>
@@ -77,7 +77,7 @@ export default function ProcessSection() {
               {/* Vertical connector (not after last step) */}
               {index < PROCESS_STEPS.length - 1 && (
                 <div className="flex justify-center w-full max-w-xs pl-[24px] py-1">
-                  <div className="h-8 w-px bg-[#C4A882]/40" />
+                  <div className="h-8 w-px bg-[#8CC4A0]/40" />
                 </div>
               )}
             </div>

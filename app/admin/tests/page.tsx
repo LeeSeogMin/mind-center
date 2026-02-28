@@ -163,33 +163,33 @@ export default function AdminTestsPage() {
   return (
     <div className="p-6 md:p-10">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="font-heading text-2xl font-bold text-[#3A2E26]">심리검사 관리</h1>
-        <Button onClick={openCreate} className="bg-[#D4845A] hover:bg-[#C47A52] text-white rounded-xl">
+        <h1 className="font-heading text-2xl font-bold text-[#1E3A26]">심리검사 관리</h1>
+        <Button onClick={openCreate} className="bg-[#4A85D4] hover:bg-[#C47A52] text-white rounded-xl">
           <Plus className="w-4 h-4 mr-1" /> 검사 추가
         </Button>
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-[#8C7B6B]">로딩 중...</div>
+        <div className="text-center py-12 text-[#6B8C7B]">로딩 중...</div>
       ) : tests.length === 0 ? (
-        <Card className="border-[#E8DDD0] rounded-2xl">
-          <CardContent className="p-8 text-center text-[#8C7B6B]">등록된 심리검사가 없습니다.</CardContent>
+        <Card className="border-[#D0E8D8] rounded-2xl">
+          <CardContent className="p-8 text-center text-[#6B8C7B]">등록된 심리검사가 없습니다.</CardContent>
         </Card>
       ) : (
         <div className="space-y-3">
           {tests.map((test) => (
-            <Card key={test.id} className="border-[#E8DDD0] rounded-2xl">
+            <Card key={test.id} className="border-[#D0E8D8] rounded-2xl">
               <CardContent className="flex items-center justify-between p-4 sm:p-6">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <Badge
-                      className={test.is_active ? "bg-[#8B6B4E] text-white" : "bg-[#E8DDD0] text-[#8C7B6B]"}
+                      className={test.is_active ? "bg-[#4A8C5E] text-white" : "bg-[#D0E8D8] text-[#6B8C7B]"}
                     >
                       {test.is_active ? "활성" : "비활성"}
                     </Badge>
-                    <p className="font-medium text-[#3A2E26] truncate">{test.name}</p>
+                    <p className="font-medium text-[#1E3A26] truncate">{test.name}</p>
                   </div>
-                  <p className="text-xs text-[#8C7B6B]">
+                  <p className="text-xs text-[#6B8C7B]">
                     {test.duration_min}분 · {test.price === 0 ? "문의" : `${test.price.toLocaleString()}원`}
                     {test.tags && test.tags.length > 0 && ` · ${test.tags.join(", ")}`}
                   </p>
@@ -199,7 +199,7 @@ export default function AdminTestsPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => handleToggleActive(test)}
-                    className="border-[#E8DDD0] text-[#8C7B6B] text-xs"
+                    className="border-[#D0E8D8] text-[#6B8C7B] text-xs"
                   >
                     {test.is_active ? "비활성화" : "활성화"}
                   </Button>
@@ -207,7 +207,7 @@ export default function AdminTestsPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => openEdit(test)}
-                    className="border-[#E8DDD0] text-[#8C7B6B]"
+                    className="border-[#D0E8D8] text-[#6B8C7B]"
                   >
                     <Pencil className="w-4 h-4" />
                   </Button>
@@ -215,7 +215,7 @@ export default function AdminTestsPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => setDeleteId(test.id)}
-                    className="border-[#E8DDD0] text-red-500 hover:text-red-600"
+                    className="border-[#D0E8D8] text-red-500 hover:text-red-600"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -234,52 +234,52 @@ export default function AdminTestsPage() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-[#3A2E26] mb-1 block">검사명</label>
+              <label className="text-sm font-medium text-[#1E3A26] mb-1 block">검사명</label>
               <Input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="검사명"
-                className="border-[#E8DDD0] rounded-xl"
+                className="border-[#D0E8D8] rounded-xl"
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-[#3A2E26] mb-1 block">설명</label>
+              <label className="text-sm font-medium text-[#1E3A26] mb-1 block">설명</label>
               <Textarea
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="검사 설명"
-                className="border-[#E8DDD0] rounded-xl min-h-[100px]"
+                className="border-[#D0E8D8] rounded-xl min-h-[100px]"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-[#3A2E26] mb-1 block">소요시간 (분)</label>
+                <label className="text-sm font-medium text-[#1E3A26] mb-1 block">소요시간 (분)</label>
                 <Input
                   type="number"
                   value={form.duration_min}
                   onChange={(e) => setForm({ ...form, duration_min: e.target.value })}
                   placeholder="60"
-                  className="border-[#E8DDD0] rounded-xl"
+                  className="border-[#D0E8D8] rounded-xl"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-[#3A2E26] mb-1 block">가격 (원)</label>
+                <label className="text-sm font-medium text-[#1E3A26] mb-1 block">가격 (원)</label>
                 <Input
                   type="number"
                   value={form.price}
                   onChange={(e) => setForm({ ...form, price: e.target.value })}
                   placeholder="0"
-                  className="border-[#E8DDD0] rounded-xl"
+                  className="border-[#D0E8D8] rounded-xl"
                 />
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-[#3A2E26] mb-1 block">태그 (쉼표 구분)</label>
+              <label className="text-sm font-medium text-[#1E3A26] mb-1 block">태그 (쉼표 구분)</label>
               <Input
                 value={form.tags}
                 onChange={(e) => setForm({ ...form, tags: e.target.value })}
                 placeholder="종합평가, 인지, 정서"
-                className="border-[#E8DDD0] rounded-xl"
+                className="border-[#D0E8D8] rounded-xl"
               />
             </div>
             <div className="flex items-center gap-3">
@@ -288,16 +288,16 @@ export default function AdminTestsPage() {
                 id="is_active"
                 checked={form.is_active}
                 onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
-                className="w-4 h-4 rounded border-[#E8DDD0]"
+                className="w-4 h-4 rounded border-[#D0E8D8]"
               />
-              <label htmlFor="is_active" className="text-sm text-[#3A2E26]">활성화</label>
+              <label htmlFor="is_active" className="text-sm text-[#1E3A26]">활성화</label>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)} className="border-[#E8DDD0]">
+            <Button variant="outline" onClick={() => setDialogOpen(false)} className="border-[#D0E8D8]">
               취소
             </Button>
-            <Button onClick={handleSubmit} disabled={submitting} className="bg-[#D4845A] hover:bg-[#C47A52] text-white">
+            <Button onClick={handleSubmit} disabled={submitting} className="bg-[#4A85D4] hover:bg-[#C47A52] text-white">
               {submitting ? "저장 중..." : "저장"}
             </Button>
           </DialogFooter>
@@ -312,7 +312,7 @@ export default function AdminTestsPage() {
             <DialogDescription>정말로 이 검사를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteId(null)} className="border-[#E8DDD0]">
+            <Button variant="outline" onClick={() => setDeleteId(null)} className="border-[#D0E8D8]">
               취소
             </Button>
             <Button onClick={handleDelete} disabled={deleting} className="bg-red-500 hover:bg-red-600 text-white">

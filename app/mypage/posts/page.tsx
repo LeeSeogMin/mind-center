@@ -58,8 +58,8 @@ export default function MyPostsPage() {
 
   if (loading) {
     return (
-      <div className="bg-[#FBF8F3] min-h-screen flex items-center justify-center">
-        <p className="text-[#8C7B6B]">로딩 중...</p>
+      <div className="bg-[#F0FAF3] min-h-screen flex items-center justify-center">
+        <p className="text-[#6B8C7B]">로딩 중...</p>
       </div>
     );
   }
@@ -77,13 +77,13 @@ export default function MyPostsPage() {
   }
 
   return (
-    <div className="bg-[#FBF8F3] min-h-screen">
+    <div className="bg-[#F0FAF3] min-h-screen">
       <div className="max-w-[1200px] mx-auto px-6 py-12">
-        <h1 className="font-heading text-3xl font-bold text-[#3A2E26] mb-8">내 글</h1>
+        <h1 className="font-heading text-3xl font-bold text-[#1E3A26] mb-8">내 글</h1>
 
         {posts.length === 0 ? (
-          <Card className="border-[#E8DDD0] rounded-2xl">
-            <CardContent className="p-8 text-center text-[#8C7B6B]">
+          <Card className="border-[#D0E8D8] rounded-2xl">
+            <CardContent className="p-8 text-center text-[#6B8C7B]">
               작성한 글이 없습니다.
             </CardContent>
           </Card>
@@ -91,22 +91,22 @@ export default function MyPostsPage() {
           <div className="space-y-4">
             {posts.map((post) => (
               <Link key={`${post.type}-${post.id}`} href={getPostLink(post)}>
-                <Card className="border-[#E8DDD0] rounded-2xl hover:border-[#C4A882] transition-colors cursor-pointer">
+                <Card className="border-[#D0E8D8] rounded-2xl hover:border-[#8CC4A0] transition-colors cursor-pointer">
                   <CardContent className="flex items-center justify-between p-6">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <Badge variant="outline" className="border-[#E8DDD0] text-xs">
+                        <Badge variant="outline" className="border-[#D0E8D8] text-xs">
                           {getTypeLabel(post)}
                         </Badge>
-                        <p className="font-medium text-[#3A2E26]">{post.title}</p>
+                        <p className="font-medium text-[#1E3A26]">{post.title}</p>
                       </div>
-                      <p className="text-sm text-[#8C7B6B]">
+                      <p className="text-sm text-[#6B8C7B]">
                         {new Date(post.created_at).toLocaleDateString("ko-KR")}
                       </p>
                     </div>
                     {post.type === "mindtalk" && (
                       <Badge
-                        className={post.is_answered ? "bg-[#8B6B4E]" : "border-[#E8DDD0] text-[#8C7B6B]"}
+                        className={post.is_answered ? "bg-[#4A8C5E]" : "border-[#D0E8D8] text-[#6B8C7B]"}
                         variant={post.is_answered ? "default" : "outline"}
                       >
                         {post.is_answered ? "답변완료" : "답변대기"}

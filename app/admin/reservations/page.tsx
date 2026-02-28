@@ -20,15 +20,15 @@ type TypeFilter = "all" | "offline" | "online";
 type PaymentFilter = "all" | "unpaid" | "paid";
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
-  pending: { label: "대기", color: "border-[#E8DDD0] text-[#8C7B6B]" },
-  confirmed: { label: "확정", color: "bg-[#8B6B4E] text-white" },
-  completed: { label: "완료", color: "bg-[#C4A882] text-white" },
+  pending: { label: "대기", color: "border-[#D0E8D8] text-[#6B8C7B]" },
+  confirmed: { label: "확정", color: "bg-[#4A8C5E] text-white" },
+  completed: { label: "완료", color: "bg-[#8CC4A0] text-white" },
   cancelled: { label: "취소", color: "bg-red-100 text-red-600" },
 };
 
 const PAYMENT_MAP: Record<string, { label: string; color: string }> = {
-  unpaid: { label: "미결제", color: "border-[#E8DDD0] text-[#8C7B6B]" },
-  paid: { label: "결제완료", color: "bg-[#8B6B4E] text-white" },
+  unpaid: { label: "미결제", color: "border-[#D0E8D8] text-[#6B8C7B]" },
+  paid: { label: "결제완료", color: "bg-[#4A8C5E] text-white" },
   refunded: { label: "환불", color: "bg-red-100 text-red-600" },
 };
 
@@ -123,8 +123,8 @@ export default function AdminReservationsPage() {
   return (
     <div className="p-6 md:p-10 max-w-[1200px]">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="font-heading text-2xl font-bold text-[#3A2E26]">예약 관리</h1>
-        <Button variant="ghost" onClick={fetchReservations} className="text-[#8C7B6B]">
+        <h1 className="font-heading text-2xl font-bold text-[#1E3A26]">예약 관리</h1>
+        <Button variant="ghost" onClick={fetchReservations} className="text-[#6B8C7B]">
           <RefreshCw className="w-4 h-4 mr-2" /> 새로고침
         </Button>
       </div>
@@ -132,7 +132,7 @@ export default function AdminReservationsPage() {
       {/* Filters */}
       <div className="flex flex-wrap gap-3 mb-6">
         <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as StatusFilter)}>
-          <SelectTrigger className="border-[#E8DDD0]">
+          <SelectTrigger className="border-[#D0E8D8]">
             <SelectValue placeholder="상태" />
           </SelectTrigger>
           <SelectContent>
@@ -145,7 +145,7 @@ export default function AdminReservationsPage() {
         </Select>
 
         <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v as TypeFilter)}>
-          <SelectTrigger className="border-[#E8DDD0]">
+          <SelectTrigger className="border-[#D0E8D8]">
             <SelectValue placeholder="유형" />
           </SelectTrigger>
           <SelectContent>
@@ -156,7 +156,7 @@ export default function AdminReservationsPage() {
         </Select>
 
         <Select value={paymentFilter} onValueChange={(v) => setPaymentFilter(v as PaymentFilter)}>
-          <SelectTrigger className="border-[#E8DDD0]">
+          <SelectTrigger className="border-[#D0E8D8]">
             <SelectValue placeholder="결제" />
           </SelectTrigger>
           <SelectContent>
@@ -169,10 +169,10 @@ export default function AdminReservationsPage() {
 
       {/* List */}
       {loading ? (
-        <p className="text-sm text-[#8C7B6B]">불러오는 중...</p>
+        <p className="text-sm text-[#6B8C7B]">불러오는 중...</p>
       ) : reservations.length === 0 ? (
-        <Card className="border-[#E8DDD0] rounded-2xl">
-          <CardContent className="p-8 text-center text-[#8C7B6B]">
+        <Card className="border-[#D0E8D8] rounded-2xl">
+          <CardContent className="p-8 text-center text-[#6B8C7B]">
             해당하는 예약이 없습니다.
           </CardContent>
         </Card>
@@ -182,27 +182,27 @@ export default function AdminReservationsPage() {
             const st = STATUS_MAP[res.status] ?? STATUS_MAP.pending;
             const pt = PAYMENT_MAP[res.payment_status] ?? PAYMENT_MAP.unpaid;
             return (
-              <Card key={res.id} className="border-[#E8DDD0] rounded-2xl">
+              <Card key={res.id} className="border-[#D0E8D8] rounded-2xl">
                 <CardContent className="p-5">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     {/* Info */}
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <p className="font-medium text-[#3A2E26]">{userName(res)}</p>
-                        <Badge variant="outline" className="border-[#E8DDD0] text-xs">
+                        <p className="font-medium text-[#1E3A26]">{userName(res)}</p>
+                        <Badge variant="outline" className="border-[#D0E8D8] text-xs">
                           {res.type === "online" ? "화상" : "대면"}
                         </Badge>
                       </div>
-                      <p className="text-sm text-[#8C7B6B]">
+                      <p className="text-sm text-[#6B8C7B]">
                         {userEmail(res)}{userPhone(res) && ` · ${userPhone(res)}`}
                       </p>
-                      <p className="text-sm text-[#8C7B6B]">
+                      <p className="text-sm text-[#6B8C7B]">
                         신청일: {new Date(res.created_at).toLocaleDateString("ko-KR")}
                         {res.amount > 0 && ` · ${res.amount.toLocaleString()}원`}
                       </p>
-                      {res.memo && <p className="text-xs text-[#8C7B6B]">메모: {res.memo}</p>}
+                      {res.memo && <p className="text-xs text-[#6B8C7B]">메모: {res.memo}</p>}
                       {res.meet_link && (
-                        <p className="text-xs text-[#D4845A] flex items-center gap-1">
+                        <p className="text-xs text-[#4A85D4] flex items-center gap-1">
                           <Video className="w-3 h-3" /> 미트 링크 설정됨
                         </p>
                       )}
@@ -222,7 +222,7 @@ export default function AdminReservationsPage() {
                           <Button
                             size="sm"
                             onClick={() => openDialog("confirm", res)}
-                            className="bg-[#8B6B4E] hover:bg-[#7A5D42] text-white"
+                            className="bg-[#4A8C5E] hover:bg-[#3D7A4E] text-white"
                           >
                             <CheckCircle className="w-4 h-4 mr-1" /> 확정
                           </Button>
@@ -240,7 +240,7 @@ export default function AdminReservationsPage() {
                         <Button
                           size="sm"
                           onClick={() => openDialog("complete", res)}
-                          className="bg-[#C4A882] hover:bg-[#B09772] text-white"
+                          className="bg-[#8CC4A0] hover:bg-[#B09772] text-white"
                         >
                           완료 처리
                         </Button>
@@ -256,7 +256,7 @@ export default function AdminReservationsPage() {
 
       {/* Confirm Dialog */}
       <Dialog open={dialogType === "confirm"} onOpenChange={(open) => !open && closeDialog()}>
-        <DialogContent className="border-[#E8DDD0]">
+        <DialogContent className="border-[#D0E8D8]">
           <DialogHeader>
             <DialogTitle className="font-heading">예약 확정</DialogTitle>
             <DialogDescription>
@@ -265,34 +265,34 @@ export default function AdminReservationsPage() {
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div>
-              <label className="text-sm font-medium text-[#3A2E26] mb-1 block">상담 금액 (원)</label>
+              <label className="text-sm font-medium text-[#1E3A26] mb-1 block">상담 금액 (원)</label>
               <Input
                 type="number"
                 placeholder="예: 80000"
                 value={confirmAmount}
                 onChange={(e) => setConfirmAmount(e.target.value)}
-                className="border-[#E8DDD0]"
+                className="border-[#D0E8D8]"
               />
             </div>
             {selectedRes?.type === "online" && (
               <div>
-                <label className="text-sm font-medium text-[#3A2E26] mb-1 block">구글 미트 링크</label>
+                <label className="text-sm font-medium text-[#1E3A26] mb-1 block">구글 미트 링크</label>
                 <Input
                   placeholder="https://meet.google.com/xxx-xxxx-xxx"
                   value={meetLink}
                   onChange={(e) => setMeetLink(e.target.value)}
-                  className="border-[#E8DDD0]"
+                  className="border-[#D0E8D8]"
                 />
-                <p className="text-xs text-[#8C7B6B] mt-1">화상 상담 시 필수. 결제 완료 후 사용자에게 노출됩니다.</p>
+                <p className="text-xs text-[#6B8C7B] mt-1">화상 상담 시 필수. 결제 완료 후 사용자에게 노출됩니다.</p>
               </div>
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={closeDialog} className="border-[#E8DDD0]">취소</Button>
+            <Button variant="outline" onClick={closeDialog} className="border-[#D0E8D8]">취소</Button>
             <Button
               onClick={handleConfirm}
               disabled={actionLoading}
-              className="bg-[#8B6B4E] hover:bg-[#7A5D42] text-white"
+              className="bg-[#4A8C5E] hover:bg-[#3D7A4E] text-white"
             >
               {actionLoading ? "처리 중..." : "확정하기"}
             </Button>
@@ -302,7 +302,7 @@ export default function AdminReservationsPage() {
 
       {/* Cancel Dialog */}
       <Dialog open={dialogType === "cancel"} onOpenChange={(open) => !open && closeDialog()}>
-        <DialogContent className="border-[#E8DDD0]">
+        <DialogContent className="border-[#D0E8D8]">
           <DialogHeader>
             <DialogTitle className="font-heading">예약 취소</DialogTitle>
             <DialogDescription>
@@ -310,7 +310,7 @@ export default function AdminReservationsPage() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={closeDialog} className="border-[#E8DDD0]">돌아가기</Button>
+            <Button variant="outline" onClick={closeDialog} className="border-[#D0E8D8]">돌아가기</Button>
             <Button
               onClick={() => handleStatusChange("cancelled")}
               disabled={actionLoading}
@@ -324,7 +324,7 @@ export default function AdminReservationsPage() {
 
       {/* Complete Dialog */}
       <Dialog open={dialogType === "complete"} onOpenChange={(open) => !open && closeDialog()}>
-        <DialogContent className="border-[#E8DDD0]">
+        <DialogContent className="border-[#D0E8D8]">
           <DialogHeader>
             <DialogTitle className="font-heading">상담 완료</DialogTitle>
             <DialogDescription>
@@ -332,11 +332,11 @@ export default function AdminReservationsPage() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={closeDialog} className="border-[#E8DDD0]">돌아가기</Button>
+            <Button variant="outline" onClick={closeDialog} className="border-[#D0E8D8]">돌아가기</Button>
             <Button
               onClick={() => handleStatusChange("completed")}
               disabled={actionLoading}
-              className="bg-[#C4A882] hover:bg-[#B09772] text-white"
+              className="bg-[#8CC4A0] hover:bg-[#B09772] text-white"
             >
               {actionLoading ? "처리 중..." : "완료 처리"}
             </Button>

@@ -61,15 +61,15 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="bg-[#FBF8F3] min-h-screen flex items-center justify-center py-20 px-6">
-      <Card className="w-full max-w-md rounded-2xl bg-white border-[#E8DDD0]">
+    <div className="bg-[#F0FAF3] min-h-screen flex items-center justify-center py-20 px-6">
+      <Card className="w-full max-w-md rounded-2xl bg-white border-[#D0E8D8]">
         <CardHeader className="text-center pb-2">
           <Link href="/">
-            <h1 className="font-heading text-2xl font-bold text-[#8B6B4E]">
+            <h1 className="font-heading text-2xl font-bold text-[#4A8C5E]">
               {SITE_NAME}
             </h1>
           </Link>
-          <p className="text-sm text-[#8C7B6B] mt-2">
+          <p className="text-sm text-[#6B8C7B] mt-2">
             회원가입 후 다양한 상담 서비스를 이용하세요
           </p>
         </CardHeader>
@@ -79,7 +79,7 @@ export default function SignupPage() {
             <div className="space-y-2">
               <label
                 htmlFor="name"
-                className="text-sm font-medium text-[#3A2E26]"
+                className="text-sm font-medium text-[#1E3A26]"
               >
                 이름
               </label>
@@ -90,14 +90,14 @@ export default function SignupPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="h-11 rounded-xl border-[#E8DDD0] focus-visible:border-[#C4A882] focus-visible:ring-[#C4A882]/30"
+                className="h-11 rounded-xl border-[#D0E8D8] focus-visible:border-[#8CC4A0] focus-visible:ring-[#8CC4A0]/30"
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="signup-email"
-                className="text-sm font-medium text-[#3A2E26]"
+                className="text-sm font-medium text-[#1E3A26]"
               >
                 이메일
               </label>
@@ -108,14 +108,14 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-11 rounded-xl border-[#E8DDD0] focus-visible:border-[#C4A882] focus-visible:ring-[#C4A882]/30"
+                className="h-11 rounded-xl border-[#D0E8D8] focus-visible:border-[#8CC4A0] focus-visible:ring-[#8CC4A0]/30"
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="phone"
-                className="text-sm font-medium text-[#3A2E26]"
+                className="text-sm font-medium text-[#1E3A26]"
               >
                 연락처
               </label>
@@ -126,14 +126,14 @@ export default function SignupPage() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 required
-                className="h-11 rounded-xl border-[#E8DDD0] focus-visible:border-[#C4A882] focus-visible:ring-[#C4A882]/30"
+                className="h-11 rounded-xl border-[#D0E8D8] focus-visible:border-[#8CC4A0] focus-visible:ring-[#8CC4A0]/30"
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="signup-password"
-                className="text-sm font-medium text-[#3A2E26]"
+                className="text-sm font-medium text-[#1E3A26]"
               >
                 비밀번호
               </label>
@@ -144,14 +144,14 @@ export default function SignupPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="h-11 rounded-xl border-[#E8DDD0] focus-visible:border-[#C4A882] focus-visible:ring-[#C4A882]/30"
+                className="h-11 rounded-xl border-[#D0E8D8] focus-visible:border-[#8CC4A0] focus-visible:ring-[#8CC4A0]/30"
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="password-confirm"
-                className="text-sm font-medium text-[#3A2E26]"
+                className="text-sm font-medium text-[#1E3A26]"
               >
                 비밀번호 확인
               </label>
@@ -162,7 +162,7 @@ export default function SignupPage() {
                 value={passwordConfirm}
                 onChange={(e) => setPasswordConfirm(e.target.value)}
                 required
-                className="h-11 rounded-xl border-[#E8DDD0] focus-visible:border-[#C4A882] focus-visible:ring-[#C4A882]/30"
+                className="h-11 rounded-xl border-[#D0E8D8] focus-visible:border-[#8CC4A0] focus-visible:ring-[#8CC4A0]/30"
               />
             </div>
 
@@ -173,14 +173,14 @@ export default function SignupPage() {
             )}
 
             {/* 약관 동의 */}
-            <div className="bg-[#FBF8F3] rounded-xl p-4 border border-[#E8DDD0]">
-              <p className="text-xs text-[#8C7B6B] leading-relaxed">
+            <div className="bg-[#F0FAF3] rounded-xl p-4 border border-[#D0E8D8]">
+              <p className="text-xs text-[#6B8C7B] leading-relaxed">
                 회원가입 시{" "}
-                <span className="text-[#8B6B4E] cursor-pointer hover:underline">
+                <span className="text-[#4A8C5E] cursor-pointer hover:underline">
                   이용약관
                 </span>{" "}
                 및{" "}
-                <span className="text-[#8B6B4E] cursor-pointer hover:underline">
+                <span className="text-[#4A8C5E] cursor-pointer hover:underline">
                   개인정보처리방침
                 </span>
                 에 동의하는 것으로 간주됩니다.
@@ -190,18 +190,18 @@ export default function SignupPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#8B6B4E] hover:bg-[#7A5D42] text-white h-11 rounded-xl text-base"
+              className="w-full bg-[#4A8C5E] hover:bg-[#3D7A4E] text-white h-11 rounded-xl text-base"
             >
               {loading ? "가입 처리중..." : "회원가입"}
             </Button>
           </form>
 
           {/* 로그인 링크 */}
-          <p className="text-center text-sm text-[#8C7B6B] mt-6">
+          <p className="text-center text-sm text-[#6B8C7B] mt-6">
             이미 회원이신가요?{" "}
             <Link
               href="/login"
-              className="text-[#8B6B4E] font-medium hover:underline"
+              className="text-[#4A8C5E] font-medium hover:underline"
             >
               로그인
             </Link>

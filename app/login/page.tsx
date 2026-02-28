@@ -52,15 +52,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="bg-[#FBF8F3] min-h-screen flex items-center justify-center py-20 px-6">
-      <Card className="w-full max-w-md rounded-2xl bg-white border-[#E8DDD0]">
+    <div className="bg-[#F0FAF3] min-h-screen flex items-center justify-center py-20 px-6">
+      <Card className="w-full max-w-md rounded-2xl bg-white border-[#D0E8D8]">
         <CardHeader className="text-center pb-2">
           <Link href="/">
-            <h1 className="font-heading text-2xl font-bold text-[#8B6B4E]">
+            <h1 className="font-heading text-2xl font-bold text-[#4A8C5E]">
               {SITE_NAME}
             </h1>
           </Link>
-          <p className="text-sm text-[#8C7B6B] mt-2">
+          <p className="text-sm text-[#6B8C7B] mt-2">
             로그인하여 상담 서비스를 이용해 보세요
           </p>
         </CardHeader>
@@ -71,7 +71,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-sm font-medium text-[#3A2E26]"
+                className="text-sm font-medium text-[#1E3A26]"
               >
                 이메일
               </label>
@@ -82,14 +82,14 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-11 rounded-xl border-[#E8DDD0] focus-visible:border-[#C4A882] focus-visible:ring-[#C4A882]/30"
+                className="h-11 rounded-xl border-[#D0E8D8] focus-visible:border-[#8CC4A0] focus-visible:ring-[#8CC4A0]/30"
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="text-sm font-medium text-[#3A2E26]"
+                className="text-sm font-medium text-[#1E3A26]"
               >
                 비밀번호
               </label>
@@ -100,7 +100,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="h-11 rounded-xl border-[#E8DDD0] focus-visible:border-[#C4A882] focus-visible:ring-[#C4A882]/30"
+                className="h-11 rounded-xl border-[#D0E8D8] focus-visible:border-[#8CC4A0] focus-visible:ring-[#8CC4A0]/30"
               />
             </div>
 
@@ -113,7 +113,7 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#8B6B4E] hover:bg-[#7A5D42] text-white h-11 rounded-xl text-base"
+              className="w-full bg-[#4A8C5E] hover:bg-[#3D7A4E] text-white h-11 rounded-xl text-base"
             >
               {loading ? "로그인 중..." : "로그인"}
             </Button>
@@ -121,8 +121,8 @@ export default function LoginPage() {
 
           {/* 구분선 */}
           <div className="relative">
-            <Separator className="bg-[#E8DDD0]" />
-            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3 text-xs text-[#8C7B6B]">
+            <Separator className="bg-[#D0E8D8]" />
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3 text-xs text-[#6B8C7B]">
               또는
             </span>
           </div>
@@ -132,7 +132,7 @@ export default function LoginPage() {
             type="button"
             variant="outline"
             onClick={handleGoogleLogin}
-            className="w-full border-[#E8DDD0] text-[#3A2E26] hover:bg-[#FBF8F3] h-11 rounded-xl text-sm"
+            className="w-full border-[#D0E8D8] text-[#1E3A26] hover:bg-[#F0FAF3] h-11 rounded-xl text-sm"
           >
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
               <path
@@ -156,11 +156,11 @@ export default function LoginPage() {
           </Button>
 
           {/* 회원가입 링크 */}
-          <p className="text-center text-sm text-[#8C7B6B]">
+          <p className="text-center text-sm text-[#6B8C7B]">
             아직 회원이 아니신가요?{" "}
             <Link
               href="/signup"
-              className="text-[#8B6B4E] font-medium hover:underline"
+              className="text-[#4A8C5E] font-medium hover:underline"
             >
               회원가입
             </Link>

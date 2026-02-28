@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   description:
     "온라인 화상상담 전문 심리상담연구소. 정선이 상담학 박사가 직접 상담하는 공감터에서 편안하게 전문 심리상담을 받아보세요.",
-  keywords: ["심리상담", "상담센터", "심리검사", "가족상담", "부부상담", "아동상담", "공감터"],
+  keywords: ["심리상담", "심리상담연구소", "심리검사", "가족상담", "부부상담", "아동상담", "공감터"],
 };
 
 export default function RootLayout({

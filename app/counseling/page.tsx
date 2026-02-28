@@ -10,14 +10,14 @@ export const metadata: Metadata = {
 
 export default function CounselingPage() {
   return (
-    <div className="bg-[#FBF8F3]">
+    <div className="bg-[#F0FAF3]">
       {/* 페이지 헤더 */}
-      <section className="bg-white border-b border-[#E8DDD0]">
+      <section className="bg-white border-b border-[#D0E8D8]">
         <div className="max-w-[1200px] mx-auto px-6 py-16 text-center">
-          <h1 className="font-heading text-4xl font-bold text-[#3A2E26] mb-4">
+          <h1 className="font-heading text-4xl font-bold text-[#1E3A26] mb-4">
             심리상담이란
           </h1>
-          <p className="text-[#8C7B6B] text-lg">
+          <p className="text-[#6B8C7B] text-lg">
             전문 상담사와 함께하는 마음 치유의 과정
           </p>
         </div>
@@ -26,11 +26,11 @@ export default function CounselingPage() {
       {/* 심리상담 설명 */}
       <section className="max-w-[1200px] mx-auto px-6 py-20">
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-2xl border border-[#E8DDD0] p-10 space-y-6">
-            <h2 className="font-heading text-2xl font-bold text-[#3A2E26]">
+          <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10 space-y-6">
+            <h2 className="font-heading text-2xl font-bold text-[#1E3A26]">
               심리상담은 무엇인가요?
             </h2>
-            <div className="space-y-4 text-[#3A2E26] leading-relaxed">
+            <div className="space-y-4 text-[#1E3A26] leading-relaxed">
               <p>
                 심리상담은 전문 교육을 받은 상담사가 심리적·정서적 어려움을 겪고 있는
                 내담자와 대화를 통해 문제를 탐색하고, 이해하며, 해결해 나가는 전문적인 과정입니다.
@@ -48,11 +48,11 @@ export default function CounselingPage() {
             </div>
 
             {/* 상담이 도움이 되는 경우 */}
-            <div className="mt-8 pt-8 border-t border-[#E8DDD0]">
-              <h3 className="font-heading text-xl font-bold text-[#3A2E26] mb-4">
+            <div className="mt-8 pt-8 border-t border-[#D0E8D8]">
+              <h3 className="font-heading text-xl font-bold text-[#1E3A26] mb-4">
                 이런 경우 상담이 도움이 됩니다
               </h3>
-              <ul className="grid sm:grid-cols-2 gap-3 text-sm text-[#3A2E26]">
+              <ul className="grid sm:grid-cols-2 gap-3 text-sm text-[#1E3A26]">
                 {[
                   "우울감이나 불안이 지속될 때",
                   "대인관계에서 반복적인 어려움을 느낄 때",
@@ -65,9 +65,9 @@ export default function CounselingPage() {
                 ].map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-2 bg-[#FBF8F3] rounded-xl px-4 py-3 border border-[#E8DDD0]"
+                    className="flex items-start gap-2 bg-[#F0FAF3] rounded-xl px-4 py-3 border border-[#D0E8D8]"
                   >
-                    <span className="text-[#D4845A] mt-0.5 shrink-0">&#10003;</span>
+                    <span className="text-[#4A85D4] mt-0.5 shrink-0">&#10003;</span>
                     {item}
                   </li>
                 ))}
@@ -78,38 +78,38 @@ export default function CounselingPage() {
       </section>
 
       {/* 상담 유형 그리드 */}
-      <section className="bg-white border-y border-[#E8DDD0]">
+      <section className="bg-white border-y border-[#D0E8D8]">
         <div className="max-w-[1200px] mx-auto px-6 py-20">
-          <h2 className="font-heading text-3xl font-bold text-[#3A2E26] text-center mb-4">
+          <h2 className="font-heading text-3xl font-bold text-[#1E3A26] text-center mb-4">
             상담 분야
           </h2>
-          <p className="text-[#8C7B6B] text-center mb-12">
+          <p className="text-[#6B8C7B] text-center mb-12">
             각 분야별 전문 상담을 제공합니다
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {COUNSELING_SERVICES.map((service) => (
               <Link key={service.slug} href={`/counseling/${service.slug}`}>
-                <Card className="rounded-2xl bg-[#FBF8F3] border-[#E8DDD0] hover:border-[#C4A882] hover:shadow-md transition-all h-full cursor-pointer group">
+                <Card className="rounded-2xl bg-[#F0FAF3] border-[#D0E8D8] hover:border-[#8CC4A0] hover:shadow-md transition-all h-full cursor-pointer group">
                   <CardHeader className="pb-2">
-                    <div className="w-14 h-14 rounded-2xl bg-white border border-[#E8DDD0] flex items-center justify-center mb-2 group-hover:border-[#C4A882] transition-colors">
-                      <span className="text-2xl text-[#8B6B4E]">
+                    <div className="w-14 h-14 rounded-2xl bg-white border border-[#D0E8D8] flex items-center justify-center mb-2 group-hover:border-[#8CC4A0] transition-colors">
+                      <span className="text-2xl text-[#4A8C5E]">
                         {service.icon === "Baby" && "👶"}
                         {service.icon === "User" && "🧑"}
                         {service.icon === "Heart" && "💛"}
                         {service.icon === "Briefcase" && "💼"}
                       </span>
                     </div>
-                    <h3 className="font-heading text-lg font-bold text-[#3A2E26] group-hover:text-[#8B6B4E] transition-colors">
+                    <h3 className="font-heading text-lg font-bold text-[#1E3A26] group-hover:text-[#4A8C5E] transition-colors">
                       {service.title}
                     </h3>
-                    <p className="text-xs text-[#8C7B6B]">{service.subtitle}</p>
+                    <p className="text-xs text-[#6B8C7B]">{service.subtitle}</p>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-[#8C7B6B] leading-relaxed line-clamp-3">
+                    <p className="text-sm text-[#6B8C7B] leading-relaxed line-clamp-3">
                       {service.description}
                     </p>
-                    <span className="inline-block mt-4 text-sm text-[#D4845A] font-medium group-hover:underline">
+                    <span className="inline-block mt-4 text-sm text-[#4A85D4] font-medium group-hover:underline">
                       자세히 보기 &rarr;
                     </span>
                   </CardContent>
@@ -122,15 +122,15 @@ export default function CounselingPage() {
 
       {/* CTA */}
       <section className="max-w-[1200px] mx-auto px-6 py-20 text-center">
-        <h2 className="font-heading text-2xl font-bold text-[#3A2E26] mb-4">
+        <h2 className="font-heading text-2xl font-bold text-[#1E3A26] mb-4">
           상담을 시작해 보세요
         </h2>
-        <p className="text-[#8C7B6B] mb-8 max-w-md mx-auto">
+        <p className="text-[#6B8C7B] mb-8 max-w-md mx-auto">
           전문 상담사가 여러분의 마음에 귀 기울이겠습니다.
           편안한 마음으로 첫 걸음을 내딛어 보세요.
         </p>
         <Link href="/reservation/offline">
-          <Button className="bg-[#D4845A] hover:bg-[#C47349] text-white px-8 h-12 text-base rounded-xl">
+          <Button className="bg-[#4A85D4] hover:bg-[#3B73C4] text-white px-8 h-12 text-base rounded-xl">
             상담 예약하기
           </Button>
         </Link>

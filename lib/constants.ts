@@ -128,7 +128,7 @@ export const COUNSELING_SERVICES: CounselingService[] = [
 
 export const PROCESS_STEPS = [
   { step: 1, title: "상담 예약·신청", description: "홈페이지, 전화, 카톡, 내방", icon: "CalendarCheck" },
-  { step: 2, title: "상담자 배정 및 일시 확정", description: "", icon: "UserCheck" },
+  { step: 2, title: "상담자 배정 및\n일시 확정", description: "", icon: "UserCheck" },
   { step: 3, title: "상담 진행", description: "", icon: "MessageCircle" },
   { step: 4, title: "종결 및 사후관리", description: "", icon: "ShieldCheck" },
 ];

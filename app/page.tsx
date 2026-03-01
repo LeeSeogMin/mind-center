@@ -1,7 +1,6 @@
 import HeroSection from "@/components/home/hero-section";
 import ServiceSection from "@/components/home/service-section";
 import ProcessSection from "@/components/home/process-section";
-import ReservationCTA from "@/components/home/reservation-cta";
 
 export default function HomePage() {
   return (
@@ -9,7 +8,6 @@ export default function HomePage() {
       <HeroSection />
       <ServiceSection />
       <ProcessSection />
-      <ReservationCTA />
     </>
   );
 }

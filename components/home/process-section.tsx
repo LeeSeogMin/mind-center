@@ -37,7 +37,7 @@ function StepFlow({ steps, color }: { steps: typeof PROCESS_STEPS; color: string
                 >
                   {IconComponent ? <IconComponent className="h-5 w-5" /> : step.step}
                 </div>
-                <h3 className="mt-3 text-sm font-semibold text-[#1E3A26]">
+                <h3 className="mt-3 text-sm font-semibold text-[#1E3A26] whitespace-pre-line">
                   {step.title}
                 </h3>
                 {step.description && (

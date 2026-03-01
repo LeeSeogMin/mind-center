@@ -1,54 +1,21 @@
 import Link from "next/link";
-import { SITE_NAME, COUNSELOR_NAME, COUNSELOR_TITLE } from "@/lib/constants";
+import { SITE_NAME } from "@/lib/constants";
 
 export default function Footer() {
   return (
     <footer className="bg-[#1E3A26] text-[#8CC4A0]">
-      <div className="max-w-[1200px] mx-auto px-6 py-12">
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* 연구소 정보 */}
-          <div>
-            <h3 className="font-heading text-xl font-bold text-white mb-4">{SITE_NAME}</h3>
-            <p className="text-sm leading-relaxed mb-3">
-              {COUNSELOR_NAME} {COUNSELOR_TITLE}<br />
-              온라인 화상상담 전문 심리상담연구소
-            </p>
-            <p className="text-sm leading-relaxed mb-3">
-              대면상담: 병점역 한신대학교 인근<br />
-              <span className="text-xs opacity-70">(예약 확정 시 구체적 장소 안내)</span>
-            </p>
-            <p className="text-sm leading-relaxed">
-              전화: 010-2739-6432<br />
-              이메일: iillac@naver.com
-            </p>
-          </div>
-
-          {/* 바로가기 */}
-          <div>
-            <h4 className="font-bold text-white mb-4">바로가기</h4>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <Link href="/about" className="hover:text-white transition-colors">연구소 소개</Link>
-              <Link href="/counseling" className="hover:text-white transition-colors">상담안내</Link>
-              <Link href="/test" className="hover:text-white transition-colors">심리검사</Link>
-              <Link href="/reservation/offline" className="hover:text-white transition-colors">상담예약</Link>
-              <Link href="/mindtalk" className="hover:text-white transition-colors">마음톡</Link>
-              <Link href="/board/notice" className="hover:text-white transition-colors">게시판</Link>
-            </div>
-          </div>
-
-          {/* 상담 시간 */}
-          <div>
-            <h4 className="font-bold text-white mb-4">상담 시간</h4>
-            <div className="text-sm space-y-1">
-              <p>평일: 09:00 ~ 21:00</p>
-              <p>토요일: 10:00 ~ 18:00</p>
-              <p>일요일·공휴일: 휴무</p>
-              <p className="mt-3 text-[#4A85D4]">상담 예약제로 운영됩니다</p>
-            </div>
-          </div>
+      <div className="max-w-[800px] mx-auto px-6 py-12">
+        <div className="flex flex-col items-center text-center gap-2">
+          <h3 className="text-2xl font-bold">
+            <span className="font-heading" style={{ color: '#8CC4A0' }}>공감</span>
+            <span style={{ fontFamily: "'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif", fontSize: '1.65rem', color: '#D4B878', fontWeight: 600 }}>터</span>
+            {' '}
+            <span style={{ fontFamily: "'DOSSaemmul', sans-serif", fontSize: '1.1rem', color: '#C8B8A0' }}>심리상담연구소</span>
+          </h3>
+          <p className="text-sm">이메일: iillac@naver.com</p>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-[#4A3E36] flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+        <div className="mt-3 pt-2 border-t border-[#2D5A3D] flex flex-col md:flex-row justify-between items-center gap-2 text-xs">
           <p>&copy; {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
           <div className="flex gap-4">
             <Link href="#" className="hover:text-white">개인정보처리방침</Link>

@@ -10,7 +10,7 @@ export default function HeroSection() {
           src="/about-illustration.jpg"
           alt="꽃밭 일러스트"
           fill
-          className="object-cover opacity-30"
+          className="object-cover"
           priority
         />
       </div>
@@ -27,16 +27,25 @@ export default function HeroSection() {
         <p className="font-heading text-lg md:text-xl font-bold text-[#5C3A1E] leading-relaxed">
           공감터와의 만남은 당신을 새롭게 합니다
         </p>
+        <p className="font-heading text-lg md:text-xl font-bold text-[#5C3A1E] leading-relaxed">
+          공감터와 함께 마음의 변화를 시작하세요
+        </p>
         <div className="flex flex-wrap justify-center gap-3 pt-4">
           <Link
             href="/reservation/offline"
             className="inline-flex items-center justify-center rounded-xl bg-[#2C3E6B] px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#3B5068] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2C3E6B]/50"
           >
-            상담예약하기
+            대면상담 예약
+          </Link>
+          <Link
+            href="/reservation/online"
+            className="inline-flex items-center justify-center rounded-xl bg-[#2D5A3D] px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#3D7A4E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D5A3D]/50"
+          >
+            화상상담 예약
           </Link>
           <Link
             href="/about"
-            className="inline-flex items-center justify-center rounded-xl border border-[#C8D6E5] bg-white/70 px-7 py-3.5 text-sm font-semibold text-[#2C3E6B] transition-colors hover:bg-[#F3EDE5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2C3E6B]/30"
+            className="inline-flex items-center justify-center rounded-xl bg-[#8B6B2E] px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#7A5C24] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8B6B2E]/50"
           >
             연구소 둘러보기
           </Link>

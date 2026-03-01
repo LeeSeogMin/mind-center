@@ -14,17 +14,7 @@ export default function Header() {
   const { user, profile, loading } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#D0E8D8]">
-      {/* Top bar — desktop only */}
-      <div className="hidden lg:block bg-[#F0FAF3] border-b border-[#D0E8D8]">
-        <div className="max-w-[1200px] mx-auto px-6 py-2 flex justify-between items-center text-xs text-[#6B8C7B]">
-          <span>온라인 화상상담 전문 | 전화 상담: 010-2739-6432 | 평일 09:00~18:00</span>
-          <div className="flex gap-4">
-            <Link href="/board/notice" className="hover:text-[#4A8C5E]">공지사항</Link>
-          </div>
-        </div>
-      </div>
-
+    <header className="sticky top-0 z-50 bg-[#E8EDF5] backdrop-blur border-b border-[#C8D6E5]">
       {/* Main nav */}
       <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}

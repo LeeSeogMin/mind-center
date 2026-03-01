@@ -42,7 +42,10 @@
       "Bash(git config --global user.name \"Leeseogmin\")",
       "Bash(git config --global user.email \"newmind68@hs.ac.kr\")",
       "Bash(xargs sed -i 's/#8B6B4E/#4A8C5E/g; s/#7A5D42/#3D7A4E/g; s/#C4A882/#8CC4A0/g; s/#D4845A/#4A85D4/g; s/#C47349/#3B73C4/g; s/#FBF8F3/#F0FAF3/g; s/#3A2E26/#1E3A26/g; s/#8C7B6B/#6B8C7B/g; s/#E8DDD0/#D0E8D8/g')",
-      "Bash(ls -la /c/Users/newmi/OneDrive/문서/mind-center/public/about-illustration*)"
+      "Bash(ls -la /c/Users/newmi/OneDrive/문서/mind-center/public/about-illustration*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001)",
+      "WebFetch(domain:noonnu.cc)"
     ]
   },
   "enableAllProjectMcpServers": true,

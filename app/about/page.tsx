@@ -24,14 +24,17 @@ export default function AboutPage() {
           />
         </div>
         <div className="relative max-w-[1200px] mx-auto px-6 py-20 text-center space-y-3">
-          <h1 className="font-heading text-2xl md:text-3xl font-bold text-[#2A5FAA] leading-relaxed">
-            당신의 마음은 안녕한가요?
+          <h1 className="font-heading text-2xl md:text-3xl font-bold text-[#C93545] leading-relaxed">
+            당신의 마음은 안녕하신가요?
           </h1>
-          <p className="font-heading text-2xl md:text-3xl font-bold text-[#2A5FAA] leading-relaxed">
-            깊은 이해, 새로운 시작.
+          <p className="font-heading text-lg md:text-xl font-bold text-[#5C3A1E] leading-relaxed">
+            깊은 이해와 마음에 닿는 진심
           </p>
-          <p className="font-heading text-2xl md:text-3xl font-bold text-[#2A5FAA] leading-relaxed">
-            마음에 닿는 진심, 삶을 바꾸는 상담
+          <p className="font-heading text-lg md:text-xl font-bold text-[#5C3A1E] leading-relaxed">
+            삶을 바꾸는 상담
+          </p>
+          <p className="font-heading text-lg md:text-xl font-bold text-[#5C3A1E] leading-relaxed">
+            공감터와의 만남은 당신을 새롭게 합니다
           </p>
         </div>
       </section>

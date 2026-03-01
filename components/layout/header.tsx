@@ -30,7 +30,12 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
           <Logo size={36} />
-          <span className="font-heading text-2xl font-bold text-[#4A8C5E]">{SITE_NAME}</span>
+          <span className="text-2xl font-bold text-[#4A8C5E]">
+            <span className="font-heading" style={{ color: '#2D5A3D' }}>공감</span>
+            <span style={{ fontFamily: "'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif", fontSize: '1.65rem', color: '#B8964A', fontWeight: 600 }}>터</span>
+            {' '}
+            <span style={{ fontFamily: "'DOSSaemmul', sans-serif", fontSize: '1.1rem', color: '#2C3E6B' }}>심리상담연구소</span>
+          </span>
         </Link>
 
         {/* Desktop nav */}
@@ -107,7 +112,12 @@ export default function Header() {
             <SheetContent side="right" className="w-[300px] bg-white p-0">
               <div className="p-6 border-b border-[#D0E8D8] flex items-center gap-2.5">
                 <Logo size={30} />
-                <span className="font-heading text-xl font-bold text-[#4A8C5E]">{SITE_NAME}</span>
+                <span className="text-xl font-bold text-[#4A8C5E]">
+                  <span className="font-heading" style={{ color: '#2D5A3D' }}>공감</span>
+                  <span style={{ fontFamily: "'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif", fontSize: '1.35rem', color: '#B8964A', fontWeight: 600 }}>터</span>
+                  {' '}
+                  <span style={{ fontFamily: "'DOSSaemmul', sans-serif", fontSize: '0.9rem', color: '#2C3E6B' }}>심리상담연구소</span>
+                </span>
               </div>
               <nav className="p-4">
                 {NAV_ITEMS.map((item) => (

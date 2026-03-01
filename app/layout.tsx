@@ -43,7 +43,7 @@ export default function RootLayout({
       <body className={`${nanumMyeongjo.variable} ${pretendard.variable} antialiased`}>
         <AuthProvider>
           <Header />
-          <main className="min-h-screen">{children}</main>
+          <main>{children}</main>
           <Footer />
           <Toaster />
         </AuthProvider>

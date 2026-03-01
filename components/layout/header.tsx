@@ -34,7 +34,7 @@ export default function Header() {
             <span className="font-heading" style={{ color: '#2D5A3D' }}>공감</span>
             <span style={{ fontFamily: "'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif", fontSize: '1.65rem', color: '#B8964A', fontWeight: 600 }}>터</span>
             {' '}
-            <span style={{ fontFamily: "'DOSSaemmul', sans-serif", fontSize: '1.1rem', color: '#2C3E6B' }}>심리상담연구소</span>
+            <span style={{ fontFamily: "'DOSSaemmul', sans-serif", fontSize: '1.1rem', color: '#5C3A1E' }}>심리상담연구소</span>
           </span>
         </Link>
 
@@ -116,7 +116,7 @@ export default function Header() {
                   <span className="font-heading" style={{ color: '#2D5A3D' }}>공감</span>
                   <span style={{ fontFamily: "'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif", fontSize: '1.35rem', color: '#B8964A', fontWeight: 600 }}>터</span>
                   {' '}
-                  <span style={{ fontFamily: "'DOSSaemmul', sans-serif", fontSize: '0.9rem', color: '#2C3E6B' }}>심리상담연구소</span>
+                  <span style={{ fontFamily: "'DOSSaemmul', sans-serif", fontSize: '0.9rem', color: '#5C3A1E' }}>심리상담연구소</span>
                 </span>
               </div>
               <nav className="p-4">

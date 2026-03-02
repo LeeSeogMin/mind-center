@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   CalendarCheck,
   UserCheck,
@@ -110,8 +111,16 @@ function StepFlow({ steps, color }: { steps: typeof PROCESS_STEPS; color: string
 
 export default function ProcessSection() {
   return (
-    <section className="bg-[#FBF8F3] pt-6 pb-12 md:pt-8 md:pb-14">
-      <div className="max-w-[800px] mx-auto px-6">
+    <section className="relative bg-[#FBF8F3] pt-6 pb-12 md:pt-8 md:pb-14 overflow-hidden">
+      <div className="absolute inset-0">
+        <Image
+          src="/publicpro.png"
+          alt="꽃 일러스트 배경"
+          fill
+          className="object-cover opacity-25"
+        />
+      </div>
+      <div className="relative max-w-[800px] mx-auto px-6">
         {/* 상담 진행 과정 */}
         <div className="text-center mb-8">
           <h2 className="font-heading text-2xl md:text-3xl font-bold text-[#1E3A26]">

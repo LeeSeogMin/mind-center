@@ -3,8 +3,8 @@ import { SITE_NAME } from "@/lib/constants";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1E3A26] text-[#8CC4A0]">
-      <div className="max-w-[800px] mx-auto px-6 py-12">
+    <footer className="bg-[#1E2A4A] text-[#A0B8D6]">
+      <div className="max-w-[800px] mx-auto px-6 py-4">
         <div className="flex flex-col items-center text-center gap-2">
           <h3 className="text-2xl font-bold">
             <span className="font-heading" style={{ color: '#8CC4A0' }}>공감</span>
@@ -15,7 +15,7 @@ export default function Footer() {
           <p className="text-sm">이메일: iillac@naver.com</p>
         </div>
 
-        <div className="mt-3 pt-2 border-t border-[#2D5A3D] flex flex-col md:flex-row justify-between items-center gap-2 text-xs">
+        <div className="mt-3 pt-2 border-t border-[#2C3E6B] flex flex-col md:flex-row justify-between items-center gap-2 text-xs">
           <p>&copy; {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
           <div className="flex gap-4">
             <Link href="#" className="hover:text-white">개인정보처리방침</Link>

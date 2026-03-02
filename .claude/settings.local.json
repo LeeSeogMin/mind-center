@@ -48,7 +48,8 @@
       "WebFetch(domain:noonnu.cc)",
       "Bash(npm install -g vercel)",
       "Bash(vercel --version)",
-      "Bash(/c/Windows/System32/cmd.exe /c \"taskkill /F /IM node.exe /T\")"
+      "Bash(/c/Windows/System32/cmd.exe /c \"taskkill /F /IM node.exe /T\")",
+      "Bash(timeout 10 tail -f \"C:/Users/newmi/AppData/Local/Temp/claude/c--Users-newmi-OneDrive----mind-center/tasks/b13rre7uo.output\")"
     ]
   },
   "enableAllProjectMcpServers": true,

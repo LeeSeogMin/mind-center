@@ -12,7 +12,7 @@ export const NAV_ITEMS = [
   ]},
   { label: "상담안내", href: "/counseling", children: [
     { label: "심리상담이란", href: "/counseling" },
-    { label: "아동청소년 상담", href: "/counseling/child" },
+    { label: "아동·청소년 상담", href: "/counseling/child" },
     { label: "성인 상담", href: "/counseling/adult" },
     { label: "커플·부부·가족 상담", href: "/counseling/family" },
     { label: "노인 상담", href: "/counseling/elderly" },
@@ -42,7 +42,7 @@ export const NAV_ITEMS = [
 export const COUNSELING_SERVICES: CounselingService[] = [
   {
     slug: "child",
-    title: "아동청소년 상담",
+    title: "아동·청소년 상담",
     subtitle: "건강한 성장을 돕는 전문 상담",
     icon: "Baby",
     description: "아동·청소년기에 겪는 정서적 어려움, 학교 부적응, 또래 관계 문제, 학습 문제 등을 전문적으로 상담합니다.",
@@ -127,7 +127,7 @@ export const COUNSELING_SERVICES: CounselingService[] = [
 ];
 
 export const PROCESS_STEPS = [
-  { step: 1, title: "상담 예약·신청", description: "홈페이지, 전화, 카톡, 내방", icon: "CalendarCheck" },
+  { step: 1, title: "상담예약", description: "홈페이지, 전화, 카톡, 내방", icon: "CalendarCheck" },
   { step: 2, title: "상담자 배정 및\n일시 확정", description: "", icon: "UserCheck" },
   { step: 3, title: "상담 진행", description: "", icon: "MessageCircle" },
   { step: 4, title: "종결 및 사후관리", description: "", icon: "ShieldCheck" },

@@ -39,7 +39,7 @@ export default function Header() {
             >
               <Link
                 href={item.href}
-                className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-[#1E3A26] hover:text-[#4A8C5E] transition-colors"
+                className="flex items-center gap-1 px-3 py-2 text-lg font-medium text-[#1E3A26] hover:text-[#4A8C5E] transition-colors whitespace-nowrap"
               >
                 {item.label}
                 {item.children && <ChevronDown className="w-3.5 h-3.5" />}

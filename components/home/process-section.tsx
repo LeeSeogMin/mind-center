@@ -38,7 +38,7 @@ function StepFlow({ steps, color }: { steps: typeof PROCESS_STEPS; color: string
                 >
                   {IconComponent ? <IconComponent className="h-5 w-5" /> : step.step}
                 </div>
-                <h3 className="mt-3 text-sm font-semibold text-[#1E3A26] whitespace-pre-line">
+                <h3 className="mt-3 text-base font-bold text-[#1E3A26] whitespace-pre-line">
                   {step.title}
                 </h3>
                 {step.description && (
@@ -87,7 +87,7 @@ function StepFlow({ steps, color }: { steps: typeof PROCESS_STEPS; color: string
                   {IconComponent ? <IconComponent className="h-5 w-5" /> : step.step}
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold text-[#1E3A26]">
+                  <h3 className="text-lg font-bold text-[#1E3A26]">
                     {step.title}
                   </h3>
                   <p className="mt-0.5 text-sm text-[#8C7B6B]">
@@ -117,7 +117,7 @@ export default function ProcessSection() {
           src="/publicpro.png"
           alt="꽃 일러스트 배경"
           fill
-          className="object-cover opacity-25"
+          className="object-cover opacity-50"
         />
       </div>
       <div className="relative max-w-[800px] mx-auto px-6">

@@ -33,19 +33,19 @@ export default function HeroSection() {
         <div className="flex flex-wrap justify-center gap-3 pt-4">
           <Link
             href="/reservation/offline"
-            className="inline-flex items-center justify-center rounded-xl bg-[#2C3E6B] px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#3B5068] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2C3E6B]/50"
+            className="inline-flex items-center justify-center rounded-xl bg-[#2C3E6B] px-7 py-3.5 text-lg font-semibold text-white shadow-sm transition-colors hover:bg-[#3B5068] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2C3E6B]/50"
           >
             대면상담 예약
           </Link>
           <Link
             href="/reservation/online"
-            className="inline-flex items-center justify-center rounded-xl bg-[#2D5A3D] px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#3D7A4E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D5A3D]/50"
+            className="inline-flex items-center justify-center rounded-xl bg-[#2D5A3D] px-7 py-3.5 text-lg font-semibold text-white shadow-sm transition-colors hover:bg-[#3D7A4E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D5A3D]/50"
           >
             화상상담 예약
           </Link>
           <Link
             href="/about"
-            className="inline-flex items-center justify-center rounded-xl bg-[#8B6B2E] px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#7A5C24] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8B6B2E]/50"
+            className="inline-flex items-center justify-center rounded-xl bg-[#8B6B2E] px-7 py-3.5 text-lg font-semibold text-white shadow-sm transition-colors hover:bg-[#7A5C24] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8B6B2E]/50"
           >
             연구소 둘러보기
           </Link>

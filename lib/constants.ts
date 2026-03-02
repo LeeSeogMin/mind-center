@@ -8,7 +8,8 @@ export const COUNSELOR_TITLE = "상담학 박사";
 export const NAV_ITEMS = [
   { label: "연구소 소개", href: "/about", children: [
     { label: "연구소 소개", href: "/about" },
-    { label: "상담사 소개", href: "/about/counselors" },
+    { label: "연구진 소개", href: "/about/counselors" },
+    { label: "오시는 길", href: "/about/directions" },
   ]},
   { label: "상담안내", href: "/counseling", children: [
     { label: "심리상담이란", href: "/counseling" },

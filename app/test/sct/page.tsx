@@ -5,13 +5,13 @@ export default function SctPage() {
   return (
     <div className="bg-[#F0FAF3]">
       {/* 페이지 헤더 */}
-      <section className="bg-white border-b border-[#D0E8D8]">
-        <div className="max-w-[1200px] mx-auto px-6 py-16">
-          <p className="text-sm text-[#6B8C7B] mb-2">심리검사</p>
-          <h1 className="font-heading text-4xl font-bold text-[#1E3A26] mb-4">
+      <section className="bg-[#2D5A3D] border-b border-[#D0E8D8]">
+        <div className="max-w-[1200px] mx-auto px-6 py-12">
+          <p className="text-sm text-white/50 mb-2">심리검사</p>
+          <h1 className="font-heading text-4xl font-bold text-white mb-4">
             SCT 문장완성검사
           </h1>
-          <p className="text-[#6B8C7B] text-lg max-w-2xl">
+          <p className="text-white/70 text-lg max-w-2xl">
             미완성 문장을 자유롭게 완성하며 내면의 감정, 욕구, 갈등을 탐색하는 투사적 심리검사입니다.
           </p>
         </div>

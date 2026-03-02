@@ -5,13 +5,13 @@ export default function Mmpi2Page() {
   return (
     <div className="bg-[#F0FAF3]">
       {/* 페이지 헤더 */}
-      <section className="bg-white border-b border-[#D0E8D8]">
-        <div className="max-w-[1200px] mx-auto px-6 py-16">
-          <p className="text-sm text-[#6B8C7B] mb-2">심리검사</p>
-          <h1 className="font-heading text-4xl font-bold text-[#1E3A26] mb-4">
+      <section className="bg-[#2D5A3D] border-b border-[#D0E8D8]">
+        <div className="max-w-[1200px] mx-auto px-6 py-12">
+          <p className="text-sm text-white/50 mb-2">심리검사</p>
+          <h1 className="font-heading text-4xl font-bold text-white mb-4">
             MMPI-2 다면적 인성검사
           </h1>
-          <p className="text-[#6B8C7B] text-lg max-w-2xl">
+          <p className="text-white/70 text-lg max-w-2xl">
             세계에서 가장 널리 사용되는 객관적 성격·정신병리 검사로, 개인의 성격 특성과 심리적 증상을 종합적으로 평가합니다.
           </p>
         </div>

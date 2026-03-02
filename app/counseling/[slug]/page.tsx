@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { COUNSELING_SERVICES, SITE_NAME } from "@/lib/constants";
+import { COUNSELING_SERVICES } from "@/lib/constants";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -28,15 +28,11 @@ export default async function CounselingDetailPage({ params }: Props) {
     notFound();
   }
 
-  // 다른 상담 분야 (현재 페이지 제외)
-  const otherServices = COUNSELING_SERVICES.filter((s) => s.slug !== slug);
-
   return (
     <div className="bg-[#F0FAF3]">
       {/* 페이지 헤더 */}
       <section className="bg-[#2D5A3D] border-b border-[#D0E8D8]">
         <div className="max-w-[1200px] mx-auto px-6 py-12 text-center">
-          <p className="text-white/50 font-medium mb-2">상담안내</p>
           <h1 className="font-heading text-4xl font-bold text-white mb-4">
             {service.title}
           </h1>
@@ -45,23 +41,77 @@ export default async function CounselingDetailPage({ params }: Props) {
       </section>
 
       {/* 상세 콘텐츠 */}
-      <section className="max-w-[1200px] mx-auto px-6 py-20">
-        <div className="grid lg:grid-cols-[1fr_360px] gap-10">
-          {/* 메인 콘텐츠 */}
-          <div className="space-y-10">
-            {/* 설명 */}
-            <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10">
-              <h2 className="font-heading text-2xl font-bold text-[#1E3A26] mb-6">
-                {service.title}이란?
-              </h2>
-              <p className="text-[#1E3A26] leading-relaxed text-lg">
-                {service.description}
-              </p>
-            </div>
+      <section className="max-w-[1200px] mx-auto px-6 pt-10 pb-10">
+        <div className="space-y-10">
+          {/* 설명 */}
+          <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10">
+            <h2 className="font-heading text-2xl font-bold text-[#2C3E6B] mb-6">
+              {service.title}이란?
+            </h2>
+            <p className="text-[#1E3A26] leading-relaxed text-lg">
+              {service.description}
+            </p>
+          </div>
 
-            {/* 상담 내용 */}
+          {/* 상담의 특징 */}
+          {service.features && service.features.length > 0 && (
+            <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10" style={{ wordBreak: "keep-all" }}>
+              <h2 className="font-heading text-2xl font-bold text-[#2C3E6B] mb-6">
+                {service.title}의 특징
+              </h2>
+              <ol className="space-y-4 text-[#1E3A26] leading-relaxed">
+                {service.features.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <span className="font-bold text-[#2C3E6B] shrink-0">{index + 1}.</span>
+                    <span><strong>{item.title}:</strong> {item.desc}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+
+          {/* 주요 상담 내용 및 영역 */}
+          {service.categories && service.categories.length > 0 && (
+            <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10" style={{ wordBreak: "keep-all" }}>
+              <h2 className="font-heading text-2xl font-bold text-[#2C3E6B] mb-6">
+                주요 상담 내용 및 영역
+              </h2>
+              <div className="grid md:grid-cols-[1fr_320px] gap-4 items-center">
+                <div className="space-y-6 text-[#1E3A26] leading-relaxed">
+                  {service.categories.map((cat, index) => (
+                    <div key={index}>
+                      <div className="flex items-start gap-3 mb-2">
+                        <span className="font-bold text-[#2C3E6B] shrink-0">{index + 1}.</span>
+                        <span><strong>{cat.title}</strong></span>
+                      </div>
+                      <ul className="space-y-2 ml-4">
+                        {cat.items.map((item, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#1E3A26] flex-shrink-0" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+                <div className="hidden md:flex justify-center">
+                  <Image
+                    src="/olenchic-ai-generated.png"
+                    alt="아동·청소년 상담 일러스트"
+                    width={240}
+                    height={300}
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 기존 details 목록 (features/categories 없는 경우) */}
+          {(!service.features || service.features.length === 0) && service.details.length > 0 && (
             <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10">
-              <h2 className="font-heading text-2xl font-bold text-[#1E3A26] mb-6">
+              <h2 className="font-heading text-2xl font-bold text-[#2C3E6B] mb-6">
                 주요 상담 내용
               </h2>
               <ul className="space-y-4">
@@ -78,105 +128,45 @@ export default async function CounselingDetailPage({ params }: Props) {
                 ))}
               </ul>
             </div>
+          )}
 
-            {/* 상담 과정 */}
-            <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10">
-              <h2 className="font-heading text-2xl font-bold text-[#1E3A26] mb-6">
-                상담 진행 과정
+          {/* 공감터만의 상담 시스템 */}
+          {service.system && service.system.length > 0 && (
+            <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10" style={{ wordBreak: "keep-all" }}>
+              <h2 className="font-heading text-2xl font-bold text-[#2C3E6B] mb-6">
+                공감터만의 {service.title} 시스템
               </h2>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {[
-                  {
-                    step: "01",
-                    title: "초기 상담",
-                    desc: "화상 또는 대면으로 현재 겪고 있는 어려움과 상담 목표를 함께 파악합니다.",
-                  },
-                  {
-                    step: "02",
-                    title: "심리 평가",
-                    desc: "필요에 따라 심리검사를 실시하여 보다 정확한 이해를 돕습니다.",
-                  },
-                  {
-                    step: "03",
-                    title: "상담 진행",
-                    desc: "Google Meet 화상상담 또는 대면상담을 통해 문제를 탐색하고 변화를 이끌어갑니다.",
-                  },
-                  {
-                    step: "04",
-                    title: "종결 및 사후관리",
-                    desc: "상담 목표 달성 후 종결하며, 필요시 추후 상담을 지원합니다.",
-                  },
-                ].map((item) => (
-                  <div
-                    key={item.step}
-                    className="bg-[#F0FAF3] rounded-xl p-5 border border-[#D0E8D8]"
-                  >
-                    <span className="text-[#4A85D4] font-bold text-sm">
-                      STEP {item.step}
-                    </span>
-                    <h4 className="font-heading text-lg font-bold text-[#1E3A26] mt-1 mb-2">
-                      {item.title}
-                    </h4>
-                    <p className="text-sm text-[#6B8C7B]">{item.desc}</p>
-                  </div>
+              <ul className="space-y-4 text-[#1E3A26] leading-relaxed">
+                {service.system.map((item, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#1E3A26] flex-shrink-0" />
+                    <span><strong>{item.title}:</strong> {item.desc}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
-          </div>
+          )}
 
-          {/* 사이드바 */}
-          <div className="space-y-6">
-            {/* 예약 CTA */}
-            <Card className="rounded-2xl bg-white border-[#D0E8D8] sticky top-24">
-              <CardContent className="p-8 text-center space-y-4">
-                <h3 className="font-heading text-xl font-bold text-[#1E3A26]">
-                  상담 예약
-                </h3>
-                <p className="text-sm text-[#6B8C7B] leading-relaxed">
-                  {service.title}에 대해 더 자세한 상담이 필요하시면
-                  편하게 예약해 주세요.
-                </p>
-                <Link href="/reservation/offline" className="block">
-                  <Button className="w-full bg-[#4A85D4] hover:bg-[#3B73C4] text-white h-12 text-base rounded-xl">
-                    대면상담 예약하기
-                  </Button>
-                </Link>
-                <Link href="/reservation/online" className="block">
-                  <Button
-                    variant="outline"
-                    className="w-full border-[#D0E8D8] text-[#4A8C5E] hover:bg-[#F0FAF3] h-12 text-base rounded-xl"
-                  >
-                    화상상담 예약하기
-                  </Button>
-                </Link>
-                <p className="text-xs text-[#6B8C7B] pt-2">
-                  전화 문의: 010-2739-6432
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* 다른 상담 분야 */}
-            <Card className="rounded-2xl bg-white border-[#D0E8D8]">
-              <CardContent className="p-6">
-                <h3 className="font-heading text-lg font-bold text-[#1E3A26] mb-4">
-                  다른 상담 분야
-                </h3>
-                <div className="space-y-2">
-                  {otherServices.map((other) => (
-                    <Link
-                      key={other.slug}
-                      href={`/counseling/${other.slug}`}
-                      className="block px-4 py-3 rounded-xl text-sm text-[#1E3A26] hover:bg-[#F0FAF3] hover:text-[#4A8C5E] transition-colors border border-transparent hover:border-[#D0E8D8]"
-                    >
-                      {other.title}
-                      <span className="text-[#6B8C7B] block text-xs mt-0.5">
-                        {other.subtitle}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+          {/* 상담 예약 */}
+          <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10 text-center space-y-4">
+            <h3 className="font-heading text-xl font-bold text-[#2C3E6B]">
+              <strong>상담 예약</strong>
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Link href="/reservation/offline">
+                <Button className="bg-[#4A85D4] hover:bg-[#3B73C4] text-white h-12 text-base rounded-xl px-8">
+                  대면상담 예약하기
+                </Button>
+              </Link>
+              <Link href="/reservation/online">
+                <Button
+                  variant="outline"
+                  className="border-[#D0E8D8] text-[#4A8C5E] hover:bg-[#F0FAF3] h-12 text-base rounded-xl px-8"
+                >
+                  화상상담 예약하기
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

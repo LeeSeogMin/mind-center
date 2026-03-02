@@ -13,7 +13,7 @@ const PROGRAMS = [
   { title: "심리상담", desc: "아동·청소년, 성인\n커플·부부·가족, 노인", icon: Brain, href: "/counseling", bg: "#8BBF8B", hover: "#7AAF7A" },
   { title: "심리검사", desc: "MMPI-2, SCT\nTCI, WISC", icon: ClipboardCheck, href: "/test", bg: "#6BA86B", hover: "#5A985A" },
   { title: "기업상담", desc: "임직원, 배우자, 자녀", icon: Building2, href: "/counseling/corporate", bg: "#4C8F4C", hover: "#3C7F3C" },
-  { title: "집단 프로그램", desc: "부모교육, 미술치료", icon: UsersRound, href: "/group-program", bg: "#3C7544", hover: "#2C6534" },
+  { title: "집단 프로그램", desc: "부모교육, 의사소통\n미술치료", icon: UsersRound, href: "/group-program", bg: "#3C7544", hover: "#2C6534" },
   { title: "논문 컨설팅", desc: "통계분석, 질적연구\n논문특강 및 코칭", icon: GraduationCap, href: "/consulting", bg: "#2D5A3D", hover: "#3D7A4E" },
 ];
 

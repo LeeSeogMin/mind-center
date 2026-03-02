@@ -110,4 +110,7 @@ export interface CounselingService {
   description: string;
   icon: string;
   details: string[];
+  features?: { title: string; desc: string }[];
+  categories?: { title: string; items: string[] }[];
+  system?: { title: string; desc: string }[];
 }

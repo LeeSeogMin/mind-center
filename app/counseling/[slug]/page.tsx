@@ -44,14 +44,18 @@ export default async function CounselingDetailPage({ params }: Props) {
       <section className="max-w-[1200px] mx-auto px-6 pt-10 pb-10">
         <div className="space-y-10">
           {/* 설명 */}
-          <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10">
-            <h2 className="font-heading text-2xl font-bold text-[#2C3E6B] mb-6">
-              {service.title}이란?
-            </h2>
-            <p className="text-[#1E3A26] leading-relaxed text-lg">
-              {service.description}
-            </p>
-          </div>
+          {service.description && (
+            <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10">
+              <h2 className="font-heading text-2xl font-bold text-[#2C3E6B] mb-6">
+                {service.title}이란?
+              </h2>
+              <div className="space-y-4 text-[#1E3A26] leading-relaxed text-lg" style={{ wordBreak: "keep-all" }}>
+                {service.description.split("\n\n").map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* 상담의 특징 */}
           {service.features && service.features.length > 0 && (
@@ -74,7 +78,7 @@ export default async function CounselingDetailPage({ params }: Props) {
           {service.categories && service.categories.length > 0 && (
             <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10" style={{ wordBreak: "keep-all" }}>
               <h2 className="font-heading text-2xl font-bold text-[#2C3E6B] mb-6">
-                주요 상담 내용 및 영역
+                {service.categoriesTitle || "주요 상담 내용 및 영역"}
               </h2>
               <div className="grid md:grid-cols-[1fr_320px] gap-4 items-center">
                 <div className="space-y-6 text-[#1E3A26] leading-relaxed">
@@ -95,15 +99,17 @@ export default async function CounselingDetailPage({ params }: Props) {
                     </div>
                   ))}
                 </div>
-                <div className="hidden md:flex justify-center">
-                  <Image
-                    src="/olenchic-ai-generated.png"
-                    alt="아동·청소년 상담 일러스트"
-                    width={240}
-                    height={300}
-                    className="object-contain"
-                  />
-                </div>
+                {service.categoriesImage && (
+                  <div className="hidden md:flex justify-center">
+                    <Image
+                      src={service.categoriesImage}
+                      alt={`${service.title} 일러스트`}
+                      width={240}
+                      height={300}
+                      className="object-contain"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -134,16 +140,22 @@ export default async function CounselingDetailPage({ params }: Props) {
           {service.system && service.system.length > 0 && (
             <div className="bg-white rounded-2xl border border-[#D0E8D8] p-10" style={{ wordBreak: "keep-all" }}>
               <h2 className="font-heading text-2xl font-bold text-[#2C3E6B] mb-6">
-                공감터만의 {service.title} 시스템
+                {service.systemTitle || `공감터만의 ${service.title} 시스템`}
               </h2>
-              <ul className="space-y-4 text-[#1E3A26] leading-relaxed">
+              {service.systemIntro && (
+                <p className="text-[#1E3A26] leading-relaxed mb-6">{service.systemIntro}</p>
+              )}
+              <ol className="space-y-6 text-[#1E3A26] leading-relaxed">
                 {service.system.map((item, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#1E3A26] flex-shrink-0" />
-                    <span><strong>{item.title}:</strong> {item.desc}</span>
+                  <li key={index}>
+                    <div className="flex items-start gap-3 mb-1">
+                      <span className="font-bold text-[#2C3E6B] shrink-0">{index + 1}.</span>
+                      <span><strong>{item.title}</strong></span>
+                    </div>
+                    <p className="ml-7">{item.desc}</p>
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
           )}
 

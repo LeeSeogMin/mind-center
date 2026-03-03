@@ -111,6 +111,10 @@ export interface CounselingService {
   icon: string;
   details: string[];
   features?: { title: string; desc: string }[];
+  categoriesTitle?: string;
+  categoriesImage?: string;
   categories?: { title: string; items: string[] }[];
+  systemTitle?: string;
+  systemIntro?: string;
   system?: { title: string; desc: string }[];
 }
